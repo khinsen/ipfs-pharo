@@ -4,11 +4,22 @@ Class {
 	#traits : 'TSingleton',
 	#classTraits : 'TSingleton classTrait',
 	#instVars : [
-		'znClient',
+		'host',
+		'port',
 		'commands'
 	],
 	#category : #'IPFSExploration-IPFS'
 }
+
+{ #category : #IPFS }
+IpfsNode class >> getIpfsObject: aCID [
+	^ self uniqueInstance getIpfsObject: aCID
+]
+
+{ #category : #IPLD }
+IpfsNode class >> getIpldNode: aCID [
+	^ self uniqueInstance getIpldNode: aCID
+]
 
 { #category : #IPFS }
 IpfsNode class >> ipfsObjectAt: aCID [
@@ -18,6 +29,11 @@ IpfsNode class >> ipfsObjectAt: aCID [
 { #category : #IPLD }
 IpfsNode class >> ipldNodeAt: aCID [
 	^ self uniqueInstance ipldNodeAt: aCID
+]
+
+{ #category : #IPLD }
+IpfsNode class >> putIpldNode: anObject [
+	^ self uniqueInstance putIpldNode: anObject
 ]
 
 { #category : #requesting }
@@ -34,24 +50,49 @@ IpfsNode >> command: aString withParameters: aDictionary [
 IpfsNode >> getCommands [
 	| result |
 	"result := znClient path: 'api/v0/commands'; get."
-	result := self command: 'commands' withParameters: Dictionary new.
+	result := self getRequest: 'commands' parameters: Dictionary new.
 	self assert: (result at: 'Name') = 'ipfs'.
 	commands := result at: 'Subcommands'.
 ]
 
+{ #category : #IPFS }
+IpfsNode >> getIpfsObject: aCID [
+	| result data links |
+	result := self getRequest: 'object/get' parameters:
+		(Dictionary with: #arg -> aCID asString).
+	data := (result at: 'Data') asByteArray.
+	links := Dictionary new.
+	(result at: 'Links') do:
+		[ :link |
+			links at: (link at: 'Name')
+					put: (IpfsLink cid: (link at: 'Hash')
+									  size: ((link at: 'Size') asNumber) )].
+	^ IpfsObject
+		data: data
+		links: links.
+]
+
+{ #category : #IPLD }
+IpfsNode >> getIpldNode: aCID [
+	^ self getRequest: 'dag/get' parameters:
+		(Dictionary with: #arg -> aCID asString).
+
+]
+
+{ #category : #requesting }
+IpfsNode >> getRequest: aString parameters: aDictionary [
+	| result |
+	result := self znClient
+		path: 'api/v0/', aString;
+		queryAddAll: aDictionary;
+		get.
+	^ result
+]
+
 { #category : #initializing }
 IpfsNode >> initialize [
-	| host port |
 	host := '127.0.0.1'.
 	port := 5001.
-	znClient := ZnClient new
-		systemPolicy;
-		http;
-		host: host;
-		port: port;
-		accept: 'application/json';
-		contentReader: [ :entity | STONJSON fromString: entity contents ];
-		yourself.
 	self getCommands.
 
 ]
@@ -92,4 +133,41 @@ IpfsNode >> ipldNodeAt: aCID [
 	^ IpldNode
 		data: data
 		links: links.
+]
+
+{ #category : #requesting }
+IpfsNode >> postRequest: aString contents: anObject parameters: aDictionary [
+	| result |
+	result := self znClient
+		path: 'api/v0/', aString;
+		queryAddAll: aDictionary;
+		addPart: (ZnMimePart fieldName: 'file' value: (NeoJSONWriter toString: anObject));
+		post.
+	^ result
+]
+
+{ #category : #IPLD }
+IpfsNode >> putIpldNode: anObject [
+	| result cid |
+	result := self postRequest: 'dag/put'
+		contents: anObject
+		parameters: (Dictionary with: #arg ->  '').
+	cid := result at: 'Cid'.
+	self assert: cid size = 1.
+	self assert: cid keys first = '/'.
+	^ cid at: '/'
+]
+
+{ #category : #initializing }
+IpfsNode >> znClient [
+	^ ZnClient new
+		systemPolicy;
+		beOneShot;
+		http;
+		host: host;
+		port: port;
+		accept: 'application/json';
+		contentReader: [ :entity | STONJSON fromString: entity contents ];
+		yourself.
+
 ]

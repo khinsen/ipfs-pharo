@@ -24,7 +24,7 @@ IpldLink class >> cid: aString size: anInteger [
 
 { #category : #acccessing }
 IpldLink >> getNode [
-	^ IpfsNode ipldNodeAt: cid
+	^ IpfsNode getIpldNode: cid
 ]
 
 { #category : #initialization }
