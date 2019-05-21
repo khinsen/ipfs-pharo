@@ -24,7 +24,7 @@ IpfsLink class >> cid: aString size: anInteger [
 
 { #category : #acccessing }
 IpfsLink >> getObject [
-	^ IpfsNode getIpfsObject: cid
+	^ IpfsClient getIpfsObject: cid
 ]
 
 { #category : #initialization }

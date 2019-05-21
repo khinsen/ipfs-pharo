@@ -1,5 +1,5 @@
 Class {
-	#name : #IpfsNode,
+	#name : #IpfsClient,
 	#superclass : #Object,
 	#traits : 'TSingleton',
 	#classTraits : 'TSingleton classTrait',
@@ -12,42 +12,32 @@ Class {
 }
 
 { #category : #IPFS }
-IpfsNode class >> getIpfsObject: aCID [
+IpfsClient class >> getIpfsObject: aCID [
 	^ self uniqueInstance getIpfsObject: aCID
 ]
 
 { #category : #IPLD }
-IpfsNode class >> getIpldNode: aCID [
+IpfsClient class >> getIpldNode: aCID [
 	^ self uniqueInstance getIpldNode: aCID
 ]
 
 { #category : #IPFS }
-IpfsNode class >> ipfsObjectAt: aCID [
+IpfsClient class >> ipfsObjectAt: aCID [
 	^ self uniqueInstance ipfsObjectAt: aCID
 ]
 
 { #category : #IPLD }
-IpfsNode class >> ipldNodeAt: aCID [
+IpfsClient class >> ipldNodeAt: aCID [
 	^ self uniqueInstance ipldNodeAt: aCID
 ]
 
 { #category : #IPLD }
-IpfsNode class >> putIpldNode: anObject [
+IpfsClient class >> putIpldNode: anObject [
 	^ self uniqueInstance putIpldNode: anObject
 ]
 
 { #category : #requesting }
-IpfsNode >> command: aString withParameters: aDictionary [
-	| result |
-	result := znClient
-		path: 'api/v0/', aString;
-		queryAddAll: aDictionary;
-		get.
-	^ result
-]
-
-{ #category : #requesting }
-IpfsNode >> getCommands [
+IpfsClient >> getCommands [
 	| result |
 	"result := znClient path: 'api/v0/commands'; get."
 	result := self getRequest: 'commands' parameters: Dictionary new.
@@ -56,7 +46,7 @@ IpfsNode >> getCommands [
 ]
 
 { #category : #IPFS }
-IpfsNode >> getIpfsObject: aCID [
+IpfsClient >> getIpfsObject: aCID [
 	| result data links |
 	result := self getRequest: 'object/get' parameters:
 		(Dictionary with: #arg -> aCID asString).
@@ -73,14 +63,14 @@ IpfsNode >> getIpfsObject: aCID [
 ]
 
 { #category : #IPLD }
-IpfsNode >> getIpldNode: aCID [
+IpfsClient >> getIpldNode: aCID [
 	^ self getRequest: 'dag/get' parameters:
 		(Dictionary with: #arg -> aCID asString).
 
 ]
 
 { #category : #requesting }
-IpfsNode >> getRequest: aString parameters: aDictionary [
+IpfsClient >> getRequest: aString parameters: aDictionary [
 	| result |
 	result := self znClient
 		path: 'api/v0/', aString;
@@ -90,7 +80,7 @@ IpfsNode >> getRequest: aString parameters: aDictionary [
 ]
 
 { #category : #initializing }
-IpfsNode >> initialize [
+IpfsClient >> initialize [
 	host := '127.0.0.1'.
 	port := 5001.
 	self getCommands.
@@ -98,9 +88,9 @@ IpfsNode >> initialize [
 ]
 
 { #category : #IPFS }
-IpfsNode >> ipfsObjectAt: aCID [
+IpfsClient >> ipfsObjectAt: aCID [
 	| result data links |
-	result := self command: 'object/get' withParameters:
+	result := self getRequest: 'object/get' parameters:
 		(Dictionary with: #arg -> aCID asString).
 	data := (result at: 'Data') asByteArray.
 	links := Dictionary new.
@@ -115,9 +105,9 @@ IpfsNode >> ipfsObjectAt: aCID [
 ]
 
 { #category : #IPLD }
-IpfsNode >> ipldNodeAt: aCID [
+IpfsClient >> ipldNodeAt: aCID [
 	| result data links |
-	result := self command: 'dag/get' withParameters:
+	result := self getRequest: 'dag/get' parameters:
 		(Dictionary with: #arg -> aCID asString).
 	data := (result at: 'data') asByteArray.
 	links := Dictionary new.
@@ -136,7 +126,7 @@ IpfsNode >> ipldNodeAt: aCID [
 ]
 
 { #category : #requesting }
-IpfsNode >> postRequest: aString contents: anObject parameters: aDictionary [
+IpfsClient >> postRequest: aString contents: anObject parameters: aDictionary [
 	| result |
 	result := self znClient
 		path: 'api/v0/', aString;
@@ -147,7 +137,7 @@ IpfsNode >> postRequest: aString contents: anObject parameters: aDictionary [
 ]
 
 { #category : #IPLD }
-IpfsNode >> putIpldNode: anObject [
+IpfsClient >> putIpldNode: anObject [
 	| result cid |
 	result := self postRequest: 'dag/put'
 		contents: anObject
@@ -159,7 +149,7 @@ IpfsNode >> putIpldNode: anObject [
 ]
 
 { #category : #initializing }
-IpfsNode >> znClient [
+IpfsClient >> znClient [
 	^ ZnClient new
 		systemPolicy;
 		beOneShot;

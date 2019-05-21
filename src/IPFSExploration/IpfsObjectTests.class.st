@@ -7,7 +7,7 @@ Class {
 { #category : #testing }
 IpfsObjectTests >> testIPFSCLIDocumentation [
 	| ipfsObject |
-	ipfsObject := IpfsNode getIpfsObject: 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
+	ipfsObject := IpfsClient getIpfsObject: 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 	self assert: ipfsObject data equals: #[8 1].
 	self assert: ipfsObject links size equals: 6.
 	self assert: ipfsObject links keys asSet
