@@ -1,0 +1,18 @@
+Class {
+	#name : #IpfsObjectTests,
+	#superclass : #TestCase,
+	#category : #'IPFSExploration-Tests '
+}
+
+{ #category : #testing }
+IpfsObjectTests >> testIPFSCLIDocumentation [
+	| ipfsObject |
+	ipfsObject := IpfsNode ipfsObjectAt: 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
+	self assert: ipfsObject data equals: #[8 1].
+	self assert: ipfsObject links size equals: 6.
+	self assert: ipfsObject links keys asSet
+		  equals: #('about' 'contact' 'help' 'quick-start' 'readme' 'security-notes') asSet.
+	ipfsObject links values
+		do: [ :each | self assert: (each isKindOf: IpfsLink) ].
+
+]
