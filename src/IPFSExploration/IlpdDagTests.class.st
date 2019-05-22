@@ -16,6 +16,17 @@ IlpdDagTests >> testIPFSCLIDocumentation [
 ]
 
 { #category : #testing }
+IlpdDagTests >> testLinkedData [
+	| data1 cid1 data2 cid2 retrieved |
+	data1 := { 'foo' -> 'bar' } asDictionary.
+	cid1 := IpfsClient putIpldNode: data1.
+	data2 := { 'data' -> { '/' -> cid1 } asDictionary } asDictionary.
+	cid2 := IpfsClient putIpldNode: data2.
+	retrieved := IpfsClient getIpldNode: cid2.
+	self assert: retrieved equals: data2.
+]
+
+{ #category : #testing }
 IlpdDagTests >> testPutAndGet [
 	| testValues |
 	testValues := { 'aString'.
