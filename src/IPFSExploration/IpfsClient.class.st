@@ -11,6 +11,11 @@ Class {
 	#category : #'IPFSExploration-IPFS'
 }
 
+{ #category : #IPLD }
+IpfsClient class >> convertToBase32: aString [
+	^ self uniqueInstance convertToBase32: aString
+]
+
 { #category : #IPFS }
 IpfsClient class >> getIpfsObject: aCID [
 	^ self uniqueInstance getIpfsObject: aCID
@@ -27,13 +32,15 @@ IpfsClient class >> ipfsObjectAt: aCID [
 ]
 
 { #category : #IPLD }
-IpfsClient class >> ipldNodeAt: aCID [
-	^ self uniqueInstance ipldNodeAt: aCID
-]
-
-{ #category : #IPLD }
 IpfsClient class >> putIpldNode: anObject [
 	^ self uniqueInstance putIpldNode: anObject
+]
+
+{ #category : #CIDs }
+IpfsClient >> convertToBase32: aString [
+	| result |
+	result := self getRequest: 'cid/base32' parameters: { #arg -> aString } asDictionary.
+	^ result at: 'Formatted'
 ]
 
 { #category : #requesting }
@@ -63,10 +70,11 @@ IpfsClient >> getIpfsObject: aCID [
 ]
 
 { #category : #IPLD }
-IpfsClient >> getIpldNode: aCID [
-	^ self getRequest: 'dag/get' parameters:
-		(Dictionary with: #arg -> aCID asString).
-
+IpfsClient >> getIpldNode: anIpldCid [
+	| node |
+	node := self getRequest: 'dag/get' parameters:
+		(Dictionary with: #arg -> anIpldCid asString).
+	^ node asIpldData
 ]
 
 { #category : #requesting }
@@ -104,27 +112,6 @@ IpfsClient >> ipfsObjectAt: aCID [
 		links: links.
 ]
 
-{ #category : #IPLD }
-IpfsClient >> ipldNodeAt: aCID [
-	| result data links |
-	result := self getRequest: 'dag/get' parameters:
-		(Dictionary with: #arg -> aCID asString).
-	data := (result at: 'data') asByteArray.
-	links := Dictionary new.
-	(result at: 'links') do:
-		[ :link |
-			| cid |
-			cid := link at: 'Cid'.
-			self assert: cid size = 1.
-			self assert: cid keys first = '/'.
-			links at: (link at: 'Name')
-					put: (IpldLink cid: (cid at: '/')
-									  size: ((link at: 'Size') asNumber) )].
-	^ IpldNode
-		data: data
-		links: links.
-]
-
 { #category : #requesting }
 IpfsClient >> postRequest: aString contents: anObject parameters: aDictionary [
 	| result |
@@ -138,14 +125,12 @@ IpfsClient >> postRequest: aString contents: anObject parameters: aDictionary [
 
 { #category : #IPLD }
 IpfsClient >> putIpldNode: anObject [
-	| result cid |
+	| result |
 	result := self postRequest: 'dag/put'
 		contents: anObject
 		parameters: (Dictionary with: #arg ->  '').
-	cid := result at: 'Cid'.
-	self assert: cid size = 1.
-	self assert: cid keys first = '/'.
-	^ cid at: '/'
+	^ IpldCid fromDictionary: (result at: 'Cid').
+
 ]
 
 { #category : #initializing }

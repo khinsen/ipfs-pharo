@@ -20,9 +20,9 @@ IlpdDagTests >> testLinkedData [
 	| data1 cid1 data2 cid2 retrieved |
 	data1 := { 'foo' -> 'bar' } asDictionary.
 	cid1 := IpfsClient putIpldNode: data1.
-	data2 := { 'data' -> { '/' -> cid1 } asDictionary } asDictionary.
+	data2 := { 'data' -> cid1 } asDictionary.
 	cid2 := IpfsClient putIpldNode: data2.
-	retrieved := IpfsClient getIpldNode: cid2.
+	retrieved := cid2 getNode.
 	self assert: retrieved equals: data2.
 ]
 
@@ -37,7 +37,7 @@ IlpdDagTests >> testPutAndGet [
 		[ :object |
 			| cid retrievedObject |
 			cid := IpfsClient putIpldNode: object.
-			retrievedObject := IpfsClient getIpldNode: cid.
+			retrievedObject := cid getNode.
 			self assert: object equals: retrievedObject ]
 
 ]
