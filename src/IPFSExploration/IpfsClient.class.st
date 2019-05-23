@@ -32,6 +32,14 @@ IpfsClient class >> putIpldNode: anObject [
 ]
 
 { #category : #CIDs }
+IpfsClient >> cidPrefix: aCid [
+	| result |
+	result := self getRequest: 'cid/format'
+						parameters: { #f -> '%P'. #arg -> aCid asString } asDictionary.
+	^ result at: 'Formatted'
+]
+
+{ #category : #CIDs }
 IpfsClient >> convertToBase32: aString [
 	| result |
 	result := self getRequest: 'cid/base32' parameters: { #arg -> aString } asDictionary.

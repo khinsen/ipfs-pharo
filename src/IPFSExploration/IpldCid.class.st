@@ -10,7 +10,8 @@ Class {
 	#name : #IpldCid,
 	#superclass : #Object,
 	#instVars : [
-		'cidBase32'
+		'cidBase32',
+		'prefix'
 	],
 	#category : #'IPFSExploration-IPLD'
 }
@@ -54,7 +55,8 @@ IpldCid >> hash [
 IpldCid >> initializeWithBase32: aString [
 	self assert: aString size equals: 59.
 	self assert: aString first equals: $b.
-	cidBase32 := aString
+	cidBase32 := aString.
+	prefix := IpfsClient uniqueInstance cidPrefix: cidBase32.
 ]
 
 { #category : #initialization }
@@ -74,6 +76,8 @@ IpldCid >> neoJsonOn: neoJSONWriter [
 IpldCid >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(;
+			  nextPutAll: prefix;
+			  nextPutAll: ', ';
 			  nextPutAll: cidBase32;
 			  nextPut: $).
 
