@@ -26,11 +26,6 @@ IpfsClient class >> getIpldNode: aCID [
 	^ self uniqueInstance getIpldNode: aCID
 ]
 
-{ #category : #IPFS }
-IpfsClient class >> ipfsObjectAt: aCID [
-	^ self uniqueInstance ipfsObjectAt: aCID
-]
-
 { #category : #IPLD }
 IpfsClient class >> putIpldNode: anObject [
 	^ self uniqueInstance putIpldNode: anObject
@@ -62,8 +57,8 @@ IpfsClient >> getIpfsObject: aCID [
 	(result at: 'Links') do:
 		[ :link |
 			links at: (link at: 'Name')
-					put: (IpfsLink cid: (link at: 'Hash')
-									  size: ((link at: 'Size') asNumber) )].
+					put: (IpfsLink cid: (IpldCid fromBase32: (self convertToBase32: (link at: 'Hash')))
+									   size: ((link at: 'Size') asNumber) )].
 	^ IpfsObject
 		data: data
 		links: links.
@@ -93,23 +88,6 @@ IpfsClient >> initialize [
 	port := 5001.
 	self getCommands.
 
-]
-
-{ #category : #IPFS }
-IpfsClient >> ipfsObjectAt: aCID [
-	| result data links |
-	result := self getRequest: 'object/get' parameters:
-		(Dictionary with: #arg -> aCID asString).
-	data := (result at: 'Data') asByteArray.
-	links := Dictionary new.
-	(result at: 'Links') do:
-		[ :link |
-			links at: (link at: 'Name')
-					put: (IpfsLink cid: (link at: 'Hash')
-									  size: ((link at: 'Size') asNumber) )].
-	^ IpfsObject
-		data: data
-		links: links.
 ]
 
 { #category : #requesting }
