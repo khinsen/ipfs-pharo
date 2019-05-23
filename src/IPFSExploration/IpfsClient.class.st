@@ -27,6 +27,11 @@ IpfsClient class >> getIpldNode: aCID [
 ]
 
 { #category : #IPLD }
+IpfsClient class >> getIpldNodeRefs: aCID [
+	^ self uniqueInstance getIpldNodeRefs: aCID
+]
+
+{ #category : #IPLD }
 IpfsClient class >> putIpldNode: anObject [
 	^ self uniqueInstance putIpldNode: anObject
 ]
@@ -65,7 +70,7 @@ IpfsClient >> getIpfsObject: aCID [
 	(result at: 'Links') do:
 		[ :link |
 			links at: (link at: 'Name')
-					put: (IpfsLink cid: (IpldCid fromBase32: (self convertToBase32: (link at: 'Hash')))
+					put: (IpfsLink cid: (IpldCid fromString: (link at: 'Hash'))
 									   size: ((link at: 'Size') asNumber) )].
 	^ IpfsObject
 		data: data
@@ -78,6 +83,14 @@ IpfsClient >> getIpldNode: anIpldCid [
 	node := self getRequest: 'dag/get' parameters:
 		(Dictionary with: #arg -> anIpldCid asString).
 	^ node asIpldData
+]
+
+{ #category : #IPLD }
+IpfsClient >> getIpldNodeRefs: anIpldCid [
+	| refs |
+	refs := self getRequest: 'refs' parameters:
+		(Dictionary with: #arg -> anIpldCid asString).
+	^ refs
 ]
 
 { #category : #requesting }
@@ -128,7 +141,9 @@ IpfsClient >> znClient [
 		host: host;
 		port: port;
 		accept: 'application/json';
-		contentReader: [ :entity | STONJSON fromString: entity contents ];
+		contentReader: [ :entity |
+								entity ifNil: [ nil ]
+										 ifNotNil: [ STONJSON fromString: entity contents ] ];
 		yourself.
 
 ]

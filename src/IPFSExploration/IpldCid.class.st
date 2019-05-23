@@ -19,14 +19,21 @@ Class {
 { #category : #'instance creation' }
 IpldCid class >> fromBase32: aString [
 	^ self basicNew
-		initializeWithBase32: aString;
+		initializeFromBase32: aString;
 		yourself
 ]
 
 { #category : #'instance creation' }
 IpldCid class >> fromDictionary: aDictionary [
 	^ self basicNew
-		initializeWithDictionary: aDictionary;
+		initializeFromDictionary: aDictionary;
+		yourself
+]
+
+{ #category : #'instance creation' }
+IpldCid class >> fromString: aString [
+	^ self basicNew
+		initializeFromString: aString;
 		yourself
 ]
 
@@ -46,13 +53,18 @@ IpldCid >> getNode [
 	^ IpfsClient getIpldNode: self
 ]
 
+{ #category : #resolving }
+IpldCid >> getRefs [
+	^ IpfsClient getIpldNodeRefs: self
+]
+
 { #category : #comparing }
 IpldCid >> hash [
 	^ cidBase32 hash
 ]
 
 { #category : #initialization }
-IpldCid >> initializeWithBase32: aString [
+IpldCid >> initializeFromBase32: aString [
 	self assert: aString size equals: 59.
 	self assert: aString first equals: $b.
 	cidBase32 := aString.
@@ -60,11 +72,16 @@ IpldCid >> initializeWithBase32: aString [
 ]
 
 { #category : #initialization }
-IpldCid >> initializeWithDictionary: aDictionary [
+IpldCid >> initializeFromDictionary: aDictionary [
 	| cidString |
 	self assert: aDictionary size equals: 1.
 	cidString := aDictionary at: '/'.
-	self initializeWithBase32: (IpfsClient convertToBase32: cidString).
+	self initializeFromString: cidString.
+]
+
+{ #category : #initialization }
+IpldCid >> initializeFromString: aString [
+	self initializeFromBase32: (IpfsClient convertToBase32: aString).
 ]
 
 { #category : #converting }
