@@ -41,3 +41,36 @@ IlpdDagTests >> testPutAndGet [
 			self assert: object equals: retrievedObject ]
 
 ]
+
+{ #category : #testing }
+IlpdDagTests >> testPutAndGetRaw [
+	| bytes cid retrievedBytes |
+	bytes := #[1 2 3 4 3 2 1].
+	cid := IpfsClient putRawIpldNode: bytes.
+	retrievedBytes := cid getNode.
+	self assert: retrievedBytes equals: bytes.
+]
+
+{ #category : #testing }
+IlpdDagTests >> testRandomArrays [
+	10 timesRepeat:
+		[ | array cid retrievedObject |
+			array := Array new: (1 to: 1000) atRandom.
+			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
+			cid := IpfsClient putIpldNode: array.
+			retrievedObject := cid getNode.
+			self assert: retrievedObject equals: array ]
+
+]
+
+{ #category : #testing }
+IlpdDagTests >> testRandomByteArrays [
+	10 timesRepeat:
+		[ | array cid retrievedObject |
+			array := ByteArray new: (1 to: 1000) atRandom.
+			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
+			cid := IpfsClient putRawIpldNode: array.
+			retrievedObject := cid getNode.
+			self assert: retrievedObject equals: array ]
+
+]

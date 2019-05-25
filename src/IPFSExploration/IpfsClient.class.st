@@ -36,6 +36,11 @@ IpfsClient class >> putIpldNode: anObject [
 	^ self uniqueInstance putIpldNode: anObject
 ]
 
+{ #category : #IPLD }
+IpfsClient class >> putRawIpldNode: anObject [
+	^ self uniqueInstance putRawIpldNode: anObject
+]
+
 { #category : #CIDs }
 IpfsClient >> cidPrefix: aCid [
 	| result |
@@ -49,15 +54,6 @@ IpfsClient >> convertToBase32: aString [
 	| result |
 	result := self getRequest: 'cid/base32' parameters: { #arg -> aString } asDictionary.
 	^ result at: 'Formatted'
-]
-
-{ #category : #requesting }
-IpfsClient >> getCommands [
-	| result |
-	"result := znClient path: 'api/v0/commands'; get."
-	result := self getRequest: 'commands' parameters: Dictionary new.
-	self assert: (result at: 'Name') = 'ipfs'.
-	commands := result at: 'Subcommands'.
 ]
 
 { #category : #IPFS }
@@ -107,17 +103,16 @@ IpfsClient >> getRequest: aString parameters: aDictionary [
 IpfsClient >> initialize [
 	host := '127.0.0.1'.
 	port := 5001.
-	self getCommands.
 
 ]
 
 { #category : #requesting }
-IpfsClient >> postRequest: aString contents: anObject parameters: aDictionary [
+IpfsClient >> postRequest: aString contents: data parameters: aDictionary [
 	| result |
 	result := self znClient
 		path: 'api/v0/', aString;
 		queryAddAll: aDictionary;
-		addPart: (ZnMimePart fieldName: 'file' value: (NeoJSONWriter toString: anObject));
+		addPart: (ZnMimePart fieldName: 'file' value: data);
 		post.
 	^ result
 ]
@@ -126,8 +121,20 @@ IpfsClient >> postRequest: aString contents: anObject parameters: aDictionary [
 IpfsClient >> putIpldNode: anObject [
 	| result |
 	result := self postRequest: 'dag/put'
-		contents: anObject
+		contents: (NeoJSONWriter toString: anObject)
 		parameters: (Dictionary with: #arg ->  '').
+	^ IpldCid fromDictionary: (result at: 'Cid').
+
+]
+
+{ #category : #IPLD }
+IpfsClient >> putRawIpldNode: anObject [
+	| result |
+	result := self postRequest: 'dag/put'
+		contents: anObject asByteArray
+		parameters: (Dictionary with: #arg ->  ''
+									  with: #f -> 'raw'
+									  with: #'input-enc' -> 'raw').
 	^ IpldCid fromDictionary: (result at: 'Cid').
 
 ]
