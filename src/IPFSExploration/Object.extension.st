@@ -4,3 +4,8 @@ Extension { #name : #Object }
 Object >> asIpldData [
 	^ self
 ]
+
+{ #category : #'*IPFSExploration' }
+Object >> storeAsIpdlNode [
+	^ IpfsClient putIpldNode: self
+]

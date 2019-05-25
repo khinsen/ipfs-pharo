@@ -78,7 +78,9 @@ IpfsClient >> getIpldNode: anIpldCid [
 	| node |
 	node := self getRequest: 'dag/get' parameters:
 		(Dictionary with: #arg -> anIpldCid asString).
-	^ node asIpldData
+	anIpldCid asIpldCid isRaw
+		ifTrue: [ ^ node asByteArray ]
+		ifFalse: [ ^ node asIpldData ]
 ]
 
 { #category : #IPLD }

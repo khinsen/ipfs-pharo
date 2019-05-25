@@ -11,7 +11,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'cidBase32',
-		'prefix'
+		'prefix',
+		'codec'
 	],
 	#category : #'IPFSExploration-IPLD'
 }
@@ -44,6 +45,12 @@ IpldCid >> = anIpldCid [
 ]
 
 { #category : #converting }
+IpldCid >> asIpldCid [
+	^ self
+
+]
+
+{ #category : #converting }
 IpldCid >> asString [
 	^ cidBase32
 ]
@@ -69,6 +76,7 @@ IpldCid >> initializeFromBase32: aString [
 	self assert: aString first equals: $b.
 	cidBase32 := aString.
 	prefix := IpfsClient uniqueInstance cidPrefix: cidBase32.
+	codec := (prefix splitOn: $-) second asSymbol.
 ]
 
 { #category : #initialization }
@@ -82,6 +90,11 @@ IpldCid >> initializeFromDictionary: aDictionary [
 { #category : #initialization }
 IpldCid >> initializeFromString: aString [
 	self initializeFromBase32: (IpfsClient convertToBase32: aString).
+]
+
+{ #category : #testing }
+IpldCid >> isRaw [
+	^ codec = #raw
 ]
 
 { #category : #converting }
