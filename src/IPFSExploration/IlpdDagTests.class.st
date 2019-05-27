@@ -67,6 +67,29 @@ IlpdDagTests >> testStoreAndLoad [
 ]
 
 { #category : #testing }
+IlpdDagTests >> testStoreAndLoadAsRaw [
+	| data cid retrievedData |
+	data := { 'foo' -> 'bar' } asDictionary.
+	cid := data storeAsIpld.
+	retrievedData := cid loadRawData.
+	self assert: retrievedData
+		  equals:
+			#[16rA1 "Data item field:
+				    	- 101: major type: map of pairs of data items
+				    	- 00001: one pair
+				   		The next two data items are key and value for this pair."
+			  16r63 "Data item field:
+				    	- 011: major type: text string
+				 		- 00011: three bytes (UTF-8)"
+			  16r66 16r6F 16r6F "foo"
+			  16r63  "Data item field:
+				     - 011: major type: text string
+				     - 00011: three bytes (UTF-8)"
+			  16r62 16r61 16r72 "bar"].
+
+]
+
+{ #category : #testing }
 IlpdDagTests >> testStoreAndLoadRaw [
 	| bytes cid retrievedBytes |
 	bytes := #[1 2 3 4 3 2 1].

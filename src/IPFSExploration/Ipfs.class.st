@@ -18,6 +18,11 @@ Class {
 	#category : #'IPFSExploration-IPFS'
 }
 
+{ #category : #IPFS }
+Ipfs class >> blockGet: aCid [
+	^ self uniqueInstance blockGet: aCid
+]
+
 { #category : #IPLD }
 Ipfs class >> cidBase32: aString [
 	^ self uniqueInstance cidBase32: aString
@@ -46,6 +51,19 @@ Ipfs class >> objectGet: aCID [
 { #category : #IPLD }
 Ipfs class >> refs: aCID [
 	^ self uniqueInstance refs: aCID
+]
+
+{ #category : #IPFS }
+Ipfs >> blockGet: aCid [
+	"This method cannot use getRequest:parameters: because it has to switch the ZnClient
+	 to binary mode."
+	^ self znClient
+		beBinary;
+		accept: 'text/plain';
+		path: 'api/v0/block/get';
+		queryAt: #arg add: aCid asString;
+		get.
+
 ]
 
 { #category : #CIDs }
