@@ -118,3 +118,9 @@ IpldCid >> printOn: aStream [
 			  nextPut: $).
 
 ]
+
+{ #category : #'data access' }
+IpldCid >> sizeOfRawData [
+	^ Ipfs blockSize: cidBase32
+
+]

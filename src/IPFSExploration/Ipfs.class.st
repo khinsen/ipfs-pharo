@@ -72,6 +72,14 @@ Ipfs >> blockGet: aCid [
 
 ]
 
+{ #category : #IPFS }
+Ipfs >> blockSize: aCid [
+	| result |
+	result := self getRequest: 'block/stat' parameters:
+		(Dictionary with: #arg -> aCid asString).
+	^ result at: 'Size'.
+]
+
 { #category : #CIDs }
 Ipfs >> cidBase32: aString [
 	| result |

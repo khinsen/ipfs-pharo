@@ -1,3 +1,7 @@
+"
+!Tests for the IPLD layer
+
+"
 Class {
 	#name : #IlpdDagTests,
 	#superclass : #TestCase,
@@ -90,10 +94,11 @@ IlpdDagTests >> testStoreAndLoadAsRaw [
 ]
 
 { #category : #testing }
-IlpdDagTests >> testStoreAndLoadRaw [
+IlpdDagTests >> testStoreAndLoadRawAndTestSize [
 	| bytes cid retrievedBytes |
 	bytes := #[1 2 3 4 3 2 1].
 	cid := bytes storeAsIpld.
 	retrievedBytes := cid load.
 	self assert: retrievedBytes equals: bytes.
+	self assert: cid sizeOfRawData equals: bytes size.
 ]

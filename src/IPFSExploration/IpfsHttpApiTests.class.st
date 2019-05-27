@@ -11,6 +11,18 @@ Class {
 }
 
 { #category : #testing }
+IpfsHttpApiTests >> testBlockStat [
+	| cid result |
+	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
+	result := self znClient
+		path: 'api/v0/block/stat';
+		queryAt: #arg add: cid asString;
+		get.
+	self assert: result trim
+		  equals: '{"Key":"QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG","Size":309}'
+]
+
+{ #category : #testing }
 IpfsHttpApiTests >> testCidConversion [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
