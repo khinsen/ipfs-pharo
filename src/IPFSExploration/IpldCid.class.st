@@ -55,7 +55,7 @@ IpldCid >> asString [
 	^ cidBase32
 ]
 
-{ #category : #resolving }
+{ #category : #'data access' }
 IpldCid >> getRefs [
 	^ Ipfs refs: self
 ]
@@ -92,12 +92,12 @@ IpldCid >> isRaw [
 	^ codec = #raw
 ]
 
-{ #category : #resolving }
+{ #category : #'data access' }
 IpldCid >> load [
 	^ Ipfs dagGet: self
 ]
 
-{ #category : #resolving }
+{ #category : #'data access' }
 IpldCid >> loadRawData [
 	^ Ipfs blockGet: cidBase32
 

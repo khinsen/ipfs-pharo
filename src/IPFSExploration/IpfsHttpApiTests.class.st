@@ -1,11 +1,17 @@
+"
+!Raw HTTP API tests 
+
+The main role of these tests is to detect changes in the IPFS API.
+
+"
 Class {
-	#name : #HttpApiTests,
+	#name : #IpfsHttpApiTests,
 	#superclass : #TestCase,
 	#category : #'IPFSExploration-Tests '
 }
 
 { #category : #testing }
-HttpApiTests >> testCidConversion [
+IpfsHttpApiTests >> testCidConversion [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 
@@ -25,7 +31,7 @@ HttpApiTests >> testCidConversion [
 ]
 
 { #category : #testing }
-HttpApiTests >> testGetIpfsObject [
+IpfsHttpApiTests >> testGetIpfsObject [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 	result := self znClient
@@ -37,7 +43,7 @@ HttpApiTests >> testGetIpfsObject [
 ]
 
 { #category : #testing }
-HttpApiTests >> testGetRawBlock [
+IpfsHttpApiTests >> testGetRawBlock [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 	result := self znClient
@@ -50,7 +56,7 @@ HttpApiTests >> testGetRawBlock [
 ]
 
 { #category : #testing }
-HttpApiTests >> testPutGetRawByteArray [
+IpfsHttpApiTests >> testPutGetRawByteArray [
 	| data cid result |
 	data := #[1 2 3 4 3 2 1].
 
@@ -79,7 +85,7 @@ HttpApiTests >> testPutGetRawByteArray [
 ]
 
 { #category : #testing }
-HttpApiTests >> testPutGetSimpleDagNodes [
+IpfsHttpApiTests >> testPutGetSimpleDagNodes [
 	| testData cid result |
 	testData := { 'aString' -> '"aString"'.
 					  42 -> '42'.
@@ -103,7 +109,7 @@ HttpApiTests >> testPutGetSimpleDagNodes [
 ]
 
 { #category : #running }
-HttpApiTests >> znClient [
+IpfsHttpApiTests >> znClient [
 	^ ZnClient new
 		beOneShot;
 		http;

@@ -1,3 +1,7 @@
+"
+!Tests for the IPFS layer
+
+"
 Class {
 	#name : #IpfsObjectTests,
 	#superclass : #TestCase,

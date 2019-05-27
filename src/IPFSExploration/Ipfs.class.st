@@ -23,6 +23,12 @@ Ipfs class >> blockGet: aCid [
 	^ self uniqueInstance blockGet: aCid
 ]
 
+{ #category : #IPFS }
+Ipfs class >> blockSize: aCid [
+	^ self uniqueInstance blockSize: aCid
+
+]
+
 { #category : #IPLD }
 Ipfs class >> cidBase32: aString [
 	^ self uniqueInstance cidBase32: aString
