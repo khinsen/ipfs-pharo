@@ -1,6 +1,6 @@
 Extension { #name : #ByteArray }
 
 { #category : #'*IPFSExploration' }
-ByteArray >> storeAsIpdlNode [
-	^ IpfsClient putRawIpldNode: self
+ByteArray >> storeAsIpld [
+	^ Ipfs dagPutRaw: self
 ]

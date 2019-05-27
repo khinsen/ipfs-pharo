@@ -6,6 +6,6 @@ Object >> asIpldData [
 ]
 
 { #category : #'*IPFSExploration' }
-Object >> storeAsIpdlNode [
-	^ IpfsClient putIpldNode: self
+Object >> storeAsIpld [
+	^ Ipfs dagPut: self
 ]

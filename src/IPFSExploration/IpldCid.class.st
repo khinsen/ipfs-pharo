@@ -56,13 +56,8 @@ IpldCid >> asString [
 ]
 
 { #category : #resolving }
-IpldCid >> getNode [
-	^ IpfsClient getIpldNode: self
-]
-
-{ #category : #resolving }
 IpldCid >> getRefs [
-	^ IpfsClient getIpldNodeRefs: self
+	^ Ipfs refs: self
 ]
 
 { #category : #comparing }
@@ -75,7 +70,7 @@ IpldCid >> initializeFromBase32: aString [
 	self assert: aString size equals: 59.
 	self assert: aString first equals: $b.
 	cidBase32 := aString.
-	prefix := IpfsClient uniqueInstance cidPrefix: cidBase32.
+	prefix := Ipfs uniqueInstance cidPrefix: cidBase32.
 	codec := (prefix splitOn: $-) second asSymbol.
 ]
 
@@ -89,12 +84,23 @@ IpldCid >> initializeFromDictionary: aDictionary [
 
 { #category : #initialization }
 IpldCid >> initializeFromString: aString [
-	self initializeFromBase32: (IpfsClient convertToBase32: aString).
+	self initializeFromBase32: (Ipfs cidBase32: aString).
 ]
 
 { #category : #testing }
 IpldCid >> isRaw [
 	^ codec = #raw
+]
+
+{ #category : #resolving }
+IpldCid >> load [
+	^ Ipfs dagGet: self
+]
+
+{ #category : #resolving }
+IpldCid >> loadRawData [
+	^ Ipfs blockGet: cidBase32
+
 ]
 
 { #category : #converting }
