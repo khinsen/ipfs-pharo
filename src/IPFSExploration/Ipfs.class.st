@@ -12,8 +12,7 @@ Class {
 	#classTraits : 'TSingleton classTrait',
 	#instVars : [
 		'host',
-		'port',
-		'commands'
+		'port'
 	],
 	#category : #'IPFSExploration-IPFS'
 }
@@ -47,6 +46,44 @@ Ipfs class >> dagPut: anObject [
 { #category : #IPLD }
 Ipfs class >> dagPutRaw: anObject [
 	^ self uniqueInstance dagPutRaw: anObject
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsPort [
+	^ self uniqueInstance port
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsPort: anInteger [
+	^ self uniqueInstance port: anInteger
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsServer [
+	^ self uniqueInstance host
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsServer: aString [
+	^ self uniqueInstance host: aString
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsSettingsOn: aBuilder [ 
+	<systemsettings> 
+	(aBuilder group: #ipfs)
+		label: 'IPFS server';
+		description: 'The IPFS server used to access IPFS';
+		parent: #network;
+		with: [ 
+			(aBuilder setting: #ipfsServer)
+				label: 'IPFS Server' ;
+				description: 'The IPFS server (e.g 127.0.0.1)';
+				target: Ipfs.
+			(aBuilder setting: #ipfsPort)
+				label: 'IPFS Port' ;
+				description: 'The IPFS port (e.g. 5001)';
+				target: Ipfs ].
 ]
 
 { #category : #IPFS }
@@ -137,6 +174,16 @@ Ipfs >> getRequest: aString parameters: aDictionary [
 	^ result
 ]
 
+{ #category : #accessing }
+Ipfs >> host [
+	^ host
+]
+
+{ #category : #accessing }
+Ipfs >> host: anObject [
+	host := anObject
+]
+
 { #category : #initializing }
 Ipfs >> initialize [
 	host := '127.0.0.1'.
@@ -159,6 +206,16 @@ Ipfs >> objectGet: aCid [
 	^ IpfsObject
 		data: data
 		links: links.
+]
+
+{ #category : #accessing }
+Ipfs >> port [
+	^ port
+]
+
+{ #category : #accessing }
+Ipfs >> port: anObject [
+	port := anObject
 ]
 
 { #category : #requesting }
