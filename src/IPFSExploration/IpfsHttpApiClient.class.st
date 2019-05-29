@@ -16,7 +16,7 @@ IpfsHttpApiClient >> parseReferenceList: aString [
 	[ | refAndErr |
 		refAndErr := [ parser next ]
 							on: NeoJSONParseError do: [ ^ references ].
-		self assert: (refAndErr at: 'Err') equals: ''.
+		self assert: (refAndErr at: 'Err') = ''.
 		references add: (refAndErr at: 'Ref') asIpldCid ]
 		repeat.
 	^ references

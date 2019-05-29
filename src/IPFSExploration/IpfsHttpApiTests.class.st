@@ -57,9 +57,9 @@ IpfsHttpApiTests >> testDagNodeReferences [
 		queryAt: #arg add: cid3 asString;
 		queryAt: #recursive add: true asString;
 		get.
-	self assert: result trim equals:
-'{"Ref":"zdpuAsR7S1BhNaXyRSDVJ2k5q8VgNcRjLnsC1hDd3ueHCF9AX","Err":""}
-{"Ref":"zdpuAoKMEvka7gKGSjF9B3of1F5gE5MyMMywxTC13wCmouQrf","Err":""}'
+	self assert: result trim lines equals: #(
+'{"Ref":"zdpuAsR7S1BhNaXyRSDVJ2k5q8VgNcRjLnsC1hDd3ueHCF9AX","Err":""}'
+'{"Ref":"zdpuAoKMEvka7gKGSjF9B3of1F5gE5MyMMywxTC13wCmouQrf","Err":""}' )
 ]
 
 { #category : #testing }

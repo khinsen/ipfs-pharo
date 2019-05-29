@@ -62,8 +62,8 @@ IpldCid >> hash [
 
 { #category : #initialization }
 IpldCid >> initializeFromBase32: aString [
-	self assert: aString size equals: 59.
-	self assert: aString first equals: $b.
+	self assert: aString size = 59.
+	self assert: aString first = $b.
 	cidBase32 := aString.
 	prefix := Ipfs uniqueInstance cidPrefix: cidBase32.
 	codec := (prefix splitOn: $-) second asSymbol.
@@ -72,7 +72,7 @@ IpldCid >> initializeFromBase32: aString [
 { #category : #initialization }
 IpldCid >> initializeFromDictionary: aDictionary [
 	| cidString |
-	self assert: aDictionary size equals: 1.
+	self assert: aDictionary size = 1.
 	cidString := aDictionary at: '/'.
 	self initializeFromString: cidString.
 ]
