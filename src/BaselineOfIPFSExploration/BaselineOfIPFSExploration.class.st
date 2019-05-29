@@ -13,6 +13,9 @@ BaselineOfIPFSExploration >> baseline: spec [
 		spec
 			baseline: 'NeoJSON'
 			with: [ spec repository: 'github://svenvc/NeoJSON/repository' ].
+		spec
+			baseline: 'SingletonTrait'
+			with: [ spec repository: 'github://khinsen/SingletonTrait' ].
 
 		spec
 			package: 'IPFSExploration'
