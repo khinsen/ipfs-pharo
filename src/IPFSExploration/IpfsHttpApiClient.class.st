@@ -1,8 +1,6 @@
 Class {
 	#name : #IpfsHttpApiClient,
 	#superclass : #Object,
-	#traits : 'TSingleton',
-	#classTraits : 'TSingleton classTrait',
 	#instVars : [
 		'host',
 		'port'
