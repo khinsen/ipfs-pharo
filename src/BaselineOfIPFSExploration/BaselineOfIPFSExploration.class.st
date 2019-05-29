@@ -11,7 +11,12 @@ BaselineOfIPFSExploration >> baseline: spec [
 	spec for: #common do: [
 
 		spec
-			package: 'IPFSExploration';
+			baseline: 'NeoJSON'
+			with: [ spec repository: 'github://svenvc/NeoJSON/repository' ].
+
+		spec
+			package: 'IPFSExploration'
+				with: [ spec requires: #('Neo-JSON-Core') ];
 			package: 'BaselineOfIPFSExploration'.
 
 ]

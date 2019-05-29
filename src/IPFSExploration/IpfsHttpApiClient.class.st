@@ -42,7 +42,7 @@ IpfsHttpApiClient >> znClientForJsonResult [
 		accept: 'application/json';
 		contentReader: [ :entity |
 								entity ifNil: [ nil ]
-										 ifNotNil: [ STONJSON fromString: entity contents ] ];
+										 ifNotNil: [ NeoJSONReader fromString: entity contents ] ];
 		yourself.
 
 ]

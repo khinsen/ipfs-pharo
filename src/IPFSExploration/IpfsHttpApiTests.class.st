@@ -99,14 +99,14 @@ IpfsHttpApiTests >> testPutGetRawByteArray [
 		addPart: (ZnMimePart fieldName: 'file'
 									value: data);
 		post.
-	cid := ((STONJSON fromString: result) at: 'Cid') at: '/'.
+	cid := ((NeoJSONReader fromString: result) at: 'Cid') at: '/'.
 
 	result := self znClient
 		path: 'api/v0/cid/format';
 		queryAt: #arg add: cid;
 		queryAt: #f add: '%c';
 		get.
-	self assert: ((STONJSON fromString: result) at: 'Formatted') equals: 'raw'.
+	self assert: ((NeoJSONReader fromString: result) at: 'Formatted') equals: 'raw'.
 
 	result := self znClient
 		path: 'api/v0/block/get';
@@ -131,7 +131,7 @@ IpfsHttpApiTests >> testPutGetSimpleDagNodes [
 				addPart: (ZnMimePart fieldName: 'file'
 											value: (NeoJSONWriter toString: object));
 				post.
-			cid := ((STONJSON fromString: result) at: 'Cid') at: '/'.
+			cid := ((NeoJSONReader fromString: result) at: 'Cid') at: '/'.
 			result := self znClient
 				path: 'api/v0/dag/get';
 				queryAt: #arg add: cid;
