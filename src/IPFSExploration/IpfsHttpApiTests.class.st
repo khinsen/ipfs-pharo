@@ -43,6 +43,26 @@ IpfsHttpApiTests >> testCidConversion [
 ]
 
 { #category : #testing }
+IpfsHttpApiTests >> testDagNodeReferences [
+	| data1 cid1 data2 cid2 data3 cid3 result |
+	data1 := { 'foo' -> 'bar' } asDictionary.
+	cid1 := data1 storeAsIpld.
+	data2 := { 'link' -> cid1 } asDictionary.
+	cid2 := data2 storeAsIpld.
+	data3 := { 'data' -> cid2 } asDictionary.
+	cid3 := data3 storeAsIpld.
+
+	result := self znClient
+		path: 'api/v0/refs';
+		queryAt: #arg add: cid3 asString;
+		queryAt: #recursive add: true asString;
+		get.
+	self assert: result trim equals:
+'{"Ref":"zdpuAsR7S1BhNaXyRSDVJ2k5q8VgNcRjLnsC1hDd3ueHCF9AX","Err":""}
+{"Ref":"zdpuAoKMEvka7gKGSjF9B3of1F5gE5MyMMywxTC13wCmouQrf","Err":""}'
+]
+
+{ #category : #testing }
 IpfsHttpApiTests >> testGetIpfsObject [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.

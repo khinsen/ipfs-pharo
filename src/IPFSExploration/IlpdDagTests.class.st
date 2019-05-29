@@ -55,6 +55,31 @@ IlpdDagTests >> testRandomByteArrays [
 ]
 
 { #category : #testing }
+IlpdDagTests >> testReferences [
+	| data1 cid1 data2 cid2 data3 cid3 refs |
+	data1 := { 'foo' -> 'bar' } asDictionary.
+	cid1 := data1 storeAsIpld.
+	data2 := { 'link' -> cid1 } asDictionary.
+	cid2 := data2 storeAsIpld.
+	data3 := { 'data' -> cid2 } asDictionary.
+	cid3 := data3 storeAsIpld.
+
+	refs := cid2 references.
+	self assert: refs size equals: 1.
+	self assert: refs first equals: cid1.
+
+	refs := cid3 references.
+	self assert: refs size equals: 1.
+	self assert: refs first equals: cid2.
+
+	refs := cid3 recursiveReferences.
+	self assert: refs size equals: 2.
+	self assert: refs first equals: cid2.
+	self assert: refs second equals: cid1.
+
+]
+
+{ #category : #testing }
 IlpdDagTests >> testStoreAndLoad [
 	| testValues |
 	testValues := { 'aString'.

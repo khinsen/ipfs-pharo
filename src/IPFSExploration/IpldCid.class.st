@@ -55,11 +55,6 @@ IpldCid >> asString [
 	^ cidBase32
 ]
 
-{ #category : #'data access' }
-IpldCid >> getRefs [
-	^ Ipfs refs: self
-]
-
 { #category : #comparing }
 IpldCid >> hash [
 	^ cidBase32 hash
@@ -117,6 +112,16 @@ IpldCid >> printOn: aStream [
 			  nextPutAll: cidBase32;
 			  nextPut: $).
 
+]
+
+{ #category : #'data access' }
+IpldCid >> recursiveReferences [
+	^ Ipfs refs: self recursive: true
+]
+
+{ #category : #'data access' }
+IpldCid >> references [
+	^ Ipfs refs: self recursive: false
 ]
 
 { #category : #'data access' }

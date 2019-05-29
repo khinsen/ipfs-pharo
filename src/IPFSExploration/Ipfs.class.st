@@ -88,8 +88,8 @@ Ipfs class >> objectGet: aCID [
 ]
 
 { #category : #IPLD }
-Ipfs class >> refs: aCID [
-	^ self uniqueInstance refs: aCID
+Ipfs class >> refs: aCID recursive: aBoolean [
+	^ self uniqueInstance refs: aCID recursive: aBoolean
 ]
 
 { #category : #IPFS }
@@ -226,9 +226,12 @@ Ipfs >> postRequest: aString contents: data parameters: aDictionary [
 ]
 
 { #category : #IPLD }
-Ipfs >> refs: anIpldCid [
-	| refs |
-	refs := self getRequest: 'refs' parameters:
-		(Dictionary with: #arg -> anIpldCid asString).
-	^ refs
+Ipfs >> refs: anIpldCid recursive: aBoolean [
+	| result |
+	result := self znClient
+		path: 'api/v0/refs';
+		queryAt: #arg add: anIpldCid asString;
+		queryAt: #recursive add: aBoolean asString;
+		get.
+	^ self parseReferenceList: result
 ]
