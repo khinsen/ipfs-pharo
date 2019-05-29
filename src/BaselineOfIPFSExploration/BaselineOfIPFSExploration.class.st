@@ -16,7 +16,7 @@ BaselineOfIPFSExploration >> baseline: spec [
 
 		spec
 			package: 'IPFSExploration'
-				with: [ spec requires: #('Neo-JSON-Core') ];
+				with: [ spec requires: #('NeoJSON') ];
 			package: 'BaselineOfIPFSExploration'.
 
 ]
