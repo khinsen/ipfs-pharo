@@ -7,13 +7,9 @@ This IPFS client uses the HTTP API of an IPFS server to provide access to IPFS f
 "
 Class {
 	#name : #Ipfs,
-	#superclass : #Object,
+	#superclass : #IpfsHttpApiClient,
 	#traits : 'TSingleton',
 	#classTraits : 'TSingleton classTrait',
-	#instVars : [
-		'host',
-		'port'
-	],
 	#category : #'IPFSExploration-IPFS'
 }
 
@@ -164,7 +160,7 @@ Ipfs >> dagPutRaw: anObject [
 
 ]
 
-{ #category : #requesting }
+{ #category : #'http requests' }
 Ipfs >> getRequest: aString parameters: aDictionary [
 	| result |
 	result := self znClientForJsonResult
@@ -218,7 +214,7 @@ Ipfs >> port: anObject [
 	port := anObject
 ]
 
-{ #category : #requesting }
+{ #category : #'http requests' }
 Ipfs >> postRequest: aString contents: data parameters: aDictionary [
 	| result |
 	result := self znClientForJsonResult
@@ -235,27 +231,4 @@ Ipfs >> refs: anIpldCid [
 	refs := self getRequest: 'refs' parameters:
 		(Dictionary with: #arg -> anIpldCid asString).
 	^ refs
-]
-
-{ #category : #initializing }
-Ipfs >> znClient [
-	^ ZnClient new
-		systemPolicy;
-		beOneShot;
-		http;
-		host: host;
-		port: port;
-		yourself.
-
-]
-
-{ #category : #initializing }
-Ipfs >> znClientForJsonResult [
-	^ self znClient
-		accept: 'application/json';
-		contentReader: [ :entity |
-								entity ifNil: [ nil ]
-										 ifNotNil: [ STONJSON fromString: entity contents ] ];
-		yourself.
-
 ]
