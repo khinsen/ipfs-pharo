@@ -29,6 +29,33 @@ IpfsPeer >> initializeWithHost: aString port: anInteger [
 ]
 
 { #category : #pinning }
+IpfsPeer >> pin: aCid [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/pin/add';
+		queryAt: #arg add: aCid;
+		queryAt: #recursive add: 'false';
+		queryAt: #progress add: 'false';
+		get.
+	^ (result at: 'Pins')
+		collect: [ :aString | aString asIpldCid ]
+
+]
+
+{ #category : #pinning }
+IpfsPeer >> pinRecursively: aCid [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/pin/add';
+		queryAt: #arg add: aCid;
+		queryAt: #recursive add: 'true';
+		queryAt: #progress add: 'false';
+		get.
+	^ (result at: 'Pins')
+		collect: [ :aString | aString asIpldCid ]
+]
+
+{ #category : #pinning }
 IpfsPeer >> pinnedCids [
 	| pinned |
 	pinned := Dictionary new.
@@ -46,4 +73,29 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 		queryAt: #type add: aCidType;
 		get.
 	^ (result at: 'Keys') keys collect: #asIpldCid
+]
+
+{ #category : #pinning }
+IpfsPeer >> unpin: aCid [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/pin/rm';
+		queryAt: #arg add: aCid;
+		queryAt: #recursive add: 'false';
+		get.
+	^ (result at: 'Pins')
+		collect: [ :aString | aString asIpldCid ]
+
+]
+
+{ #category : #pinning }
+IpfsPeer >> unpinRecursively: aCid [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/pin/rm';
+		queryAt: #arg add: aCid;
+		queryAt: #recursive add: 'true';
+		get.
+	^ (result at: 'Pins')
+		collect: [ :aString | aString asIpldCid ]
 ]

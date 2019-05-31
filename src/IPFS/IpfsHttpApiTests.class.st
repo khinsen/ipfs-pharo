@@ -88,6 +88,36 @@ IpfsHttpApiTests >> testGetRawBlock [
 ]
 
 { #category : #testing }
+IpfsHttpApiTests >> testPinning [
+	| data cid result |
+	data := #[1 2 3 4 3 2 1].
+
+	result := self znClient
+		path: 'api/v0/dag/put';
+		queryAt: #f add: 'raw';
+		queryAt: #'input-enc' add: 'raw';
+		addPart: (ZnMimePart fieldName: 'file'
+									value: data);
+		post.
+	cid := ((NeoJSONReader fromString: result) at: 'Cid') at: '/'.
+
+	result := self znClient
+		path: 'api/v0/pin/add';
+		queryAt: #arg add: cid;
+		queryAt: #recursive add: 'false';
+		queryAt: #progress add: 'false';
+		get.
+	self assert: ((NeoJSONReader fromString: result) at: 'Pins') equals: { cid }.
+
+	result := self znClient
+		path: 'api/v0/pin/rm';
+		queryAt: #arg add: cid;
+		queryAt: #recursive add: 'false';
+		get.
+	self assert: ((NeoJSONReader fromString: result) at: 'Pins') equals: { cid }.
+]
+
+{ #category : #testing }
 IpfsHttpApiTests >> testPutGetRawByteArray [
 	| data cid result |
 	data := #[1 2 3 4 3 2 1].

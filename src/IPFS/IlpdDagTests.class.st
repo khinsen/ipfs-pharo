@@ -31,6 +31,32 @@ IlpdDagTests >> testLinkedData [
 ]
 
 { #category : #testing }
+IlpdDagTests >> testPinning [
+	| localPeer cid1 cid2 |
+	localPeer := IpfsPeer local.
+	cid1 := { #foo -> #bar } asDictionary storeAsIpld.
+	cid2 := { #foobar -> cid1 } asDictionary storeAsIpld.
+	[ localPeer unpin: cid1 ] on: Error do: [ ].
+	[ localPeer unpin: cid2 ] on: Error do: [ ].
+	self deny: ((localPeer pinnedCids) includes: cid1).
+	self deny: ((localPeer pinnedCids) includes: cid2).
+
+	localPeer pin: cid2.
+	self assert: ((localPeer pinnedCidsOfType: #direct) includes: cid2).
+	self deny: ((localPeer pinnedCids) includes: cid1).
+	localPeer unpin: cid2.
+	self deny: ((localPeer pinnedCids) includes: cid2).
+
+	localPeer pinRecursively: cid2.
+	self assert: ((localPeer pinnedCidsOfType: #recursive) includes: cid2).
+	self assert: ((localPeer pinnedCidsOfType: #indirect) includes: cid1).
+	localPeer unpinRecursively: cid2.
+	self deny: ((localPeer pinnedCids) includes: cid1).
+	self deny: ((localPeer pinnedCids) includes: cid2).
+
+]
+
+{ #category : #testing }
 IlpdDagTests >> testRandomArrays [
 	10 timesRepeat:
 		[ | array cid retrievedArray |
