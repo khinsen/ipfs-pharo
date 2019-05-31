@@ -11,31 +11,42 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'cidBase32',
-		'prefix',
-		'codec'
+		'prefix'
 	],
 	#category : #'IPFS-Linked data'
 }
 
 { #category : #'instance creation' }
+IpldCid class >> codec [
+	self subclassResponsibility
+]
+
+{ #category : #'instance creation' }
 IpldCid class >> fromBase32: aString [
-	^ self basicNew
-		initializeFromBase32: aString;
-		yourself
+	| prefix codec |
+	self assert: aString size = 59.
+	self assert: aString first = $b.
+	prefix := Ipfs uniqueInstance cidPrefix: aString.
+	codec := prefix second asSymbol.
+	self subclasses do:
+		[ :class | class codec = codec
+						ifTrue: [ ^ class new initializeFromBase32: aString prefix: prefix ] ].
+	self error: 'No IpldCid subclass for codec ', codec
 ]
 
 { #category : #'instance creation' }
 IpldCid class >> fromDictionary: aDictionary [
-	^ self basicNew
-		initializeFromDictionary: aDictionary;
-		yourself
+	| cidString |
+	self assert: aDictionary size = 1.
+	cidString := aDictionary at: '/'.
+	^ self fromString: cidString.
+
 ]
 
 { #category : #'instance creation' }
 IpldCid class >> fromString: aString [
-	^ self basicNew
-		initializeFromString: aString;
-		yourself
+	^ self fromBase32: (Ipfs cidBase32: aString).
+
 ]
 
 { #category : #comparing }
@@ -57,7 +68,7 @@ IpldCid >> asString [
 
 { #category : #accessing }
 IpldCid >> codec [
-	^ codec
+	^ self class codec
 ]
 
 { #category : #comparing }
@@ -67,44 +78,34 @@ IpldCid >> hash [
 
 { #category : #accessing }
 IpldCid >> hashFunction [
-	^ (prefix splitOn: $-) third asSymbol
+	^ prefix third asSymbol
 ]
 
 { #category : #accessing }
 IpldCid >> hashLength [
-	^ (prefix splitOn: $-) fourth asNumber
+	^ prefix fourth asNumber
 ]
 
 { #category : #initialization }
-IpldCid >> initializeFromBase32: aString [
-	self assert: aString size = 59.
-	self assert: aString first = $b.
-	cidBase32 := aString.
-	prefix := Ipfs uniqueInstance cidPrefix: cidBase32.
-	codec := (prefix splitOn: $-) second asSymbol.
-]
+IpldCid >> initializeFromBase32: aBase32Cid prefix: aPrefix [
+	cidBase32 := aBase32Cid.
+	prefix := aPrefix
 
-{ #category : #initialization }
-IpldCid >> initializeFromDictionary: aDictionary [
-	| cidString |
-	self assert: aDictionary size = 1.
-	cidString := aDictionary at: '/'.
-	self initializeFromString: cidString.
-]
-
-{ #category : #initialization }
-IpldCid >> initializeFromString: aString [
-	self initializeFromBase32: (Ipfs cidBase32: aString).
 ]
 
 { #category : #testing }
 IpldCid >> isRaw [
-	^ codec = #raw
+	^ self codec = #raw
 ]
 
 { #category : #'data access' }
 IpldCid >> load [
 	^ Ipfs dagGet: self
+]
+
+{ #category : #'data access' }
+IpldCid >> loadObject [
+	^ Ipfs objectGet: self
 ]
 
 { #category : #'data access' }
@@ -122,8 +123,6 @@ IpldCid >> neoJsonOn: neoJSONWriter [
 IpldCid >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(;
-			  nextPutAll: prefix;
-			  nextPutAll: ', ';
 			  nextPutAll: cidBase32;
 			  nextPut: $).
 
@@ -147,5 +146,5 @@ IpldCid >> sizeOfRawData [
 
 { #category : #accessing }
 IpldCid >> version [
-	^ (prefix splitOn: $-) first asSymbol
+	^ prefix first asSymbol
 ]

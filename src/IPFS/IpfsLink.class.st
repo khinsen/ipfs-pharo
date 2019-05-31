@@ -22,6 +22,16 @@ IpfsLink class >> cid: aString size: anInteger [
 		yourself
 ]
 
+{ #category : #accessing }
+IpfsLink >> cid [
+	^ cid
+]
+
+{ #category : #accessing }
+IpfsLink >> dataSize [
+	^ size
+]
+
 { #category : #acccessing }
 IpfsLink >> getObject [
 	^ Ipfs objectGet: cid

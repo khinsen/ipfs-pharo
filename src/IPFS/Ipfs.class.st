@@ -124,8 +124,8 @@ Ipfs >> cidBase32: aString [
 Ipfs >> cidPrefix: aCid [
 	| result |
 	result := self getRequest: 'cid/format'
-						parameters: { #f -> '%P'. #arg -> aCid asString } asDictionary.
-	^ result at: 'Formatted'
+						parameters: { #f -> ' %v/%c/%h/%L'. #arg -> aCid asString } asDictionary.
+	^ (result at: 'Formatted') splitOn: $/
 ]
 
 { #category : #IPLD }
