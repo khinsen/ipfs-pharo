@@ -11,6 +11,18 @@ Class {
 	#category : #'IPFS-Access'
 }
 
+{ #category : #'instance creation' }
+IpfsPeer class >> host: aString port: anInteger [
+	^ self basicNew
+		initializeWithHost: aString port: anInteger;
+		yourself
+]
+
+{ #category : #'instance creation' }
+IpfsPeer class >> local [
+	^ self host: Ipfs uniqueInstance host port: Ipfs uniqueInstance port
+]
+
 { #category : #references }
 IpfsPeer >> allCids [
 	"Returns the CIDs of all objects stored by the peer, whether they are pinned or not."
