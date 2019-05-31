@@ -233,5 +233,7 @@ Ipfs >> refs: anIpldCid recursive: aBoolean [
 		queryAt: #arg add: anIpldCid asString;
 		queryAt: #recursive add: aBoolean asString;
 		get.
-	^ self parseReferenceList: result
+	^ result
+		ifNil: [ Array new ]
+		ifNotNil: [ self parseReferenceList: result ]
 ]

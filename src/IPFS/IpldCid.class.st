@@ -55,9 +55,24 @@ IpldCid >> asString [
 	^ cidBase32
 ]
 
+{ #category : #accessing }
+IpldCid >> codec [
+	^ codec
+]
+
 { #category : #comparing }
 IpldCid >> hash [
 	^ cidBase32 hash
+]
+
+{ #category : #accessing }
+IpldCid >> hashFunction [
+	^ (prefix splitOn: $-) third asSymbol
+]
+
+{ #category : #accessing }
+IpldCid >> hashLength [
+	^ (prefix splitOn: $-) fourth asNumber
 ]
 
 { #category : #initialization }
@@ -128,4 +143,9 @@ IpldCid >> references [
 IpldCid >> sizeOfRawData [
 	^ Ipfs blockSize: cidBase32
 
+]
+
+{ #category : #accessing }
+IpldCid >> version [
+	^ (prefix splitOn: $-) first asSymbol
 ]
