@@ -10,7 +10,7 @@ Class {
 	#superclass : #IpfsHttpApiClient,
 	#traits : 'TSingleton',
 	#classTraits : 'TSingleton classTrait',
-	#category : #'IPFSExploration-IPFS'
+	#category : #'IPFS-Access'
 }
 
 { #category : #IPFS }

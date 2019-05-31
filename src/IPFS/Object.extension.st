@@ -1,11 +1,11 @@
 Extension { #name : #Object }
 
-{ #category : #'*IPFSExploration' }
+{ #category : #'*IPFS' }
 Object >> asIpldData [
 	^ self
 ]
 
-{ #category : #'*IPFSExploration' }
+{ #category : #'*IPFS' }
 Object >> storeAsIpld [
 	^ Ipfs dagPut: self
 ]

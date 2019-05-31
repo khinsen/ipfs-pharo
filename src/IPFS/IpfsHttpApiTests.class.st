@@ -7,7 +7,7 @@ The main role of these tests is to detect changes in the IPFS API.
 Class {
 	#name : #IpfsHttpApiTests,
 	#superclass : #TestCase,
-	#category : #'IPFSExploration-Tests '
+	#category : #'IPFS-Tests '
 }
 
 { #category : #testing }

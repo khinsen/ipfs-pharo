@@ -5,7 +5,7 @@
 Class {
 	#name : #IpfsObjectTests,
 	#superclass : #TestCase,
-	#category : #'IPFSExploration-Tests '
+	#category : #'IPFS-Tests '
 }
 
 { #category : #testing }

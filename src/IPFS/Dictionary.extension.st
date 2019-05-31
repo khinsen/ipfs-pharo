@@ -1,6 +1,6 @@
 Extension { #name : #Dictionary }
 
-{ #category : #'*IPFSExploration' }
+{ #category : #'*IPFS' }
 Dictionary >> asIpldData [
 	(self size = 1
 		and: [ self keys first = '/' ])

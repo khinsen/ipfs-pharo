@@ -8,20 +8,8 @@ Note that both this class and ${class:name=Ipfs}$ access the HTTP API of an IPFS
 Class {
 	#name : #IpfsPeer,
 	#superclass : #IpfsHttpApiClient,
-	#category : #'IPFSExploration-IPFS'
+	#category : #'IPFS-Access'
 }
-
-{ #category : #'instance creation' }
-IpfsPeer class >> host: aString port: anInteger [
-	^ self basicNew
-		initializeWithHost: aString port: anInteger;
-		yourself
-]
-
-{ #category : #'instance creation' }
-IpfsPeer class >> local [
-	^ self host: Ipfs uniqueInstance host port: Ipfs uniqueInstance port
-]
 
 { #category : #references }
 IpfsPeer >> allCids [

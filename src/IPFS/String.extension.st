@@ -1,6 +1,6 @@
 Extension { #name : #String }
 
-{ #category : #'*IPFSExploration' }
+{ #category : #'*IPFS' }
 String >> asIpldCid [
 	^ IpldCid fromString: self
 ]

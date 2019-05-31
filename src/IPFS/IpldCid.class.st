@@ -14,7 +14,7 @@ Class {
 		'prefix',
 		'codec'
 	],
-	#category : #'IPFSExploration-IPLD'
+	#category : #'IPFS-Linked data'
 }
 
 { #category : #'instance creation' }

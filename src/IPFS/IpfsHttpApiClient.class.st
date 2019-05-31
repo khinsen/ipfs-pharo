@@ -5,7 +5,7 @@ Class {
 		'host',
 		'port'
 	],
-	#category : #'IPFSExploration-IPFS'
+	#category : #'IPFS-Access'
 }
 
 { #category : #'http requests' }

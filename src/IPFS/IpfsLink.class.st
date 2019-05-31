@@ -5,7 +5,7 @@ Class {
 		'cid',
 		'size'
 	],
-	#category : #'IPFSExploration-IPFS'
+	#category : #'IPFS-Files'
 }
 
 { #category : #'instance creation' }
