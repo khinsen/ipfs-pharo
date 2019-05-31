@@ -22,7 +22,7 @@ BaselineOfIPFS >> baseline: spec [
 
 		spec
 			package: 'IPFS'
-				with: [ spec requires: #('NeoJSON') ];
+				with: [ spec requires: #('SingletonTrait' 'NeoJSON') ];
 			package: 'IPFS-GToolkit'
 				with: [ spec requires: #('IPFS' 'GToolkit') ];
 			package: 'BaselineOfIPFS'.
