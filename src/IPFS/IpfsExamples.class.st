@@ -1,5 +1,5 @@
 "
-!Examples for IPLD objects
+!Examples for IPFS
 
 "
 Class {
@@ -57,6 +57,31 @@ IpfsExamples >> gitObjectCid [
 	"There is no support for creating git-raw objects from Pharo for now.
 	Use a commit from an IPFS repository that is already stored in IPFS."
 	^ 'z8mWaJHXieAVxxLagBpdaNWFEBKVWmMiE' asIpfsCid
+]
+
+{ #category : #examples }
+IpfsExamples >> ipfsPathToWebExplorer [
+	<gtExample>
+	^ '/ipfs/QmfQkD8pBSBCBxWEwFSu4XaDVSWK6bjnNuaWZjMyQbyDub/#/explore/'
+]
+
+{ #category : #examples }
+IpfsExamples >> loadRawBlock [
+	<gtExample>
+	| block |
+	block := self rawBlockCid load.
+	self assert: block equals: #[1 2 3 2 1].
+	^ block
+]
+
+{ #category : #examples }
+IpfsExamples >> openRawBlockInLocalWebExplorer [
+	<gtExample>
+	WebBrowser openOn:
+		'http://127.0.0.1:5001',
+		self ipfsPathToWebExplorer,
+		self rawBlockCid asString.
+
 ]
 
 { #category : #examples }

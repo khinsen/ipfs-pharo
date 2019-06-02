@@ -126,7 +126,7 @@ IpfsDagTests >> testStoreAndLoadAsRaw [
 	| data cid retrievedData |
 	data := { 'foo' -> 'bar' } asDictionary.
 	cid := data storeInIpfs.
-	retrievedData := cid loadRawData.
+	retrievedData := cid loadRawBlock.
 	self assert: retrievedData
 		  equals:
 			#[16rA1 "Data item field:

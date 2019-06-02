@@ -110,12 +110,7 @@ IpfsCid >> load [
 ]
 
 { #category : #'data access' }
-IpfsCid >> loadObject [
-	^ Ipfs objectGet: self
-]
-
-{ #category : #'data access' }
-IpfsCid >> loadRawData [
+IpfsCid >> loadRawBlock [
 	^ Ipfs blockGet: cidBase32
 
 ]

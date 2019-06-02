@@ -13,3 +13,8 @@ Class {
 IpfsProtobufCid class >> codec [
 	^ #protobuf
 ]
+
+{ #category : #'data access' }
+IpfsProtobufCid >> loadObject [
+	^ Ipfs objectGet: self
+]

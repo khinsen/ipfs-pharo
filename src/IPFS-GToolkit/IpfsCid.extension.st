@@ -40,7 +40,7 @@ IpfsCid >> gtCidDataFor: aView [
 IpfsCid >> gtRawDataFor: aView [
 	<gtView>
 	| view |
-	view := self loadRawData ipfsDataViewFor: aView.
+	view := self loadRawBlock ipfsDataViewFor: aView.
 	^ view
 		title: 'Raw data';
 		priority: -4;
