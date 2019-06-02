@@ -1,3 +1,7 @@
+"
+!Client connecting to an IPFS server
+
+"
 Class {
 	#name : #IpfsHttpApiClient,
 	#superclass : #Object,
@@ -5,7 +9,7 @@ Class {
 		'host',
 		'port'
 	],
-	#category : #'IPFS-Access'
+	#category : #'IPFS-0 - Server access'
 }
 
 { #category : #'http requests' }
@@ -17,7 +21,7 @@ IpfsHttpApiClient >> parseReferenceList: aString [
 		refAndErr := [ parser next ]
 							on: NeoJSONParseError do: [ ^ references ].
 		self assert: (refAndErr at: 'Err') = ''.
-		references add: (refAndErr at: 'Ref') asIpldCid ]
+		references add: (refAndErr at: 'Ref') asIpfsCid ]
 		repeat.
 	^ references
 ]

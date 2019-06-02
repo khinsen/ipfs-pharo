@@ -1,6 +1,6 @@
 Extension { #name : #Integer }
 
 { #category : #'*IPFS-GToolkit' }
-Integer >> ipldDataViewFor: aView [
+Integer >> ipfsDataViewFor: aView [
 	^ self gtIntegerFor: aView
 ]

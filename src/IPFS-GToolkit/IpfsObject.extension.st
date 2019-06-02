@@ -4,7 +4,7 @@ Extension { #name : #IpfsObject }
 IpfsObject >> gtDataFor: aView [
 	<gtView>
 	| view |
-	view := self data ipldDataViewFor: aView.
+	view := self data ipfsDataViewFor: aView.
 	^ view
 		title: 'Data';
 		priority: -10;

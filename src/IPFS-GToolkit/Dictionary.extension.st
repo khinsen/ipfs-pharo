@@ -1,6 +1,6 @@
 Extension { #name : #Dictionary }
 
 { #category : #'*IPFS-GToolkit' }
-Dictionary >> ipldDataViewFor: aView [
+Dictionary >> ipfsDataViewFor: aView [
 	^ self gtItemsFor: aView
 ]

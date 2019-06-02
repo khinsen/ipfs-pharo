@@ -3,15 +3,15 @@
 
 "
 Class {
-	#name : #IlpdDagTests,
+	#name : #IpfsDagTests,
 	#superclass : #TestCase,
 	#category : #'IPFS-Tests '
 }
 
 { #category : #testing }
-IlpdDagTests >> testIPFSCLIDocumentation [
+IpfsDagTests >> testIPFSCLIDocumentation [
 	| dagNode |
-	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpldCid load.
+	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid load.
 	self assert: (dagNode at: 'data') equals: 'CAE='.
 	self assert: (dagNode at: 'links') size equals: 6.
 	(dagNode at: 'links') do:
@@ -20,22 +20,22 @@ IlpdDagTests >> testIPFSCLIDocumentation [
 ]
 
 { #category : #testing }
-IlpdDagTests >> testLinkedData [
+IpfsDagTests >> testLinkedData [
 	| data1 cid1 data2 cid2 retrieved |
 	data1 := { 'foo' -> 'bar' } asDictionary.
-	cid1 := data1 storeAsIpld.
+	cid1 := data1 storeInIpfs.
 	data2 := { 'data' -> cid1 } asDictionary.
-	cid2 := data2 storeAsIpld.
+	cid2 := data2 storeInIpfs.
 	retrieved := cid2 load.
 	self assert: retrieved equals: data2.
 ]
 
 { #category : #testing }
-IlpdDagTests >> testPinning [
+IpfsDagTests >> testPinning [
 	| localPeer cid1 cid2 |
 	localPeer := IpfsPeer local.
-	cid1 := { #foo -> #bar } asDictionary storeAsIpld.
-	cid2 := { #foobar -> cid1 } asDictionary storeAsIpld.
+	cid1 := { #foo -> #bar } asDictionary storeInIpfs.
+	cid2 := { #foobar -> cid1 } asDictionary storeInIpfs.
 	[ localPeer unpin: cid1 ] on: Error do: [ ].
 	[ localPeer unpin: cid2 ] on: Error do: [ ].
 	self deny: ((localPeer pinnedCids) includes: cid1).
@@ -57,38 +57,38 @@ IlpdDagTests >> testPinning [
 ]
 
 { #category : #testing }
-IlpdDagTests >> testRandomArrays [
+IpfsDagTests >> testRandomArrays [
 	10 timesRepeat:
 		[ | array cid retrievedArray |
 			array := Array new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
-			cid := array storeAsIpld.
+			cid := array storeInIpfs.
 			retrievedArray := cid load.
 			self assert: retrievedArray equals: array ]
 
 ]
 
 { #category : #testing }
-IlpdDagTests >> testRandomByteArrays [
+IpfsDagTests >> testRandomByteArrays [
 	10 timesRepeat:
 		[ | array cid retrievedObject |
 			array := ByteArray new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
-			cid := array storeAsIpld.
+			cid := array storeInIpfs.
 			retrievedObject := cid load.
 			self assert: retrievedObject equals: array ]
 
 ]
 
 { #category : #testing }
-IlpdDagTests >> testReferences [
+IpfsDagTests >> testReferences [
 	| data1 cid1 data2 cid2 data3 cid3 refs |
 	data1 := { 'foo' -> 'bar' } asDictionary.
-	cid1 := data1 storeAsIpld.
+	cid1 := data1 storeInIpfs.
 	data2 := { 'link' -> cid1 } asDictionary.
-	cid2 := data2 storeAsIpld.
+	cid2 := data2 storeInIpfs.
 	data3 := { 'data' -> cid2 } asDictionary.
-	cid3 := data3 storeAsIpld.
+	cid3 := data3 storeInIpfs.
 
 	refs := cid2 references.
 	self assert: refs size equals: 1.
@@ -106,7 +106,7 @@ IlpdDagTests >> testReferences [
 ]
 
 { #category : #testing }
-IlpdDagTests >> testStoreAndLoad [
+IpfsDagTests >> testStoreAndLoad [
 	| testValues |
 	testValues := { 'aString'.
 						 42.
@@ -115,17 +115,17 @@ IlpdDagTests >> testStoreAndLoad [
 	testValues do:
 		[ :object |
 			| cid retrievedObject |
-			cid := object storeAsIpld.
+			cid := object storeInIpfs.
 			retrievedObject := cid load.
 			self assert: object equals: retrievedObject ]
 
 ]
 
 { #category : #testing }
-IlpdDagTests >> testStoreAndLoadAsRaw [
+IpfsDagTests >> testStoreAndLoadAsRaw [
 	| data cid retrievedData |
 	data := { 'foo' -> 'bar' } asDictionary.
-	cid := data storeAsIpld.
+	cid := data storeInIpfs.
 	retrievedData := cid loadRawData.
 	self assert: retrievedData
 		  equals:
@@ -145,10 +145,10 @@ IlpdDagTests >> testStoreAndLoadAsRaw [
 ]
 
 { #category : #testing }
-IlpdDagTests >> testStoreAndLoadRawAndTestSize [
+IpfsDagTests >> testStoreAndLoadRawAndTestSize [
 	| bytes cid retrievedBytes |
 	bytes := #[1 2 3 4 3 2 1].
-	cid := bytes storeAsIpld.
+	cid := bytes storeInIpfs.
 	retrievedBytes := cid load.
 	self assert: retrievedBytes equals: bytes.
 	self assert: cid sizeOfRawData equals: bytes size.

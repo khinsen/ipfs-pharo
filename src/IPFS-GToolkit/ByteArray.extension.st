@@ -1,6 +1,6 @@
 Extension { #name : #ByteArray }
 
 { #category : #'*IPFS-GToolkit' }
-ByteArray >> ipldDataViewFor: aView [
+ByteArray >> ipfsDataViewFor: aView [
 	^ self gtItemsFor: aView
 ]

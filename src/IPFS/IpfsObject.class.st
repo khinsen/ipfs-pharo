@@ -5,7 +5,7 @@ Class {
 		'data',
 		'links'
 	],
-	#category : #'IPFS-Files'
+	#category : #'IPFS-3 - Files'
 }
 
 { #category : #'instance creation' }

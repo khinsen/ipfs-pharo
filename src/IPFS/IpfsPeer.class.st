@@ -3,12 +3,14 @@
 
 A specific node in the IPFS network.
 
-Note that both this class and ${class:name=Ipfs}$ access the HTTP API of an IPFS daemon. ${class:name=IpfsPeer}$ implements the operations that are specific to one peer, in particular pinning, whereas ${class:name=Ipfs}$ implements the operations that conceptually address IPFS as a whole, in particular get and put operations, even though a specific peer is used as the access point.
+Both this class and ${class:name=Ipfs}$ access the HTTP API of an IPFS daemon. ${class:name=IpfsPeer}$ implements the operations that are specific to one peer, in particular pinning, whereas ${class:name=Ipfs}$ implements the operations that conceptually address IPFS as a whole, in particular get and put operations. Put differently, the operations handled by ${class:name=Ipfs}$ could use any IPFS server around the world without changing anything else than performance.
+
+
 "
 Class {
 	#name : #IpfsPeer,
 	#superclass : #IpfsHttpApiClient,
-	#category : #'IPFS-Access'
+	#category : #'IPFS-0 - Server access'
 }
 
 { #category : #'instance creation' }
@@ -50,7 +52,7 @@ IpfsPeer >> pin: aCid [
 		queryAt: #progress add: 'false';
 		get.
 	^ (result at: 'Pins')
-		collect: [ :aString | aString asIpldCid ]
+		collect: [ :aString | aString asIpfsCid ]
 
 ]
 
@@ -64,7 +66,7 @@ IpfsPeer >> pinRecursively: aCid [
 		queryAt: #progress add: 'false';
 		get.
 	^ (result at: 'Pins')
-		collect: [ :aString | aString asIpldCid ]
+		collect: [ :aString | aString asIpfsCid ]
 ]
 
 { #category : #pinning }
@@ -84,7 +86,7 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 		path: 'api/v0/pin/ls';
 		queryAt: #type add: aCidType;
 		get.
-	^ (result at: 'Keys') keys collect: #asIpldCid
+	^ (result at: 'Keys') keys collect: #asIpfsCid
 ]
 
 { #category : #pinning }
@@ -96,7 +98,7 @@ IpfsPeer >> unpin: aCid [
 		queryAt: #recursive add: 'false';
 		get.
 	^ (result at: 'Pins')
-		collect: [ :aString | aString asIpldCid ]
+		collect: [ :aString | aString asIpfsCid ]
 
 ]
 
@@ -109,5 +111,5 @@ IpfsPeer >> unpinRecursively: aCid [
 		queryAt: #recursive add: 'true';
 		get.
 	^ (result at: 'Pins')
-		collect: [ :aString | aString asIpldCid ]
+		collect: [ :aString | aString asIpfsCid ]
 ]

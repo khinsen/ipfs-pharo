@@ -1,6 +1,6 @@
 Extension { #name : #Array }
 
 { #category : #'*IPFS-GToolkit' }
-Array >> ipldDataViewFor: aView [
+Array >> ipfsDataViewFor: aView [
 	^ self gtItemsFor: aView
 ]

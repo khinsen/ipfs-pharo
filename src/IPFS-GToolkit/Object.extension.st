@@ -1,6 +1,6 @@
 Extension { #name : #Object }
 
 { #category : #'*IPFS-GToolkit' }
-Object >> ipldDataViewFor: aView [
+Object >> ipfsDataViewFor: aView [
 	^ self gtRawFor: aView
 ]

@@ -1,6 +1,6 @@
 Extension { #name : #ByteArray }
 
 { #category : #'*IPFS' }
-ByteArray >> storeAsIpld [
+ByteArray >> storeInIpfs [
 	^ Ipfs dagPutRaw: self
 ]

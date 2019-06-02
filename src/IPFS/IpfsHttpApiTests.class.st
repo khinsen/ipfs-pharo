@@ -46,11 +46,11 @@ IpfsHttpApiTests >> testCidConversion [
 IpfsHttpApiTests >> testDagNodeReferences [
 	| data1 cid1 data2 cid2 data3 cid3 result |
 	data1 := { 'foo' -> 'bar' } asDictionary.
-	cid1 := data1 storeAsIpld.
+	cid1 := data1 storeInIpfs.
 	data2 := { 'link' -> cid1 } asDictionary.
-	cid2 := data2 storeAsIpld.
+	cid2 := data2 storeInIpfs.
 	data3 := { 'data' -> cid2 } asDictionary.
-	cid3 := data3 storeAsIpld.
+	cid3 := data3 storeInIpfs.
 
 	result := self znClient
 		path: 'api/v0/refs';

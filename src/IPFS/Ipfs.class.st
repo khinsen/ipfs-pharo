@@ -10,7 +10,7 @@ Class {
 	#superclass : #IpfsHttpApiClient,
 	#traits : 'TSingleton',
 	#classTraits : 'TSingleton classTrait',
-	#category : #'IPFS-Access'
+	#category : #'IPFS-0 - Server access'
 }
 
 { #category : #IPFS }
@@ -129,13 +129,13 @@ Ipfs >> cidPrefix: aCid [
 ]
 
 { #category : #IPLD }
-Ipfs >> dagGet: anIpldCid [
+Ipfs >> dagGet: anIpfsCid [
 	| node |
 	node := self getRequest: 'dag/get' parameters:
-		(Dictionary with: #arg -> anIpldCid asString).
-	anIpldCid asIpldCid isRaw
+		(Dictionary with: #arg -> anIpfsCid asString).
+	anIpfsCid asIpfsCid isRaw
 		ifTrue: [ ^ node asByteArray ]
-		ifFalse: [ ^ node asIpldData ]
+		ifFalse: [ ^ node asIpfsBlock ]
 ]
 
 { #category : #IPLD }
@@ -144,7 +144,7 @@ Ipfs >> dagPut: anObject [
 	result := self postRequest: 'dag/put'
 		contents: (NeoJSONWriter toString: anObject)
 		parameters: (Dictionary with: #arg ->  '').
-	^ IpldCid fromDictionary: (result at: 'Cid').
+	^ IpfsCid fromDictionary: (result at: 'Cid').
 
 ]
 
@@ -156,7 +156,7 @@ Ipfs >> dagPutRaw: anObject [
 		parameters: (Dictionary with: #arg ->  ''
 									  with: #f -> 'raw'
 									  with: #'input-enc' -> 'raw').
-	^ IpldCid fromDictionary: (result at: 'Cid').
+	^ IpfsCid fromDictionary: (result at: 'Cid').
 
 ]
 
@@ -197,7 +197,7 @@ Ipfs >> objectGet: aCid [
 	(result at: 'Links') do:
 		[ :link |
 			links at: (link at: 'Name')
-					put: (IpfsLink cid: (IpldCid fromString: (link at: 'Hash'))
+					put: (IpfsLink cid: (IpfsCid fromString: (link at: 'Hash'))
 									   size: ((link at: 'Size') asNumber) )].
 	^ IpfsObject
 		data: data
@@ -226,11 +226,11 @@ Ipfs >> postRequest: aString contents: data parameters: aDictionary [
 ]
 
 { #category : #IPLD }
-Ipfs >> refs: anIpldCid recursive: aBoolean [
+Ipfs >> refs: anIpfsCid recursive: aBoolean [
 	| result |
 	result := self znClient
 		path: 'api/v0/refs';
-		queryAt: #arg add: anIpldCid asString;
+		queryAt: #arg add: anIpfsCid asString;
 		queryAt: #recursive add: aBoolean asString;
 		get.
 	^ result

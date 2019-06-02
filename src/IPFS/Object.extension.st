@@ -1,11 +1,11 @@
 Extension { #name : #Object }
 
 { #category : #'*IPFS' }
-Object >> asIpldData [
+Object >> asIpfsBlock [
 	^ self
 ]
 
 { #category : #'*IPFS' }
-Object >> storeAsIpld [
+Object >> storeInIpfs [
 	^ Ipfs dagPut: self
 ]

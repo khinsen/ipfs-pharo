@@ -5,7 +5,7 @@ Class {
 		'cid',
 		'size'
 	],
-	#category : #'IPFS-Files'
+	#category : #'IPFS-3 - Files'
 }
 
 { #category : #'instance creation' }
@@ -32,7 +32,7 @@ IpfsLink >> dataSize [
 	^ size
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 IpfsLink >> getObject [
 	^ Ipfs objectGet: cid
 ]
