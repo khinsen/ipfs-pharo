@@ -36,6 +36,13 @@ IpfsPeer >> allCids [
 
 ]
 
+{ #category : #repository }
+IpfsPeer >> collectGarbage [
+	^ self znClientForJsonResult
+		path: 'api/v0/repo/gc';
+		get
+]
+
 { #category : #initialization }
 IpfsPeer >> initializeWithHost: aString port: anInteger [
 	host := aString.
@@ -87,6 +94,13 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 		queryAt: #type add: aCidType;
 		get.
 	^ (result at: 'Keys') keys collect: #asIpfsCid
+]
+
+{ #category : #repository }
+IpfsPeer >> storageStatistics [
+	^ self znClientForJsonResult
+		path: 'api/v0/repo/stat';
+		get
 ]
 
 { #category : #pinning }

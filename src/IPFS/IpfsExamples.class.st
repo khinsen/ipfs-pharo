@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #examples }
+IpfsExamples >> allCidsOnlocalIpfsPeer [
+	<gtExample>
+	^ self localIpfsPeer allCids
+]
+
+{ #category : #examples }
 IpfsExamples >> cborCidForArray [
 	<gtExample>
 	^ #(1 2 3) storeInIpfs
@@ -75,6 +81,12 @@ IpfsExamples >> loadRawBlock [
 ]
 
 { #category : #examples }
+IpfsExamples >> localIpfsPeer [
+	<gtExample>
+	^ IpfsPeer local
+]
+
+{ #category : #examples }
 IpfsExamples >> openRawBlockInLocalWebExplorer [
 	<gtExample>
 	WebBrowser openOn:
@@ -96,4 +108,45 @@ IpfsExamples >> protobufCid [
 IpfsExamples >> rawBlockCid [
 	<gtExample>
 	^ #[1 2 3 2 1] storeInIpfs
+]
+
+{ #category : #examples }
+IpfsExamples >> storeDataAndCheckItsAbsenceAfterGarbageCollection [
+	<gtExample>
+	| cid |
+	cid := self storeDataAndCheckItsPresenceOnLocalPeer.
+	self localIpfsPeer collectGarbage.
+	self assert: (self allCidsOnlocalIpfsPeer includes: cid) not.
+	^ cid
+]
+
+{ #category : #examples }
+IpfsExamples >> storeDataAndCheckItsPresenceOnLocalPeer [
+	<gtExample>
+	| cid |
+	cid := self rawBlockCid storeInIpfs.
+	self assert: (self allCidsOnlocalIpfsPeer includes: cid).
+	^ cid
+]
+
+{ #category : #examples }
+IpfsExamples >> storeDataPinAndCheckItsPresenceAfterGarbageCollection [
+	<gtExample>
+	| cid |
+	cid := self rawBlockCid storeInIpfs.
+	self localIpfsPeer pin: cid.
+	self localIpfsPeer collectGarbage.
+	self assert: (self allCidsOnlocalIpfsPeer includes: cid).
+	^ cid
+]
+
+{ #category : #examples }
+IpfsExamples >> storeDataPinUnpinAndCheckItsAbsenceAfterGarbageCollection [
+	<gtExample>
+	| cid |
+	cid := self storeDataPinAndCheckItsPresenceAfterGarbageCollection.
+	self localIpfsPeer unpin: cid.
+	self localIpfsPeer collectGarbage.
+	self assert: (self allCidsOnlocalIpfsPeer includes: cid) not.
+	^ cid
 ]
