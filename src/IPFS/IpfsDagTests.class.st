@@ -11,7 +11,7 @@ Class {
 { #category : #testing }
 IpfsDagTests >> testIPFSCLIDocumentation [
 	| dagNode |
-	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid load.
+	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid loadAndDecode.
 	self assert: (dagNode at: 'data') equals: 'CAE='.
 	self assert: (dagNode at: 'links') size equals: 6.
 	(dagNode at: 'links') do:
@@ -26,7 +26,7 @@ IpfsDagTests >> testLinkedData [
 	cid1 := data1 storeInIpfs.
 	data2 := { 'data' -> cid1 } asDictionary.
 	cid2 := data2 storeInIpfs.
-	retrieved := cid2 load.
+	retrieved := cid2 loadAndDecode.
 	self assert: retrieved equals: data2.
 ]
 
@@ -63,7 +63,7 @@ IpfsDagTests >> testRandomArrays [
 			array := Array new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
 			cid := array storeInIpfs.
-			retrievedArray := cid load.
+			retrievedArray := cid loadAndDecode.
 			self assert: retrievedArray equals: array ]
 
 ]
@@ -75,7 +75,7 @@ IpfsDagTests >> testRandomByteArrays [
 			array := ByteArray new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
 			cid := array storeInIpfs.
-			retrievedObject := cid load.
+			retrievedObject := cid loadAndDecode.
 			self assert: retrievedObject equals: array ]
 
 ]
@@ -116,7 +116,7 @@ IpfsDagTests >> testStoreAndLoad [
 		[ :object |
 			| cid retrievedObject |
 			cid := object storeInIpfs.
-			retrievedObject := cid load.
+			retrievedObject := cid loadAndDecode.
 			self assert: object equals: retrievedObject ]
 
 ]
@@ -149,7 +149,7 @@ IpfsDagTests >> testStoreAndLoadRawAndTestSize [
 	| bytes cid retrievedBytes |
 	bytes := #[1 2 3 4 3 2 1].
 	cid := bytes storeInIpfs.
-	retrievedBytes := cid load.
+	retrievedBytes := cid loadAndDecode.
 	self assert: retrievedBytes equals: bytes.
 	self assert: cid sizeOfRawData equals: bytes size.
 ]

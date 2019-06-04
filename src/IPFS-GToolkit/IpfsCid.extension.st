@@ -3,7 +3,7 @@ Extension { #name : #IpfsCid }
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> defaultDataViewFor: aView [
 	| view |
-	view := self load ipfsDataViewFor: aView.
+	view := self loadAndDecode ipfsDataViewFor: aView.
 	^ view
 		title: 'Data';
 		priority: -6;

@@ -44,7 +44,7 @@ IpfsHttpApiTests >> testCidConversion [
 
 { #category : #testing }
 IpfsHttpApiTests >> testDagNodeReferences [
-	| data1 cid1 data2 cid2 data3 cid3 result |
+	| data1 cid1 data2 cid2 data3 cid3 result expected1 expected2 |
 	data1 := { 'foo' -> 'bar' } asDictionary.
 	cid1 := data1 storeInIpfs.
 	data2 := { 'link' -> cid1 } asDictionary.
@@ -57,9 +57,11 @@ IpfsHttpApiTests >> testDagNodeReferences [
 		queryAt: #arg add: cid3 asString;
 		queryAt: #recursive add: true asString;
 		get.
-	self assert: result trim lines equals: #(
-'{"Ref":"zdpuAsR7S1BhNaXyRSDVJ2k5q8VgNcRjLnsC1hDd3ueHCF9AX","Err":""}'
-'{"Ref":"zdpuAoKMEvka7gKGSjF9B3of1F5gE5MyMMywxTC13wCmouQrf","Err":""}' )
+	"Depending on the version of go-ifps, the encoding of the CIDs can be different."
+	expected1 := #('{"Ref":"bafyreidh5rcksptfokqohifw2lxfjeudz67bjwmjocqi6fs3cxwirpkgna","Err":""}' '{"Ref":"bafyreiblaotetvwobe7cu2uqvnddr6ew2q3cu75qsoweulzku2egca4dxq","Err":""}').
+	expected2 := #('{"Ref":"zdpuAsR7S1BhNaXyRSDVJ2k5q8VgNcRjLnsC1hDd3ueHCF9AX","Err":""}'
+'{"Ref":"zdpuAoKMEvka7gKGSjF9B3of1F5gE5MyMMywxTC13wCmouQrf","Err":""}').
+	self assert: ({ expected1. expected2 } includes: result trim lines).
 ]
 
 { #category : #testing }

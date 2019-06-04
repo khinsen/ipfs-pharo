@@ -1,7 +1,7 @@
 Extension { #name : #Object }
 
 { #category : #'*IPFS' }
-Object >> asIpfsBlock [
+Object >> asIpfsLinkedData [
 	^ self
 ]
 

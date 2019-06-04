@@ -20,9 +20,10 @@ There is one more piece of information in the CID that we will exploit shortly: 
 But how do we know that our byte array has really been stored in IPFS? One way to check is to inspect it in your Web browser:
 ${example:name=IpfsExamples>>#openRawBlockInLocalWebExplorer|expanded=}$
 
-Note that this only shows that the data is accessible outside of Pharo. Your Web browser still retrieves it from the same local IPFS server that Pharo also connects to. Your data ''should'' be accessible from all over the world, right? You can check by installing IPFS on another computer, and opening the same URL there. It could take some time for that other machine to obtain the data (which it ends up requesting from your computer, so don't turn it off!), but the results shown should be the same.
+Note that this only shows that the data is accessible outside of Pharo. Your Web browser still retrieves it from the same local IPFS server that Pharo also connects to. Your data ''should'' be accessible from all over the world, right? To check that this is true, you have to access it from another computer. You can do that via a public Web-based explorer:
+${example:name=IpfsExamples>>#urlForExploringRawBlockInRemoteWebExplorer|expanded=}$
 
-Unfortunately, you cannot simply retrieve the data via a public IPFS gateway (such as *http://ipfs.io/*), because these gateways operate at the file level, not the raw block level.
+Paste the URL you get from the this code into a Web browser that runs ''on another computer'' - your phone or tablet will do. If you use a browser on the same computer that runs your IPFS daemon, the JavaScript code for the explorer will detect that daemon and use it, so you have proved nothing.
 
 !!Pinning
 

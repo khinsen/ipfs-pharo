@@ -13,3 +13,8 @@ Class {
 IpfsCborCid class >> codec [
 	^ #cbor
 ]
+
+{ #category : #'data access' }
+IpfsCborCid >> loadObject [
+	^ self loadAndDecode
+]

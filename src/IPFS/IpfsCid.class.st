@@ -29,15 +29,16 @@ IpfsCid class >> codec [
 
 { #category : #'instance creation' }
 IpfsCid class >> fromBase32: aString [
-	| prefix codec |
+	| prefix codec subclass |
 	"The first letter of a valid base32-encoded CID must be 'b'."
 	self assert: aString first = $b.
 	prefix := Ipfs uniqueInstance cidPrefix: aString.
 	codec := prefix second asSymbol.
+	subclass := IpfsGenericCid.
 	self subclasses do:
 		[ :class | class codec = codec
-						ifTrue: [ ^ class new initializeFromBase32: aString prefix: prefix ] ].
-	self error: 'No IpfsCid subclass for codec ', codec
+						ifTrue: [ subclass := class  ] ].
+	^ subclass new initializeFromBase32: aString prefix: prefix
 ]
 
 { #category : #'instance creation' }
@@ -105,7 +106,7 @@ IpfsCid >> isRaw [
 ]
 
 { #category : #'data access' }
-IpfsCid >> load [
+IpfsCid >> loadAndDecode [
 	^ Ipfs dagGet: self
 ]
 

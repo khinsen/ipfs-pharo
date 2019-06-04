@@ -58,6 +58,14 @@ IpfsExamples >> cborCidForString [
 ]
 
 { #category : #examples }
+IpfsExamples >> genericCid [
+	<gtExample>
+	"This is a CID pointing to an Ethereum block, for which there is no support
+	 in Pharo yet."
+	^ 'z43AaGEvwdfzjrCZ3Sq7DKxdDHrwoaPQDtqF4jfdkNEVTiqGVFW' asIpfsCid
+]
+
+{ #category : #examples }
 IpfsExamples >> gitObjectCid [
 	<gtExample>
 	"There is no support for creating git-raw objects from Pharo for now.
@@ -75,7 +83,7 @@ IpfsExamples >> ipfsPathToWebExplorer [
 IpfsExamples >> loadRawBlock [
 	<gtExample>
 	| block |
-	block := self rawBlockCid load.
+	block := self rawBlockCid loadAndDecode.
 	self assert: block equals: #[1 2 3 2 1].
 	^ block
 ]
@@ -149,4 +157,11 @@ IpfsExamples >> storeDataPinUnpinAndCheckItsAbsenceAfterGarbageCollection [
 	self localIpfsPeer collectGarbage.
 	self assert: (self allCidsOnlocalIpfsPeer includes: cid) not.
 	^ cid
+]
+
+{ #category : #examples }
+IpfsExamples >> urlForExploringRawBlockInRemoteWebExplorer [
+	<gtExample>
+	^ 'https://explore.ipld.io/#/explore/',
+		self rawBlockCid asString.
 ]
