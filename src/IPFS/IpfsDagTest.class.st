@@ -3,15 +3,15 @@
 
 "
 Class {
-	#name : #IpfsDagTests,
+	#name : #IpfsDagTest,
 	#superclass : #TestCase,
 	#category : #'IPFS-Tests '
 }
 
 { #category : #testing }
-IpfsDagTests >> testIPFSCLIDocumentation [
+IpfsDagTest >> testIPFSCLIDocumentation [
 	| dagNode |
-	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid loadAndDecode.
+	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid loadAndDecode value.
 	self assert: (dagNode at: 'data') equals: 'CAE='.
 	self assert: (dagNode at: 'links') size equals: 6.
 	(dagNode at: 'links') do:
@@ -20,22 +20,22 @@ IpfsDagTests >> testIPFSCLIDocumentation [
 ]
 
 { #category : #testing }
-IpfsDagTests >> testLinkedData [
+IpfsDagTest >> testLinkedData [
 	| data1 cid1 data2 cid2 retrieved |
-	data1 := { 'foo' -> 'bar' } asDictionary.
+	data1 := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
 	cid1 := data1 storeInIpfs.
-	data2 := { 'data' -> cid1 } asDictionary.
+	data2 := IpfsLinkedData value: { 'data' -> cid1 } asDictionary.
 	cid2 := data2 storeInIpfs.
 	retrieved := cid2 loadAndDecode.
 	self assert: retrieved equals: data2.
 ]
 
 { #category : #testing }
-IpfsDagTests >> testPinning [
+IpfsDagTest >> testPinning [
 	| localPeer cid1 cid2 |
 	localPeer := IpfsPeer local.
-	cid1 := { #foo -> #bar } asDictionary storeInIpfs.
-	cid2 := { #foobar -> cid1 } asDictionary storeInIpfs.
+	cid1 := (IpfsLinkedData value: { #foo -> #bar } asDictionary) storeInIpfs.
+	cid2 := (IpfsLinkedData value: { #foobar -> cid1 } asDictionary) storeInIpfs.
 	[ localPeer unpin: cid1 ] on: Error do: [ ].
 	[ localPeer unpin: cid2 ] on: Error do: [ ].
 	self deny: ((localPeer pinnedCids) includes: cid1).
@@ -57,19 +57,19 @@ IpfsDagTests >> testPinning [
 ]
 
 { #category : #testing }
-IpfsDagTests >> testRandomArrays [
+IpfsDagTest >> testRandomArrays [
 	10 timesRepeat:
 		[ | array cid retrievedArray |
 			array := Array new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
-			cid := array storeInIpfs.
+			cid := (IpfsLinkedData value: array) storeInIpfs.
 			retrievedArray := cid loadAndDecode.
-			self assert: retrievedArray equals: array ]
+			self assert: retrievedArray value equals: array ]
 
 ]
 
 { #category : #testing }
-IpfsDagTests >> testRandomByteArrays [
+IpfsDagTest >> testRandomByteArrays [
 	10 timesRepeat:
 		[ | array cid retrievedObject |
 			array := ByteArray new: (1 to: 1000) atRandom.
@@ -81,13 +81,13 @@ IpfsDagTests >> testRandomByteArrays [
 ]
 
 { #category : #testing }
-IpfsDagTests >> testReferences [
+IpfsDagTest >> testReferences [
 	| data1 cid1 data2 cid2 data3 cid3 refs |
-	data1 := { 'foo' -> 'bar' } asDictionary.
+	data1 := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
 	cid1 := data1 storeInIpfs.
-	data2 := { 'link' -> cid1 } asDictionary.
+	data2 := IpfsLinkedData value: { 'link' -> cid1 } asDictionary.
 	cid2 := data2 storeInIpfs.
-	data3 := { 'data' -> cid2 } asDictionary.
+	data3 := IpfsLinkedData value: { 'data' -> cid2 } asDictionary.
 	cid3 := data3 storeInIpfs.
 
 	refs := cid2 references.
@@ -106,7 +106,7 @@ IpfsDagTests >> testReferences [
 ]
 
 { #category : #testing }
-IpfsDagTests >> testStoreAndLoad [
+IpfsDagTest >> testStoreAndLoad [
 	| testValues |
 	testValues := { 'aString'.
 						 42.
@@ -115,16 +115,16 @@ IpfsDagTests >> testStoreAndLoad [
 	testValues do:
 		[ :object |
 			| cid retrievedObject |
-			cid := object storeInIpfs.
+			cid := (IpfsLinkedData value: object) storeInIpfs.
 			retrievedObject := cid loadAndDecode.
-			self assert: object equals: retrievedObject ]
+			self assert: retrievedObject value equals: object ]
 
 ]
 
 { #category : #testing }
-IpfsDagTests >> testStoreAndLoadAsRaw [
+IpfsDagTest >> testStoreAndLoadAsRaw [
 	| data cid retrievedData |
-	data := { 'foo' -> 'bar' } asDictionary.
+	data := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
 	cid := data storeInIpfs.
 	retrievedData := cid loadRawBlock.
 	self assert: retrievedData
@@ -145,7 +145,7 @@ IpfsDagTests >> testStoreAndLoadAsRaw [
 ]
 
 { #category : #testing }
-IpfsDagTests >> testStoreAndLoadRawAndTestSize [
+IpfsDagTest >> testStoreAndLoadRawAndTestSize [
 	| bytes cid retrievedBytes |
 	bytes := #[1 2 3 4 3 2 1].
 	cid := bytes storeInIpfs.

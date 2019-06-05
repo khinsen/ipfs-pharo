@@ -3,13 +3,13 @@
 
 "
 Class {
-	#name : #IpfsObjectTests,
+	#name : #IpfsFileObjectTest,
 	#superclass : #TestCase,
 	#category : #'IPFS-Tests '
 }
 
 { #category : #testing }
-IpfsObjectTests >> testIPFSCLIDocumentation [
+IpfsFileObjectTest >> testIPFSCLIDocumentation [
 	| ipfsObject |
 	ipfsObject := Ipfs objectGet: 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 	self assert: ipfsObject data equals: #[8 1].

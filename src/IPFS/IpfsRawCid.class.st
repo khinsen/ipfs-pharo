@@ -13,3 +13,8 @@ Class {
 IpfsRawCid class >> codec [
 	^ #raw
 ]
+
+{ #category : #'data access' }
+IpfsRawCid >> loadObject [
+	^ self loadRawBlock
+]

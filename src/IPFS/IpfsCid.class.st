@@ -78,6 +78,16 @@ IpfsCid >> codec [
 	^ self class codec
 ]
 
+{ #category : #converting }
+IpfsCid >> decodeFromIpfs [
+	^ self
+]
+
+{ #category : #converting }
+IpfsCid >> encodeForIpfs [
+	^ { '/' -> cidBase32 } asDictionary
+]
+
 { #category : #comparing }
 IpfsCid >> hash [
 	^ cidBase32 hash

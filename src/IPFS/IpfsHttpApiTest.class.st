@@ -5,13 +5,13 @@ The main role of these tests is to detect changes in the IPFS API.
 
 "
 Class {
-	#name : #IpfsHttpApiTests,
+	#name : #IpfsHttpApiTest,
 	#superclass : #TestCase,
 	#category : #'IPFS-Tests '
 }
 
 { #category : #testing }
-IpfsHttpApiTests >> testBlockStat [
+IpfsHttpApiTest >> testBlockStat [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 	result := self znClient
@@ -23,7 +23,7 @@ IpfsHttpApiTests >> testBlockStat [
 ]
 
 { #category : #testing }
-IpfsHttpApiTests >> testCidConversion [
+IpfsHttpApiTest >> testCidConversion [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 
@@ -43,13 +43,13 @@ IpfsHttpApiTests >> testCidConversion [
 ]
 
 { #category : #testing }
-IpfsHttpApiTests >> testDagNodeReferences [
+IpfsHttpApiTest >> testDagNodeReferences [
 	| data1 cid1 data2 cid2 data3 cid3 result expected1 expected2 |
-	data1 := { 'foo' -> 'bar' } asDictionary.
+	data1 := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
 	cid1 := data1 storeInIpfs.
-	data2 := { 'link' -> cid1 } asDictionary.
+	data2 := IpfsLinkedData value: { 'link' -> cid1 } asDictionary.
 	cid2 := data2 storeInIpfs.
-	data3 := { 'data' -> cid2 } asDictionary.
+	data3 := IpfsLinkedData value: { 'data' -> cid2 } asDictionary.
 	cid3 := data3 storeInIpfs.
 
 	result := self znClient
@@ -65,7 +65,7 @@ IpfsHttpApiTests >> testDagNodeReferences [
 ]
 
 { #category : #testing }
-IpfsHttpApiTests >> testGetIpfsObject [
+IpfsHttpApiTest >> testGetIpfsObject [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 	result := self znClient
@@ -77,7 +77,7 @@ IpfsHttpApiTests >> testGetIpfsObject [
 ]
 
 { #category : #testing }
-IpfsHttpApiTests >> testGetRawBlock [
+IpfsHttpApiTest >> testGetRawBlock [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.
 	result := self znClient
@@ -90,7 +90,7 @@ IpfsHttpApiTests >> testGetRawBlock [
 ]
 
 { #category : #testing }
-IpfsHttpApiTests >> testPinning [
+IpfsHttpApiTest >> testPinning [
 	| data cid result |
 	data := #[1 2 3 4 3 2 1].
 
@@ -120,7 +120,7 @@ IpfsHttpApiTests >> testPinning [
 ]
 
 { #category : #testing }
-IpfsHttpApiTests >> testPutGetRawByteArray [
+IpfsHttpApiTest >> testPutGetRawByteArray [
 	| data cid result |
 	data := #[1 2 3 4 3 2 1].
 
@@ -149,7 +149,7 @@ IpfsHttpApiTests >> testPutGetRawByteArray [
 ]
 
 { #category : #testing }
-IpfsHttpApiTests >> testPutGetSimpleDagNodes [
+IpfsHttpApiTest >> testPutGetSimpleDagNodes [
 	| testData cid result |
 	testData := { 'aString' -> '"aString"'.
 					  42 -> '42'.
@@ -173,7 +173,7 @@ IpfsHttpApiTests >> testPutGetSimpleDagNodes [
 ]
 
 { #category : #running }
-IpfsHttpApiTests >> znClient [
+IpfsHttpApiTest >> znClient [
 	^ ZnClient new
 		beOneShot;
 		http;

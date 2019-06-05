@@ -6,6 +6,11 @@ Object >> asIpfsLinkedData [
 ]
 
 { #category : #'*IPFS' }
+Object >> encodeForIpfs [
+	self subclassResponsibility 
+]
+
+{ #category : #'*IPFS' }
 Object >> storeInIpfs [
-	^ Ipfs dagPut: self
+	^ Ipfs dagPut: self encodeForIpfs
 ]

@@ -37,12 +37,12 @@ IpfsCid >> gtCidDataFor: aView [
 ]
 
 { #category : #'*IPFS-GToolkit' }
-IpfsCid >> gtRawDataFor: aView [
+IpfsCid >> gtRawBlockFor: aView [
 	<gtView>
 	| view |
 	view := self loadRawBlock ipfsDataViewFor: aView.
 	^ view
-		title: 'Raw data';
+		title: 'Raw block';
 		priority: -4;
 		yourself.
 

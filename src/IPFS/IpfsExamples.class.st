@@ -39,15 +39,15 @@ IpfsExamples >> cborCidForInteger [
 ]
 
 { #category : #examples }
-IpfsExamples >> cborCidForMap [
+IpfsExamples >> cborCidForJSONMap [
 	<gtExample>
-	^ { #a -> 1. #b -> 2 } asDictionary storeInIpfs
+	^ (IpfsLinkedData value: { #a -> 1. #b -> 2 } asDictionary) storeInIpfs
 ]
 
 { #category : #examples }
-IpfsExamples >> cborCidForMapWithReference [
+IpfsExamples >> cborCidForJSONMapWithReference [
 	<gtExample>
-	^ { #data -> self cborCidForMap } asDictionary storeInIpfs
+	^ (IpfsLinkedData value: { #data -> self cborCidForJSONMap } asDictionary) storeInIpfs
 
 ]
 

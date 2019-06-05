@@ -16,5 +16,5 @@ IpfsCborCid class >> codec [
 
 { #category : #'data access' }
 IpfsCborCid >> loadObject [
-	^ self loadAndDecode
+	^ self loadAndDecode decodeFromIpfs
 ]
