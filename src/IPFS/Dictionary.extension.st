@@ -24,7 +24,7 @@ Dictionary >> decodeFromIpfs [
 ]
 
 { #category : #'*IPFS' }
-Dictionary >> decodeIpfsDictionary: aDictionary [
+Dictionary class >> decodeIpfsObject: aDictionary [
 	<ipfsDecoder: #dictionary>
 	| decodedDictionary |
 	decodedDictionary := Dictionary new.

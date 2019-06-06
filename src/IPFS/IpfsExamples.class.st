@@ -27,6 +27,12 @@ IpfsExamples >> cborCidForArrayWithReferences [
 ]
 
 { #category : #examples }
+IpfsExamples >> cborCidForDictionary [
+	<gtExample>
+	^ (Dictionary with: 1 -> 2 with: 2 -> 3) storeInIpfs
+]
+
+{ #category : #examples }
 IpfsExamples >> cborCidForFloat [
 	<gtExample>
 	^ 0.5 storeInIpfs
