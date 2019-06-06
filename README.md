@@ -19,6 +19,7 @@ To install the support for [GToolkit](http://gtoolkit.com) as well, replace by:
 Metacello new
     baseline: 'IPFS';
     repository: 'github://khinsen/ipfs-pharo/src';
+    onConflictUseLoaded;
     load: 'All'.
 ```
 
