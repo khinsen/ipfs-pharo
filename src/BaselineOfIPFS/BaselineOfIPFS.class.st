@@ -18,7 +18,7 @@ BaselineOfIPFS >> baseline: spec [
 			with: [ spec repository: 'github://khinsen/SingletonTrait' ].
 		spec
 			baseline: 'GToolkit' 
-			with: [ spec repository: 'github://feenkcom/gtoolkit/src' ].
+			with: [ spec repository: 'github://feenkcom/gtoolkit:release/src' ].
 
 		spec
 			package: 'IPFS'
