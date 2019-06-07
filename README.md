@@ -1,5 +1,7 @@
 # An IPFS interface for Pharo
 
+![screenshot](./screenshot.png)
+
 **Important note:** This is work in progress, written so far mainly to let me play with IPFS. Everything might change at any time. Don't rely on this package for mission-critical software! Moreover, many things are still missing, in particular support for IPNS and the file system layer. But for experimenting with [IPLD](http://ipld.io/) it's just fine!
 
 ## Installation
