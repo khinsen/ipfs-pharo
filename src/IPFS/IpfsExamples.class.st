@@ -47,13 +47,13 @@ IpfsExamples >> cborCidForInteger [
 { #category : #examples }
 IpfsExamples >> cborCidForJSONMap [
 	<gtExample>
-	^ (IpfsLinkedData value: { #a -> 1. #b -> 2 } asDictionary) storeInIpfs
+	^ (NeoJSONObject with: #a -> 1 with: #b -> 2) storeInIpfs
 ]
 
 { #category : #examples }
 IpfsExamples >> cborCidForJSONMapWithReference [
 	<gtExample>
-	^ (IpfsLinkedData value: { #data -> self cborCidForJSONMap } asDictionary) storeInIpfs
+	^ (NeoJSONObject with: #data -> self cborCidForJSONMap) storeInIpfs
 
 ]
 

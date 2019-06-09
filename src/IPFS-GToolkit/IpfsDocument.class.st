@@ -35,7 +35,7 @@ IpfsDocument >> basename [
 
 { #category : #accessing }
 IpfsDocument >> encodeForIpfs [
-	^ Dictionary
+	^ NeoJSONObject
 		with: #type -> #pillarDocument
 		with: #name -> self name
 		with: #text -> self text

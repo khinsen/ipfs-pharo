@@ -1,11 +1,11 @@
 Extension { #name : #Dictionary }
 
 { #category : #'*IPFS' }
-Dictionary >> asIpfsLinkedData [
+Dictionary >> convertIpfsCids [
 	(self size = 1
 		and: [ self keys first = '/' ])
 		ifTrue: [ ^ IpfsCid fromDictionary: self ].
-	^ self collect: [ :each | each asIpfsLinkedData ]
+	^ self collect: [ :each | each convertIpfsCids ]
 ]
 
 { #category : #'*IPFS' }
@@ -37,7 +37,7 @@ Dictionary class >> decodeIpfsObject: aDictionary [
 
 { #category : #'*IPFS' }
 Dictionary >> encodeForIpfs [
-	^ Dictionary
+	^ NeoJSONObject
 		with: #type -> #dictionary
 		with: #items ->
 				(self associations collect:

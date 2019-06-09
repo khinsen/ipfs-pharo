@@ -51,7 +51,7 @@ ${example:name=IpfsExamples>>#storeDataPinUnpinAndCheckItsAbsenceAfterGarbageCol
 
 There remains a practical question: what if your local IPFS peer is not online permanently, but you want to make some data available at any time? The answer is that you need to pin it on some other IPFS peer, one that ''is'' always available. No need to send it over first - it will retrieve the data by itself when you ask it to pin a CID. Note however that pinning data has a cost in terms of resources (storage, bandwidth, and a bit of CPU time). Just like storing data on a traditional Web server, in fact. There are a few commercial IPFS pinning services (a Web search will find them easily) that you can turn to.
 
-So far for part 1 of the tutorial. Part 2 is just one click away. It will be loaded via IPFS, so opening it might take a while. Ready? Then ${ipfs:cid=bafyreicupesuj5vaneblvftnw5lebdwaq76uxllwdtsbweyarhq444nao4|name=click here}$.
+So far for part 1 of the tutorial. Part 2 is just one click away. It will be loaded via IPFS, so opening it might take a while. Ready? Then ${ipfs:cid=bafyreiawg5vhmvnvnkzp7cxgjc6fdrszm4e5pqa6jf2qk4e22j7rlw4bhe|name=click here}$.
 
 "
 Class {

@@ -1,7 +1,7 @@
 Extension { #name : #Object }
 
 { #category : #'*IPFS' }
-Object >> asIpfsLinkedData [
+Object >> convertIpfsCids [
 	^ self
 ]
 

@@ -135,7 +135,7 @@ Ipfs >> dagGet: anIpfsCid [
 		(Dictionary with: #arg -> anIpfsCid asString).
 	anIpfsCid asIpfsCid isRaw
 		ifTrue: [ ^ node asByteArray ]
-		ifFalse: [ ^ IpfsLinkedData value: node asIpfsLinkedData ]
+		ifFalse: [ ^ node convertIpfsCids ]
 ]
 
 { #category : #IPLD }

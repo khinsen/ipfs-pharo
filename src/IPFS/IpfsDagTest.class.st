@@ -11,7 +11,7 @@ Class {
 { #category : #testing }
 IpfsDagTest >> testIPFSCLIDocumentation [
 	| dagNode |
-	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid loadAndDecode value.
+	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid loadAndDecode.
 	self assert: (dagNode at: 'data') equals: 'CAE='.
 	self assert: (dagNode at: 'links') size equals: 6.
 	(dagNode at: 'links') do:
@@ -22,9 +22,9 @@ IpfsDagTest >> testIPFSCLIDocumentation [
 { #category : #testing }
 IpfsDagTest >> testLinkedData [
 	| data1 cid1 data2 cid2 retrieved |
-	data1 := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
+	data1 := NeoJSONObject with: 'foo' -> 'bar'.
 	cid1 := data1 storeInIpfs.
-	data2 := IpfsLinkedData value: { 'data' -> cid1 } asDictionary.
+	data2 := NeoJSONObject with: 'data' -> cid1.
 	cid2 := data2 storeInIpfs.
 	retrieved := cid2 loadAndDecode.
 	self assert: retrieved equals: data2.
@@ -34,12 +34,12 @@ IpfsDagTest >> testLinkedData [
 IpfsDagTest >> testPinning [
 	| localPeer cid1 cid2 |
 	localPeer := IpfsPeer local.
-	cid1 := (IpfsLinkedData value: { #foo -> #bar } asDictionary) storeInIpfs.
-	cid2 := (IpfsLinkedData value: { #foobar -> cid1 } asDictionary) storeInIpfs.
+	cid1 := (NeoJSONObject with: #foo -> #bar) storeInIpfs.
+	cid2 := (NeoJSONObject with: #foobar -> cid1) storeInIpfs.
 	[ localPeer unpin: cid1 ] on: Error do: [ ].
 	[ localPeer unpin: cid2 ] on: Error do: [ ].
-	self deny: ((localPeer pinnedCids) includes: cid1).
-	self deny: ((localPeer pinnedCids) includes: cid2).
+	self deny: (localPeer pinnedCids includes: cid1).
+	self deny: (localPeer pinnedCids includes: cid2).
 
 	localPeer pin: cid2.
 	self assert: ((localPeer pinnedCidsOfType: #direct) includes: cid2).
@@ -62,9 +62,9 @@ IpfsDagTest >> testRandomArrays [
 		[ | array cid retrievedArray |
 			array := Array new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
-			cid := (IpfsLinkedData value: array) storeInIpfs.
+			cid := array storeInIpfs.
 			retrievedArray := cid loadAndDecode.
-			self assert: retrievedArray value equals: array ]
+			self assert: retrievedArray equals: array ]
 
 ]
 
@@ -83,11 +83,11 @@ IpfsDagTest >> testRandomByteArrays [
 { #category : #testing }
 IpfsDagTest >> testReferences [
 	| data1 cid1 data2 cid2 data3 cid3 refs |
-	data1 := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
+	data1 := NeoJSONObject with: 'foo' -> 'bar'.
 	cid1 := data1 storeInIpfs.
-	data2 := IpfsLinkedData value: { 'link' -> cid1 } asDictionary.
+	data2 := NeoJSONObject with: 'link' -> cid1.
 	cid2 := data2 storeInIpfs.
-	data3 := IpfsLinkedData value: { 'data' -> cid2 } asDictionary.
+	data3 := NeoJSONObject with: 'data' -> cid2.
 	cid3 := data3 storeInIpfs.
 
 	refs := cid2 references.
@@ -111,20 +111,20 @@ IpfsDagTest >> testStoreAndLoad [
 	testValues := { 'aString'.
 						 42.
 						 -2.5.
-						 { 'foor' -> 'bar' } asDictionary }.
+						 NeoJSONObject with: 'foor' -> 'bar' }.
 	testValues do:
 		[ :object |
 			| cid retrievedObject |
-			cid := (IpfsLinkedData value: object) storeInIpfs.
+			cid := object storeInIpfs.
 			retrievedObject := cid loadAndDecode.
-			self assert: retrievedObject value equals: object ]
+			self assert: retrievedObject equals: object ]
 
 ]
 
 { #category : #testing }
 IpfsDagTest >> testStoreAndLoadAsRaw [
 	| data cid retrievedData |
-	data := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
+	data := NeoJSONObject with: 'foo' -> 'bar'.
 	cid := data storeInIpfs.
 	retrievedData := cid loadRawBlock.
 	self assert: retrievedData

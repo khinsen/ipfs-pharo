@@ -85,7 +85,7 @@ IpfsCid >> decodeFromIpfs [
 
 { #category : #converting }
 IpfsCid >> encodeForIpfs [
-	^ { '/' -> cidBase32 } asDictionary
+	^ NeoJSONObject with: '/' -> cidBase32
 ]
 
 { #category : #comparing }

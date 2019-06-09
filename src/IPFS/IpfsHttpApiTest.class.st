@@ -45,11 +45,11 @@ IpfsHttpApiTest >> testCidConversion [
 { #category : #testing }
 IpfsHttpApiTest >> testDagNodeReferences [
 	| data1 cid1 data2 cid2 data3 cid3 result expected1 expected2 |
-	data1 := IpfsLinkedData value: { 'foo' -> 'bar' } asDictionary.
+	data1 := NeoJSONObject with: 'foo' -> 'bar'.
 	cid1 := data1 storeInIpfs.
-	data2 := IpfsLinkedData value: { 'link' -> cid1 } asDictionary.
+	data2 := NeoJSONObject with: 'link' -> cid1.
 	cid2 := data2 storeInIpfs.
-	data3 := IpfsLinkedData value: { 'data' -> cid2 } asDictionary.
+	data3 := NeoJSONObject with: 'data' -> cid2.
 	cid3 := data3 storeInIpfs.
 
 	result := self znClient
@@ -154,7 +154,7 @@ IpfsHttpApiTest >> testPutGetSimpleDagNodes [
 	testData := { 'aString' -> '"aString"'.
 					  42 -> '42'.
 					  -2.5 -> '-2.5'.
-					  { 'foo' -> 'bar' } asDictionary -> '{"foo":"bar"}'}
+					  (NeoJSONObject with: 'foo' -> 'bar') -> '{"foo":"bar"}'}
 					asDictionary.
 	testData keysAndValuesDo:
 		[ :object :json |
