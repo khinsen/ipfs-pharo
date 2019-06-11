@@ -1,3 +1,6 @@
+"
+!A world menu entry for IPFS
+"
 Class {
 	#name : #IpfsWorldMenu,
 	#superclass : #Object,
@@ -5,7 +8,7 @@ Class {
 }
 
 { #category : #'world menu' }
-IpfsWorldMenu class >> activePapersCatalogWorldMenuOn: aBuilder [
+IpfsWorldMenu class >> ipfsWorldMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #IPFS)
 		label: 'IPFS';
@@ -13,7 +16,12 @@ IpfsWorldMenu class >> activePapersCatalogWorldMenuOn: aBuilder [
 	(aBuilder item: #IpfsTutorial)
 		parent: #IPFS;
 		order: 0;
+		withSeparatorAfter;
 		label: 'Tutorial';
 		action: [ GtInspector openOn: IpfsTutorial ].
-
+	(aBuilder item: #IpfsLocalPeer)
+		parent: #IPFS;
+		order: 1;
+		label: 'Local peer';
+		action: [ GtInspector openOn: IpfsPeer local ]
 ]
