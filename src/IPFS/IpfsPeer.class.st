@@ -43,10 +43,59 @@ IpfsPeer >> collectGarbage [
 		get
 ]
 
+{ #category : #keys }
+IpfsPeer >> deleteKeyNamed: aSymbol [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/key/rm';
+		queryAt: #arg add: aSymbol;
+		get.
+	self assert: (result at: #Name) = aSymbol.
+
+]
+
+{ #category : #keys }
+IpfsPeer >> generateKeyNamed: aSymbol [
+	| result |
+	^ self keyNamed: aSymbol
+		ifAbsent:
+			[	result := self znClientForJsonResult
+					path: 'api/v0/key/gen';
+					queryAt: #arg add: aSymbol;
+					queryAt: #type add: #rsa;
+					get.
+				self assert: (result at: #Name) = aSymbol.
+				^ IpfsKey peer: self name: aSymbol id: (result at: #Id) ]
+
+]
+
 { #category : #initialization }
 IpfsPeer >> initializeWithHost: aString port: anInteger [
 	host := aString.
 	port := anInteger.
+]
+
+{ #category : #keys }
+IpfsPeer >> keyNamed: aSymbol [
+	^ self keys detect: [ :each | each name = aSymbol ]
+]
+
+{ #category : #keys }
+IpfsPeer >> keyNamed: aSymbol ifAbsent: aBlock [
+	[ ^ self keyNamed: aSymbol ]
+	on: NotFound do: [ ^ aBlock value ]. 
+
+]
+
+{ #category : #keys }
+IpfsPeer >> keys [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/key/list';
+		get.
+	^ (result at: #Keys)
+		collect: [ :each |  IpfsKey peer: self name: (each at: #Name) id: (each at: #Id) ]
+
 ]
 
 { #category : #pinning }
@@ -94,6 +143,18 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 		queryAt: #type add: aCidType;
 		get.
 	^ (result at: 'Keys') keys collect: #asIpfsCid
+]
+
+{ #category : #keys }
+IpfsPeer >> renameKeyNamed: aSymbol to: anotherSymbol [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/key/rename';
+		queryAt: #arg add: aSymbol;
+		queryAt: #arg add: anotherSymbol;
+		get.
+	self assert: (result at: #Was) = aSymbol.
+	self assert: (result at: #Now) = anotherSymbol.
 ]
 
 { #category : #repository }

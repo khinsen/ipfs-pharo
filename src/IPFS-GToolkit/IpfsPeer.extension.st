@@ -12,6 +12,17 @@ IpfsPeer >> gtIndirectlyPinnedCidsFor: aView [
 ]
 
 { #category : #'*IPFS-GToolkit' }
+IpfsPeer >> gtIpnsKeysFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'IPNS keys';
+		priority: -4;
+		items: [ self keys ];
+		column: 'Name' item: [ :aField | aField name ];
+		column: 'Id' item: [ :aField | aField id ]
+]
+
+{ #category : #'*IPFS-GToolkit' }
 IpfsPeer >> gtPinnedCidsFor: aView [
 	<gtView>
 	^ aView list
