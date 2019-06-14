@@ -12,7 +12,7 @@ Class {
 		'name',
 		'id'
 	],
-	#category : #'IPFS-3 - Names'
+	#category : #'IPFS-4 - Names'
 }
 
 { #category : #'instance creation' }
@@ -22,6 +22,12 @@ IpfsKey class >> peer: anIpfsPeer name: aSymbolOrString id: aString [
 			name: aSymbolOrString asSymbol
 			id: aString;
 		yourself
+]
+
+{ #category : #converting }
+IpfsKey >> asIpfsPath [
+	^ IpfsNamePath new name: self id
+
 ]
 
 { #category : #deleting }

@@ -19,7 +19,7 @@ Class {
 		'cidBase32',
 		'prefix'
 	],
-	#category : #'IPFS-1 - Blocks'
+	#category : #'IPFS-1 - Paths'
 }
 
 { #category : #'instance creation' }
@@ -65,6 +65,12 @@ IpfsCid >> = anIpfsCid [
 { #category : #converting }
 IpfsCid >> asIpfsCid [
 	^ self
+
+]
+
+{ #category : #converting }
+IpfsCid >> asIpfsPath [
+	^ IpfsCidPath new cid: self
 
 ]
 
