@@ -32,3 +32,8 @@ IpfsCidPath >> cid: anIpfsCid [
 	cid := anIpfsCid.
 
 ]
+
+{ #category : #resolving }
+IpfsCidPath >> resolve [
+	^ self
+]

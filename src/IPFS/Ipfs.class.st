@@ -87,9 +87,35 @@ Ipfs class >> objectGet: aCID [
 	^ self uniqueInstance objectGet: aCID
 ]
 
+{ #category : #IPNS }
+Ipfs class >> publish: ipfsPath key: ipnsKey [
+	^ self uniqueInstance publish: ipfsPath key: ipnsKey
+]
+
+{ #category : #IPNS }
+Ipfs class >> publish: ipfsPath key: ipnsKey lifetime: aDuration [
+	^ self uniqueInstance publish: ipfsPath key: ipnsKey lifetime: aDuration
+
+]
+
 { #category : #IPLD }
 Ipfs class >> refs: aCID recursive: aBoolean [
 	^ self uniqueInstance refs: aCID recursive: aBoolean
+]
+
+{ #category : #IPNS }
+Ipfs class >> resolveName: aString [
+	^ self uniqueInstance resolveName: aString
+]
+
+{ #category : #IPNS }
+Ipfs class >> resolveName: aString timeout: aDuration [
+	^ self uniqueInstance resolveName: aString timeout: aDuration
+]
+
+{ #category : #IPNS }
+Ipfs class >> resolvePath: aString [
+	^ self uniqueInstance resolvePath: aString
 ]
 
 { #category : #IPFS }
@@ -160,16 +186,6 @@ Ipfs >> dagPutRaw: anObject [
 
 ]
 
-{ #category : #'http requests' }
-Ipfs >> getRequest: aString parameters: aDictionary [
-	| result |
-	result := self znClientForJsonResult
-		path: 'api/v0/', aString;
-		queryAddAll: aDictionary;
-		get.
-	^ result
-]
-
 { #category : #accessing }
 Ipfs >> host [
 	^ host
@@ -214,17 +230,6 @@ Ipfs >> port: anObject [
 	port := anObject
 ]
 
-{ #category : #'http requests' }
-Ipfs >> postRequest: aString contents: data parameters: aDictionary [
-	| result |
-	result := self znClientForJsonResult
-		path: 'api/v0/', aString;
-		queryAddAll: aDictionary;
-		addPart: (ZnMimePart fieldName: 'file' value: data);
-		post.
-	^ result
-]
-
 { #category : #IPLD }
 Ipfs >> refs: anIpfsCid recursive: aBoolean [
 	| result |
@@ -236,4 +241,27 @@ Ipfs >> refs: anIpfsCid recursive: aBoolean [
 	^ result
 		ifNil: [ Array new ]
 		ifNotNil: [ self parseReferenceList: result ]
+]
+
+{ #category : #IPNS }
+Ipfs >> resolveName: aString [
+	^ self resolveName: aString timeout: 0 seconds
+
+]
+
+{ #category : #IPNS }
+Ipfs >> resolveName: aString timeout: aDuration [
+	| result |
+	result := self getRequest: 'name/resolve'
+						parameters: { #arg -> aString.
+										  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
+										asDictionary.
+	^ result at: #Path
+]
+
+{ #category : #IPNS }
+Ipfs >> resolvePath: aString [
+	| result |
+	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
+	^ result at: #Path
 ]

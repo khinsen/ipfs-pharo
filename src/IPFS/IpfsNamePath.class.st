@@ -30,3 +30,8 @@ IpfsNamePath >> name [
 IpfsNamePath >> name: aString [
 	name := aString
 ]
+
+{ #category : #resolving }
+IpfsNamePath >> resolve [
+	^ IpfsPath fromString: (Ipfs resolvePath: self asString)
+]

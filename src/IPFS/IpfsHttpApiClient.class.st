@@ -13,6 +13,16 @@ Class {
 }
 
 { #category : #'http requests' }
+IpfsHttpApiClient >> getRequest: aString parameters: aDictionary [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/', aString;
+		queryAddAll: aDictionary;
+		get.
+	^ result
+]
+
+{ #category : #'http requests' }
 IpfsHttpApiClient >> parseReferenceList: aString [
 	| parser references |
 	parser := NeoJSONReader on: aString contents readStream.
@@ -24,6 +34,17 @@ IpfsHttpApiClient >> parseReferenceList: aString [
 		references add: (refAndErr at: 'Ref') asIpfsCid ]
 		repeat.
 	^ references
+]
+
+{ #category : #'http requests' }
+IpfsHttpApiClient >> postRequest: aString contents: data parameters: aDictionary [
+	| result |
+	result := self znClientForJsonResult
+		path: 'api/v0/', aString;
+		queryAddAll: aDictionary;
+		addPart: (ZnMimePart fieldName: 'file' value: data);
+		post.
+	^ result
 ]
 
 { #category : #'http requests' }

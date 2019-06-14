@@ -50,7 +50,6 @@ IpfsPeer >> deleteKeyNamed: aSymbol [
 		path: 'api/v0/key/rm';
 		queryAt: #arg add: aSymbol;
 		get.
-	self assert: (result at: #Name) = aSymbol.
 
 ]
 
@@ -143,6 +142,32 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 		queryAt: #type add: aCidType;
 		get.
 	^ (result at: 'Keys') keys collect: #asIpfsCid
+]
+
+{ #category : #publishing }
+IpfsPeer >> publish: ipfsPath key: ipnsKey [
+	| result |
+	ZnConnectionTimeout
+		value: 600
+		during:
+			[ result := self getRequest: 'name/publish'
+						parameters: { #arg -> ipfsPath asString.
+										  #key -> ipnsKey name }
+										asDictionary ].
+	self assert: (result at: #Name) = ipnsKey id.
+
+]
+
+{ #category : #publishing }
+IpfsPeer >> publish: ipfsPath key: ipnsKey lifetime: aDuration [
+	| result |
+	result := self getRequest: 'name/publish'
+						parameters: { #arg -> ipfsPath asString.
+										  #key -> ipnsKey name.
+										  #lifetime -> (aDuration asSeconds printString, 's') }
+										asDictionary.
+	self assert: (result at: #Name) = ipnsKey id.
+
 ]
 
 { #category : #keys }

@@ -30,6 +30,22 @@ IpfsPath >> / aString [
 	linkSequence add: aString
 ]
 
+{ #category : #comparing }
+IpfsPath >> = anIpfsPath [
+	^ self asString = anIpfsPath asString
+
+]
+
+{ #category : #accessing }
+IpfsPath >> asIpfsPath [
+	^ self
+]
+
+{ #category : #comparing }
+IpfsPath >> hash [
+	^ self asString hash
+]
+
 { #category : #initialization }
 IpfsPath >> initialize [
 	linkSequence := OrderedCollection new.
@@ -42,4 +58,9 @@ IpfsPath >> printOn: aStream [
 			  nextPutAll: self asString;
 			  nextPut: $).
 
+]
+
+{ #category : #resolving }
+IpfsPath >> resolve [
+	self subclassResponsibility
 ]
