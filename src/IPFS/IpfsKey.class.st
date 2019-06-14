@@ -52,8 +52,25 @@ IpfsKey >> name [
 	^ name
 ]
 
+{ #category : #publishing }
+IpfsKey >> publish: ipfsPath [ 
+	^ IpfsPeer local publish: ipfsPath asIpfsPath key: self
+
+]
+
+{ #category : #publishing }
+IpfsKey >> publish: ipfsPath lifetime: aDuration [
+	^ Ipfs publish: ipfsPath asIpfsPath key: self lifetime: aDuration
+
+]
+
 { #category : #renaming }
 IpfsKey >> rename: aSymbol [
 	peer renameKeyNamed: name to: aSymbol.
 	name := aSymbol 
+]
+
+{ #category : #accessing }
+IpfsKey >> resolve [
+	^ self asIpfsPath resolve
 ]

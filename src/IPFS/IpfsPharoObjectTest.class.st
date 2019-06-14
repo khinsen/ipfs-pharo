@@ -12,7 +12,7 @@ IpfsPharoObjectTest >> storeLoadCheck: anObject [
 	| cid retrievedObject |
 	cid := anObject storeInIpfs.
 	retrievedObject := cid loadObject.
-	self assert: retrievedObject value equals: anObject
+	self assert: retrievedObject equals: anObject
 ]
 
 { #category : #testing }
