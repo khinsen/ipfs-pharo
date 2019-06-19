@@ -1,44 +1,29 @@
 Class {
 	#name : #IpfsLink,
-	#superclass : #Object,
+	#superclass : #ProtoObject,
 	#instVars : [
-		'cid',
-		'size'
+		'target'
 	],
-	#category : #'IPFS-3 - Files'
+	#category : #'IPFS-2 - Linked data'
 }
 
 { #category : #'instance creation' }
-IpfsLink class >> cid: aString [
-	^ self basicNew
-		initializeWithCid: aString size: nil;
-		yourself
+IpfsLink class >> to: anObject [
+	^ self new initializeWithTarget: anObject
 ]
 
-{ #category : #'instance creation' }
-IpfsLink class >> cid: aString size: anInteger [
-	^ self basicNew
-		initializeWithCid: aString size: anInteger;
-		yourself
+{ #category : #'reflective operations' }
+IpfsLink >> doesNotUnderstand: aMessage [
+	^ target perform: aMessage selector withArguments: aMessage arguments
+
 ]
 
-{ #category : #accessing }
-IpfsLink >> cid [
-	^ cid
-]
-
-{ #category : #accessing }
-IpfsLink >> dataSize [
-	^ size
-]
-
-{ #category : #accessing }
-IpfsLink >> getObject [
-	^ Ipfs objectGet: cid
+{ #category : #converting }
+IpfsLink >> encodeForIpfs [
+	^ target storeInIpfs
 ]
 
 { #category : #initialization }
-IpfsLink >> initializeWithCid: aString size: anInteger [
-	cid := aString.
-	size := anInteger.
+IpfsLink >> initializeWithTarget: anObject [
+	target := anObject
 ]

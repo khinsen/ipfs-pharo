@@ -17,6 +17,6 @@ IpfsFileObjectTest >> testIPFSCLIDocumentation [
 	self assert: ipfsObject links keys asSet
 		  equals: #('about' 'contact' 'help' 'quick-start' 'readme' 'security-notes') asSet.
 	ipfsObject links values
-		do: [ :each | self assert: (each isKindOf: IpfsLink) ].
+		do: [ :each | self assert: (each isKindOf: IpfsProtoBufLink) ].
 
 ]

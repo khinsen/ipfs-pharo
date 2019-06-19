@@ -15,6 +15,17 @@ IpfsCborCid class >> codec [
 ]
 
 { #category : #'data access' }
+IpfsCborCid >> decodeLinkedObjectsFromIpfs [
+	^ IpfsLink to: self loadLinkedObjects
+
+]
+
+{ #category : #'data access' }
+IpfsCborCid >> loadLinkedObjects [
+	^ self loadAndDecode decodeLinkedObjectsFromIpfs
+]
+
+{ #category : #'data access' }
 IpfsCborCid >> loadObject [
 	^ self loadAndDecode decodeFromIpfs
 ]

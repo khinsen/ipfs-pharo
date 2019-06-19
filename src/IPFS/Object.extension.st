@@ -6,6 +6,16 @@ Object >> convertIpfsCids [
 ]
 
 { #category : #'*IPFS' }
+Object >> decodeFromIpfs [
+	self subclassResponsibility
+]
+
+{ #category : #'*IPFS' }
+Object >> decodeLinkedObjectsFromIpfs [
+	^ self decodeFromIpfs
+]
+
+{ #category : #'*IPFS' }
 Object >> encodeForIpfs [
 	self subclassResponsibility 
 ]

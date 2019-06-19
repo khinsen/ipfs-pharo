@@ -33,7 +33,7 @@ IpfsDocument >> basename [
 	^ self name
 ]
 
-{ #category : #accessing }
+{ #category : #converting }
 IpfsDocument >> encodeForIpfs [
 	^ NeoJSONObject
 		with: #type -> #pillarDocument

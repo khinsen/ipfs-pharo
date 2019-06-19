@@ -209,7 +209,7 @@ Ipfs >> objectGet: aCid [
 	(result at: 'Links') do:
 		[ :link |
 			links at: (link at: 'Name')
-					put: (IpfsLink cid: (IpfsCid fromString: (link at: 'Hash'))
+					put: (IpfsProtoBufLink cid: (IpfsCid fromString: (link at: 'Hash'))
 									   size: ((link at: 'Size') asNumber) )].
 	^ IpfsObject
 		data: data

@@ -6,8 +6,8 @@ Dictionary class >> decodeIpfsObject: aDictionary [
 	| decodedDictionary |
 	decodedDictionary := Dictionary new.
 	(aDictionary at: #items) do:
-		[ :each | decodedDictionary at: each first decodeFromIpfs
-											put: each second decodeFromIpfs ].
+		[ :each | decodedDictionary at: each first
+											put: each second ].
 	^ decodedDictionary
 
 ]
