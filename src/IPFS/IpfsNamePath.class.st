@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'name'
 	],
-	#category : #'IPFS-1 - Paths'
+	#category : #'IPFS-4 - Names'
 }
 
 { #category : #converting }
@@ -34,4 +34,9 @@ IpfsNamePath >> name: aString [
 { #category : #resolving }
 IpfsNamePath >> resolve [
 	^ IpfsPath fromString: (Ipfs resolvePath: self asString)
+]
+
+{ #category : #resolving }
+IpfsNamePath >> resolveWithTimeout: aDuration [
+	^ IpfsPath fromString: (Ipfs resolvePath: self asString timeout: aDuration)
 ]

@@ -10,6 +10,9 @@ Both this class and ${class:name=Ipfs}$ access the HTTP API of an IPFS daemon. $
 Class {
 	#name : #IpfsPeer,
 	#superclass : #IpfsHttpApiClient,
+	#instVars : [
+		'publishingTimeout'
+	],
 	#category : #'IPFS-0 - Server access'
 }
 
@@ -72,6 +75,7 @@ IpfsPeer >> generateKeyNamed: aSymbol [
 IpfsPeer >> initializeWithHost: aString port: anInteger [
 	host := aString.
 	port := anInteger.
+	publishingTimeout := 10 minutes.
 ]
 
 { #category : #keys }
@@ -148,7 +152,7 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 IpfsPeer >> publish: ipfsPath key: ipnsKey [
 	| result |
 	ZnConnectionTimeout
-		value: 600
+		value: publishingTimeout asSeconds
 		during:
 			[ result := self getRequest: 'name/publish'
 						parameters: { #arg -> ipfsPath asString.
@@ -161,13 +165,26 @@ IpfsPeer >> publish: ipfsPath key: ipnsKey [
 { #category : #publishing }
 IpfsPeer >> publish: ipfsPath key: ipnsKey lifetime: aDuration [
 	| result |
-	result := self getRequest: 'name/publish'
-						parameters: { #arg -> ipfsPath asString.
-										  #key -> ipnsKey name.
-										  #lifetime -> (aDuration asSeconds printString, 's') }
-										asDictionary.
+	ZnConnectionTimeout
+		value: publishingTimeout asSeconds
+		during:
+			[	result := self getRequest: 'name/publish'
+									parameters: { #arg -> ipfsPath asString.
+													  #key -> ipnsKey name.
+													  #lifetime -> (aDuration asSeconds printString, 's') }
+													asDictionary ].
 	self assert: (result at: #Name) = ipnsKey id.
 
+]
+
+{ #category : #publishing }
+IpfsPeer >> publishingTimeout [
+	^ publishingTimeout
+]
+
+{ #category : #publishing }
+IpfsPeer >> publishingTimeout: anObject [
+	publishingTimeout := anObject
 ]
 
 { #category : #keys }

@@ -33,3 +33,15 @@ IpfsPublishingTest >> testPublishThenResolve [
 	self assert: key resolve equals: cid asIpfsPath.
 
 ]
+
+{ #category : #testing }
+IpfsPublishingTest >> testPublishWithLifetime [
+	| cid |
+	cid := 'foo' storeInIpfs.
+	key publish: cid lifetime: 5 minutes.
+	self assert: (key resolveWithTimeout: 5 seconds) equals: cid asIpfsPath.
+	1 minute asDelay wait.
+	self assert: (key resolveWithTimeout: 5 seconds) equals: cid asIpfsPath.
+	5 minutes asDelay wait.
+	self should: [ key resolve ] raise: Exception.
+]

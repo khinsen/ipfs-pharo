@@ -19,7 +19,7 @@ Class {
 		'cidBase32',
 		'prefix'
 	],
-	#category : #'IPFS-1 - Paths'
+	#category : #'IPFS-1 - CIDs and paths'
 }
 
 { #category : #'instance creation' }

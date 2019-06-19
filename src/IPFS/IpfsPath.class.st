@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'linkSequence'
 	],
-	#category : #'IPFS-1 - Paths'
+	#category : #'IPFS-1 - CIDs and paths'
 }
 
 { #category : #accessing }

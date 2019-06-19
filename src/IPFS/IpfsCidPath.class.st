@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'cid'
 	],
-	#category : #'IPFS-1 - Paths'
+	#category : #'IPFS-1 - CIDs and paths'
 }
 
 { #category : #converting }

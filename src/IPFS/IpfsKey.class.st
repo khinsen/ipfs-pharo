@@ -54,13 +54,13 @@ IpfsKey >> name [
 
 { #category : #publishing }
 IpfsKey >> publish: ipfsPath [ 
-	^ IpfsPeer local publish: ipfsPath asIpfsPath key: self
+	^ peer publish: ipfsPath asIpfsPath key: self
 
 ]
 
 { #category : #publishing }
 IpfsKey >> publish: ipfsPath lifetime: aDuration [
-	^ Ipfs publish: ipfsPath asIpfsPath key: self lifetime: aDuration
+	^ peer publish: ipfsPath asIpfsPath key: self lifetime: aDuration
 
 ]
 
@@ -73,4 +73,9 @@ IpfsKey >> rename: aSymbol [
 { #category : #accessing }
 IpfsKey >> resolve [
 	^ self asIpfsPath resolve
+]
+
+{ #category : #accessing }
+IpfsKey >> resolveWithTimeout: aDuration [
+	^ self asIpfsPath resolveWithTimeout: aDuration
 ]

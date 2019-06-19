@@ -104,18 +104,14 @@ Ipfs class >> refs: aCID recursive: aBoolean [
 ]
 
 { #category : #IPNS }
-Ipfs class >> resolveName: aString [
-	^ self uniqueInstance resolveName: aString
-]
-
-{ #category : #IPNS }
-Ipfs class >> resolveName: aString timeout: aDuration [
-	^ self uniqueInstance resolveName: aString timeout: aDuration
-]
-
-{ #category : #IPNS }
 Ipfs class >> resolvePath: aString [
 	^ self uniqueInstance resolvePath: aString
+]
+
+{ #category : #IPNS }
+Ipfs class >> resolvePath: aString timeout: aDuration [
+	^ self uniqueInstance resolvePath: aString timeout: aDuration
+	
 ]
 
 { #category : #IPFS }
@@ -244,24 +240,21 @@ Ipfs >> refs: anIpfsCid recursive: aBoolean [
 ]
 
 { #category : #IPNS }
-Ipfs >> resolveName: aString [
-	^ self resolveName: aString timeout: 0 seconds
-
-]
-
-{ #category : #IPNS }
-Ipfs >> resolveName: aString timeout: aDuration [
+Ipfs >> resolvePath: aString [
 	| result |
-	result := self getRequest: 'name/resolve'
-						parameters: { #arg -> aString.
-										  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
-										asDictionary.
+	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
 	^ result at: #Path
 ]
 
 { #category : #IPNS }
-Ipfs >> resolvePath: aString [
+Ipfs >> resolvePath: aString timeout: aDuration [
 	| result |
-	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
+	ZnConnectionTimeout
+		value: aDuration asSeconds + 10 "10 extra seconds as an error margin"
+		during:
+			[	result := self getRequest: 'name/resolve'
+									parameters: { #arg -> aString.
+													  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
+													asDictionary ].
 	^ result at: #Path
 ]
