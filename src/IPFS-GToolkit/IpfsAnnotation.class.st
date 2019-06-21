@@ -5,8 +5,8 @@ Class {
 	#name : #IpfsAnnotation,
 	#superclass : #GtAnnotation,
 	#instVars : [
-		'referencedCid',
-		'displayedName'
+		'displayedName',
+		'referencedPath'
 	],
 	#category : #'IPFS-GToolkit'
 }
@@ -14,7 +14,7 @@ Class {
 { #category : #accessing }
 IpfsAnnotation class >> possibleParameters [
 	^ {
-		self constants ipfsCidParameterName.
+		self constants ipfsPathParameterName.
 		self constants nameParameterName.
 		self constants expandedParameterName.
 		self constants showParameterName.
@@ -31,7 +31,7 @@ IpfsAnnotation class >> tag [
 IpfsAnnotation >> browseReferenceFrom: anEvent [
 	anEvent modifiers isShift ifTrue: [ ^ self ].
 	anEvent target fireEvent: (GtPhlowObjectToSpawn new 
-		object: self referencedCid loadObject;
+		object: self referencedPath loadObject;
 		sourceElement: anEvent target)
 ]
 
@@ -42,8 +42,8 @@ IpfsAnnotation >> displayedName [
 			valueOf: self constants nameParameterName
 			in: self parameters 
 			value: [ :aValue | aValue ] 
-			emptyValue: [ '/ipfs/', self referencedCid asString ] 
-			defaultValue: [ '/ipfs/', self referencedCid asString ] ]
+			emptyValue: [ self referencedPath asString ] 
+			defaultValue: [ self referencedPath asString ] ]
 ]
 
 { #category : #testing }
@@ -58,16 +58,16 @@ IpfsAnnotation >> isPreviewDefined [
 
 { #category : #accessing }
 IpfsAnnotation >> objectToPreview [
-	^ self referencedCid loadObject
+	^ self referencedPath resolve cid loadObject
 ]
 
 { #category : #accessing }
-IpfsAnnotation >> referencedCid [
-	^ referencedCid ifNil: [ referencedCid := 
+IpfsAnnotation >> referencedPath [
+	^ referencedPath ifNil: [ referencedPath := 
 		self utility 
-			valueOf: self constants ipfsCidParameterName
+			valueOf: self constants ipfsPathParameterName
 			in: self parameters 
-			value: [ :aValue | IpfsCid fromString: aValue ] 
+			value: [ :aValue | IpfsPath fromString: aValue ] 
 			emptyValue: [ nil ] 
 			defaultValue: [ nil ] ]
 ]
@@ -78,7 +78,7 @@ IpfsAnnotation >> styleTextWithMarkup: aBlRope [
 	self styleLinkInText: aBlRope.
 	(self nodeStyler: aBlRope)
 		name: self displayedName;
-		spawnObject: self referencedCid loadObject;
+		spawnObject: self objectToPreview;
 		linkButton.
 	self styleExpandingPreviewInText: aBlRope
 ]

@@ -6,6 +6,6 @@ GtDocumentConstants class >> ipfsAnnotationName [
 ]
 
 { #category : #'*IPFS-GToolkit' }
-GtDocumentConstants class >> ipfsCidParameterName [
-	^ #cid
+GtDocumentConstants class >> ipfsPathParameterName [
+	^ #path
 ]
