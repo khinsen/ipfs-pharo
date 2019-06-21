@@ -38,5 +38,10 @@ IpfsNamePath >> resolve [
 
 { #category : #resolving }
 IpfsNamePath >> resolveWithTimeout: aDuration [
-	^ IpfsPath fromString: (Ipfs resolvePath: self asString timeout: aDuration)
+	| pathString |
+	pathString := Ipfs resolvePath: self asString timeout: aDuration.
+	pathString
+		ifNotNil: [ :s | ^ IpfsPath fromString: s ]
+		ifNil: [ ^ nil ]
+	
 ]

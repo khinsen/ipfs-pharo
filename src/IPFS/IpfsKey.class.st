@@ -48,8 +48,18 @@ IpfsKey >> initializeWithPeer: anIpfsPeer name: aSymbol id: aString [
 ]
 
 { #category : #accessing }
+IpfsKey >> load [
+	^ IpfsVariable key: self value: self resolve cid loadLinkedObjects
+]
+
+{ #category : #accessing }
 IpfsKey >> name [
 	^ name
+]
+
+{ #category : #accessing }
+IpfsKey >> peer [
+	^ peer
 ]
 
 { #category : #publishing }

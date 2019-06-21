@@ -52,7 +52,7 @@ IpfsCid class >> fromDictionary: aDictionary [
 
 { #category : #'instance creation' }
 IpfsCid class >> fromString: aString [
-	^ self fromBase32: (Ipfs cidBase32: aString).
+	^ self fromBase32: (Ipfs cidBase32: aString trimBoth).
 
 ]
 

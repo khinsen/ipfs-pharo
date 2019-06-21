@@ -38,5 +38,5 @@ NeoJSONObject >> decodeLinkedObjectsFromIpfs [
 
 { #category : #'*IPFS' }
 NeoJSONObject >> encodeForIpfs [
-	^ self
+	^ self collect: [ :each | each encodeForIpfs ]
 ]

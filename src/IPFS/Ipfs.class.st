@@ -249,12 +249,17 @@ Ipfs >> resolvePath: aString [
 { #category : #IPNS }
 Ipfs >> resolvePath: aString timeout: aDuration [
 	| result |
-	ZnConnectionTimeout
-		value: aDuration asSeconds + 10 "10 extra seconds as an error margin"
-		during:
-			[	result := self getRequest: 'name/resolve'
-									parameters: { #arg -> aString.
-													  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
-													asDictionary ].
+	[ 	ZnConnectionTimeout
+			value: aDuration asSeconds + 5 "5 extra seconds as an error margin"
+			during:
+				[	result := self getRequest: 'name/resolve'
+										parameters: { #arg -> aString.
+														  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
+														asDictionary ] ]
+	on: ZnHttpUnsuccessful do:
+		[ :ex |
+			| contents |
+			contents := (NeoJSONReader on: ex response contents readStream) next.
+			^ nil ].
 	^ result at: #Path
 ]
