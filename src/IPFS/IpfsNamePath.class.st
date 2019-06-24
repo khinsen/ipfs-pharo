@@ -21,6 +21,11 @@ IpfsNamePath >> asString [
 	^ '/' join: elements
 ]
 
+{ #category : #testing }
+IpfsNamePath >> isFullyResolvedPath [
+	^ false
+]
+
 { #category : #accessing }
 IpfsNamePath >> name [
 	^ name
@@ -33,15 +38,28 @@ IpfsNamePath >> name: aString [
 
 { #category : #resolving }
 IpfsNamePath >> resolve [
-	^ IpfsPath fromString: (Ipfs resolvePath: self asString)
+	^ self resolveWithDefault: nil
+]
+
+{ #category : #resolving }
+IpfsNamePath >> resolveWithDefault: anObject [
+	| path |
+	path := Ipfs resolvePath: self asString.
+	path ifNil: [ ^ anObject ].
+	^ IpfsPath fromString: path
 ]
 
 { #category : #resolving }
 IpfsNamePath >> resolveWithTimeout: aDuration [
+	^ self resolveWithTimeout: aDuration default: nil
+]
+
+{ #category : #resolving }
+IpfsNamePath >> resolveWithTimeout: aDuration default: anObject [
 	| pathString |
 	pathString := Ipfs resolvePath: self asString timeout: aDuration.
 	pathString
 		ifNotNil: [ :s | ^ IpfsPath fromString: s ]
-		ifNil: [ ^ nil ]
+		ifNil: [ ^ anObject ]
 	
 ]

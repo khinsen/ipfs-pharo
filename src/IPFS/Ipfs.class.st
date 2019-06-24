@@ -242,8 +242,9 @@ Ipfs >> refs: anIpfsCid recursive: aBoolean [
 { #category : #IPNS }
 Ipfs >> resolvePath: aString [
 	| result |
-	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
-	^ result at: #Path
+	[	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
+		^ result at: #Path ]
+	on: IpfsError do: [ ^ nil ]
 ]
 
 { #category : #IPNS }
@@ -255,11 +256,7 @@ Ipfs >> resolvePath: aString timeout: aDuration [
 				[	result := self getRequest: 'name/resolve'
 										parameters: { #arg -> aString.
 														  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
-														asDictionary ] ]
-	on: ZnHttpUnsuccessful do:
-		[ :ex |
-			| contents |
-			contents := (NeoJSONReader on: ex response contents readStream) next.
-			^ nil ].
-	^ result at: #Path
+														asDictionary.
+					^ result at: #Path ] ]
+	on: IpfsError do: [ ^ nil ].	
 ]

@@ -33,6 +33,11 @@ IpfsCidPath >> cid: anIpfsCid [
 
 ]
 
+{ #category : #testing }
+IpfsCidPath >> isFullyResolvedPath [
+	^ true
+]
+
 { #category : #resolving }
 IpfsCidPath >> resolve [
 	^ self

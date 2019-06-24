@@ -23,6 +23,21 @@ IpfsHttpApiClient >> getRequest: aString parameters: aDictionary [
 ]
 
 { #category : #'http requests' }
+IpfsHttpApiClient >> handleFailure: anException [
+	| message ipfsError |
+	"IPFS errors are ZnHttpUnsuccessful with a message in the response"
+	(anException isKindOf: ZnHttpUnsuccessful)
+		ifFalse: [ anException pass ].
+	message := (NeoJSONReader
+						on: anException response contents readStream)
+						next.
+	ipfsError := IpfsError new.
+	ipfsError messageText: (message at: #Message).
+	ipfsError signal.
+
+]
+
+{ #category : #'http requests' }
 IpfsHttpApiClient >> parseReferenceList: aString [
 	| parser references |
 	parser := NeoJSONReader on: aString contents readStream.
@@ -55,6 +70,7 @@ IpfsHttpApiClient >> znClient [
 		http;
 		host: host;
 		port: port;
+		ifFail: [ :exception | self handleFailure: exception ];
 		yourself.
 
 ]

@@ -51,6 +51,11 @@ IpfsPath >> initialize [
 	linkSequence := OrderedCollection new.
 ]
 
+{ #category : #testing }
+IpfsPath >> isFullyResolvedPath [
+	self subclassResponsibility
+]
+
 { #category : #printing }
 IpfsPath >> printOn: aStream [
 	super printOn: aStream.
