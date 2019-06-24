@@ -10,7 +10,8 @@ Class {
 	#instVars : [
 		'peer',
 		'name',
-		'id'
+		'id',
+		'waiting'
 	],
 	#category : #'IPFS-4 - Names'
 }
@@ -45,6 +46,12 @@ IpfsKey >> initializeWithPeer: anIpfsPeer name: aSymbol id: aString [
 	peer := anIpfsPeer.
 	name := aSymbol.
 	id := aString.
+	waiting := false.
+]
+
+{ #category : #accessing }
+IpfsKey >> isWaiting [
+	^ waiting
 ]
 
 { #category : #accessing }
@@ -67,14 +74,23 @@ IpfsKey >> peer [
 ]
 
 { #category : #publishing }
-IpfsKey >> publish: ipfsPath [ 
-	^ peer publish: ipfsPath asIpfsPath key: self
+IpfsKey >> publish: ipfsPath [
+	self waitForLastRequest.
+	waiting := true.
+	[	peer publish: ipfsPath asIpfsPath key: self.
+		waiting := false. ]
+	newProcess resume.
+
 
 ]
 
 { #category : #publishing }
 IpfsKey >> publish: ipfsPath lifetime: aDuration [
-	^ peer publish: ipfsPath asIpfsPath key: self lifetime: aDuration
+	self waitForLastRequest.
+	waiting := true.
+	[	peer publish: ipfsPath asIpfsPath key: self lifetime: aDuration.
+		waiting := false. ]
+	newProcess resume.
 
 ]
 
@@ -84,12 +100,19 @@ IpfsKey >> rename: aSymbol [
 	name := aSymbol 
 ]
 
-{ #category : #accessing }
+{ #category : #resolving }
 IpfsKey >> resolve [
+	self waitForLastRequest.
 	^ self asIpfsPath resolve
 ]
 
-{ #category : #accessing }
+{ #category : #resolving }
 IpfsKey >> resolveWithTimeout: aDuration [
+	self waitForLastRequest.
 	^ self asIpfsPath resolveWithTimeout: aDuration
+]
+
+{ #category : #publishing }
+IpfsKey >> waitForLastRequest [
+	[ waiting ] whileTrue: [ 1 second asDuration wait ]
 ]
