@@ -156,7 +156,8 @@ IpfsPeer >> publish: ipfsPath key: ipnsKey [
 		during:
 			[ result := self getRequest: 'name/publish'
 						parameters: { #arg -> ipfsPath asString.
-										  #key -> ipnsKey name }
+										  #key -> ipnsKey name.
+										  #'allow-offline' -> true }
 										asDictionary ].
 	self assert: (result at: #Name) = ipnsKey id.
 
@@ -171,7 +172,8 @@ IpfsPeer >> publish: ipfsPath key: ipnsKey lifetime: aDuration [
 			[	result := self getRequest: 'name/publish'
 									parameters: { #arg -> ipfsPath asString.
 													  #key -> ipnsKey name.
-													  #lifetime -> (aDuration asSeconds printString, 's') }
+													  #lifetime -> (aDuration asSeconds printString, 's').
+										 			  #'allow-offline' -> true }
 													asDictionary ].
 	self assert: (result at: #Name) = ipnsKey id.
 

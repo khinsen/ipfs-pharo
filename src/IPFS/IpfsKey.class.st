@@ -49,7 +49,11 @@ IpfsKey >> initializeWithPeer: anIpfsPeer name: aSymbol id: aString [
 
 { #category : #accessing }
 IpfsKey >> load [
-	^ IpfsVariable key: self value: self resolve cid loadLinkedObjects
+	| resolvedPath |
+	resolvedPath := self resolve.
+	resolvedPath ifNil: [ self error: 'Path could not be resolved' ].
+	resolvedPath isFullyResolvedPath ifFalse: [ self error: 'Path not resolvable to a CID' ].
+	^ resolvedPath cid loadLinkedObjects
 ]
 
 { #category : #accessing }

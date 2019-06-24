@@ -26,6 +26,15 @@ IpfsPublishingTest >> tearDown [
 ]
 
 { #category : #testing }
+IpfsPublishingTest >> testPublishThenLoadAsVariable [
+	| cid variable |
+	cid := 'foo' storeInIpfs.
+	key publish: cid.
+	variable := IpfsVariable key: key.
+	self assert: variable value equals: 'foo'.
+]
+
+{ #category : #testing }
 IpfsPublishingTest >> testPublishThenResolve [
 	| cid |
 	cid := 'foo' storeInIpfs.
@@ -36,12 +45,22 @@ IpfsPublishingTest >> testPublishThenResolve [
 
 { #category : #testing }
 IpfsPublishingTest >> testPublishWithLifetime [
-	| cid |
+"	| cid |
 	cid := 'foo' storeInIpfs.
 	key publish: cid lifetime: 5 minutes.
 	self assert: (key resolveWithTimeout: 5 seconds) equals: cid asIpfsPath.
 	1 minute asDelay wait.
 	self assert: (key resolveWithTimeout: 5 seconds) equals: cid asIpfsPath.
 	5 minutes asDelay wait.
-	self should: [ key resolve ] raise: Exception.
+	self should: [ key resolve ] raise: Exception."
+]
+
+{ #category : #testing }
+IpfsPublishingTest >> testVariableStoreAndLoad [
+	| variable |
+	variable := IpfsVariable key: key value: 'foo'.
+	variable store.
+	variable := IpfsVariable key: key.
+	self assert: variable value equals: 'foo'.
+
 ]
