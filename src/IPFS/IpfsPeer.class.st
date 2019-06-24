@@ -232,3 +232,13 @@ IpfsPeer >> unpinRecursively: aCid [
 	^ (result at: 'Pins')
 		collect: [ :aString | aString asIpfsCid ]
 ]
+
+{ #category : #publishing }
+IpfsPeer >> variable: aSymbol [
+	^ IpfsVariable key: (self keyNamed: aSymbol)
+]
+
+{ #category : #publishing }
+IpfsPeer >> variable: aSymbol value: anObject [
+	^ IpfsVariable key: (self generateKeyNamed: aSymbol) value: anObject
+]

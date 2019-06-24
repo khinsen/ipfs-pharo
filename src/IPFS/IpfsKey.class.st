@@ -57,7 +57,7 @@ IpfsKey >> isWaiting [
 { #category : #accessing }
 IpfsKey >> load [
 	| resolvedPath |
-	resolvedPath := self resolve.
+	resolvedPath := self resolveWithTimeout: 1 second.
 	resolvedPath ifNil: [ self error: 'Path could not be resolved' ].
 	resolvedPath isFullyResolvedPath ifFalse: [ self error: 'Path not resolvable to a CID' ].
 	^ resolvedPath cid loadLinkedObjects
