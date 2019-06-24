@@ -10,8 +10,7 @@ Class {
 	#instVars : [
 		'peer',
 		'name',
-		'id',
-		'waiting'
+		'id'
 	],
 	#category : #'IPFS-4 - Names'
 }
