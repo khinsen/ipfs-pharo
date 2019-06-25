@@ -42,3 +42,8 @@ IpfsCidPath >> isFullyResolvedPath [
 IpfsCidPath >> resolve [
 	^ self
 ]
+
+{ #category : #resolving }
+IpfsCidPath >> resolveLinks [
+	^ (self cid resolveLinks: linkSequence) decodeLinkedObjectsFromIpfs
+]

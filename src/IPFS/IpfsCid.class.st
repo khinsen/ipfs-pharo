@@ -156,6 +156,20 @@ IpfsCid >> references [
 	^ Ipfs refs: self recursive: false
 ]
 
+{ #category : #resolving }
+IpfsCid >> resolveLink: aString [
+	self subclassResponsibility
+]
+
+{ #category : #resolving }
+IpfsCid >> resolveLinks: aLinkSequence [
+	| nextInChain |
+	aLinkSequence ifEmpty: [ ^ self ].
+	nextInChain := self resolveLink: aLinkSequence first.
+	aLinkSequence size = 1 ifTrue: [ ^ nextInChain ].
+	^ nextInChain resolveLinks: aLinkSequence allButFirst.
+]
+
 { #category : #'data access' }
 IpfsCid >> sizeOfRawData [
 	^ Ipfs blockSize: cidBase32

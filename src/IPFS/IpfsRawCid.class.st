@@ -18,3 +18,8 @@ IpfsRawCid class >> codec [
 IpfsRawCid >> loadObject [
 	^ self loadRawBlock
 ]
+
+{ #category : #resolving }
+IpfsRawCid >> resolveLink: aString [
+	self shouldNotImplement
+]

@@ -42,6 +42,13 @@ IpfsNamePath >> resolve [
 ]
 
 { #category : #resolving }
+IpfsNamePath >> resolveLinks [
+	self resolve
+		ifNil: [ ^ nil ]
+		ifNotNil: [ :path | ^ path resolveLinks ]
+]
+
+{ #category : #resolving }
 IpfsNamePath >> resolveWithDefault: anObject [
 	| path |
 	path := Ipfs resolvePath: self asString.

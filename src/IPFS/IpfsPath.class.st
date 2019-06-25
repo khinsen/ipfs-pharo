@@ -69,3 +69,8 @@ IpfsPath >> printOn: aStream [
 IpfsPath >> resolve [
 	self subclassResponsibility
 ]
+
+{ #category : #resolving }
+IpfsPath >> resolveLinks [
+	self subclassResponsibility
+]

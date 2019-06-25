@@ -29,3 +29,8 @@ IpfsCborCid >> loadLinkedObjects [
 IpfsCborCid >> loadObject [
 	^ self loadAndDecode decodeFromIpfs
 ]
+
+{ #category : #resolving }
+IpfsCborCid >> resolveLink: aString [
+	^ self loadAndDecode at: aString
+]
