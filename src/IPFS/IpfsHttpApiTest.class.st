@@ -65,6 +65,16 @@ IpfsHttpApiTest >> testDagNodeReferences [
 ]
 
 { #category : #testing }
+IpfsHttpApiTest >> testDagResolve [
+	| cid1 cid2 path resolvedPath |
+	cid1 := (NeoJSONObject with: #foo -> #bar) storeInIpfs.
+	cid2 := (NeoJSONObject with: #data -> cid1) storeInIpfs.
+	path := cid2 asIpfsPath / #data / #foo.
+	resolvedPath := Ipfs dagResolve: path asString.
+	self assert: resolvedPath equals: cid1 asIpfsPath / #foo.
+]
+
+{ #category : #testing }
 IpfsHttpApiTest >> testGetIpfsObject [
 	| cid result |
 	cid := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG'.

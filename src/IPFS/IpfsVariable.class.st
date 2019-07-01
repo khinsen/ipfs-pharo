@@ -49,10 +49,7 @@ IpfsVariable >> load [
 IpfsVariable >> store [
 	| oldPath oldCid newCid |
 	oldPath := key resolveWithTimeout: 1 second.
-	oldCid := nil.
-	oldPath ifNotNil:
-		[ :p | p isFullyResolvedPath
-					ifTrue: [ oldPath := p cid ] ].
+	oldCid := oldPath asCid.
 	newCid := value storeInIpfs.
 	newCid = oldCid ifTrue: [ ^ self ].
 	key publish: newCid.

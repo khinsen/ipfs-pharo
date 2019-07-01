@@ -33,11 +33,6 @@ IpfsCidPath >> cid: anIpfsCid [
 
 ]
 
-{ #category : #testing }
-IpfsCidPath >> isFullyResolvedPath [
-	^ true
-]
-
 { #category : #resolving }
 IpfsCidPath >> resolve [
 	^ self
@@ -45,5 +40,5 @@ IpfsCidPath >> resolve [
 
 { #category : #resolving }
 IpfsCidPath >> resolveLinks [
-	^ (self cid resolveLinks: linkSequence) decodeLinkedObjectsFromIpfs
+	^ Ipfs dagResolve: self asString
 ]

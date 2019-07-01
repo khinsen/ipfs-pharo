@@ -43,3 +43,23 @@ IpfsPathTest >> testPathFromKey [
 	self assert: reconstructedPath name equals: key id.
 
 ]
+
+{ #category : #testing }
+IpfsPathTest >> testResolveDagPath [
+	| cid path linkPath resolvedPath |
+	cid := (NeoJSONObject with: #foo -> #bar) storeInIpfs.
+	path := cid asIpfsPath.
+	linkPath := path / #foo.
+	resolvedPath := linkPath resolveLinks.
+	self assert: resolvedPath equals: linkPath.
+]
+
+{ #category : #testing }
+IpfsPathTest >> testResolveDagPathThroughLink [
+	| cid1 cid2 path resolvedPath |
+	cid1 := (NeoJSONObject with: #foo -> #bar) storeInIpfs.
+	cid2 := (NeoJSONObject with: #data -> cid1) storeInIpfs.
+	path := cid2 asIpfsPath / #data / #foo.
+	resolvedPath := path resolveLinks.
+	self assert: resolvedPath equals: cid1 asIpfsPath / #foo.
+]

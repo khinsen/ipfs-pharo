@@ -44,6 +44,11 @@ Ipfs class >> dagPutRaw: anObject [
 	^ self uniqueInstance dagPutRaw: anObject
 ]
 
+{ #category : #IPLD }
+Ipfs class >> dagResolve: aString [
+	^ self uniqueInstance dagResolve: aString
+]
+
 { #category : #settings }
 Ipfs class >> ipfsPort [
 	^ self uniqueInstance port
@@ -82,6 +87,17 @@ Ipfs class >> ipfsSettingsOn: aBuilder [
 				target: Ipfs ].
 ]
 
+{ #category : #IPNS }
+Ipfs class >> nameResolve: aString [
+	^ self uniqueInstance nameResolve: aString
+]
+
+{ #category : #IPNS }
+Ipfs class >> nameResolve: aString timeout: aDuration [
+	^ self uniqueInstance nameResolve: aString timeout: aDuration
+	
+]
+
 { #category : #IPFS }
 Ipfs class >> objectGet: aCID [
 	^ self uniqueInstance objectGet: aCID
@@ -101,17 +117,6 @@ Ipfs class >> publish: ipfsPath key: ipnsKey lifetime: aDuration [
 { #category : #IPLD }
 Ipfs class >> refs: aCID recursive: aBoolean [
 	^ self uniqueInstance refs: aCID recursive: aBoolean
-]
-
-{ #category : #IPNS }
-Ipfs class >> resolvePath: aString [
-	^ self uniqueInstance resolvePath: aString
-]
-
-{ #category : #IPNS }
-Ipfs class >> resolvePath: aString timeout: aDuration [
-	^ self uniqueInstance resolvePath: aString timeout: aDuration
-	
 ]
 
 { #category : #IPFS }
@@ -182,6 +187,18 @@ Ipfs >> dagPutRaw: anObject [
 
 ]
 
+{ #category : #IPLD }
+Ipfs >> dagResolve: aString [
+	| result path remPath |
+	[	result := self getRequest: 'dag/resolve' parameters: { #arg -> aString } asDictionary.
+		path := IpfsCidPath new cid: (IpfsCid fromString: ((result at: #Cid) at: #'/')).
+		remPath := result at: #RemPath.
+		remPath ifNotEmpty:
+			[ (remPath splitOn: $/) do: [ :each | path := path / each ] ].
+		^ path ]
+	on: IpfsError do: [ ^ nil ]
+]
+
 { #category : #accessing }
 Ipfs >> host [
 	^ host
@@ -197,6 +214,28 @@ Ipfs >> initialize [
 	host := '127.0.0.1'.
 	port := 5001.
 
+]
+
+{ #category : #IPNS }
+Ipfs >> nameResolve: aString [
+	| result |
+	[	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
+		^ result at: #Path ]
+	on: IpfsError do: [ ^ nil ]
+]
+
+{ #category : #IPNS }
+Ipfs >> nameResolve: aString timeout: aDuration [
+	| result |
+	[ 	ZnConnectionTimeout
+			value: aDuration asSeconds + 5 "5 extra seconds as an error margin"
+			during:
+				[	result := self getRequest: 'name/resolve'
+										parameters: { #arg -> aString.
+														  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
+														asDictionary.
+					^ result at: #Path ] ]
+	on: IpfsError do: [ ^ nil ].	
 ]
 
 { #category : #IPFS }
@@ -237,26 +276,4 @@ Ipfs >> refs: anIpfsCid recursive: aBoolean [
 	^ result
 		ifNil: [ Array new ]
 		ifNotNil: [ self parseReferenceList: result ]
-]
-
-{ #category : #IPNS }
-Ipfs >> resolvePath: aString [
-	| result |
-	[	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
-		^ result at: #Path ]
-	on: IpfsError do: [ ^ nil ]
-]
-
-{ #category : #IPNS }
-Ipfs >> resolvePath: aString timeout: aDuration [
-	| result |
-	[ 	ZnConnectionTimeout
-			value: aDuration asSeconds + 5 "5 extra seconds as an error margin"
-			during:
-				[	result := self getRequest: 'name/resolve'
-										parameters: { #arg -> aString.
-														  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
-														asDictionary.
-					^ result at: #Path ] ]
-	on: IpfsError do: [ ^ nil ].	
 ]
