@@ -33,12 +33,17 @@ IpfsCidPath >> cid: anIpfsCid [
 
 ]
 
-{ #category : #resolving }
-IpfsCidPath >> resolve [
-	^ self
+{ #category : #testing }
+IpfsCidPath >> isRaw [
+	^ linkSequence isEmpty and: [ cid isRaw ]
 ]
 
 { #category : #resolving }
-IpfsCidPath >> resolveLinks [
+IpfsCidPath >> resolve [
 	^ Ipfs dagResolve: self asString
+]
+
+{ #category : #resolving }
+IpfsCidPath >> resolveNames [
+	^ self
 ]

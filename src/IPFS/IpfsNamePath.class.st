@@ -33,18 +33,18 @@ IpfsNamePath >> name: aString [
 
 { #category : #resolving }
 IpfsNamePath >> resolve [
-	^ self resolveWithDefault: nil
-]
-
-{ #category : #resolving }
-IpfsNamePath >> resolveLinks [
-	self resolve
+	self resolveNames
 		ifNil: [ ^ nil ]
-		ifNotNil: [ :path | ^ path resolveLinks ]
+		ifNotNil: [ :path | ^ path resolve ]
 ]
 
 { #category : #resolving }
-IpfsNamePath >> resolveWithDefault: anObject [
+IpfsNamePath >> resolveNames [
+	^ self resolveNamesWithDefault: nil
+]
+
+{ #category : #resolving }
+IpfsNamePath >> resolveNamesWithDefault: anObject [
 	| path |
 	path := Ipfs nameResolve: self asString.
 	path ifNil: [ ^ anObject ].
@@ -52,12 +52,12 @@ IpfsNamePath >> resolveWithDefault: anObject [
 ]
 
 { #category : #resolving }
-IpfsNamePath >> resolveWithTimeout: aDuration [
-	^ self resolveWithTimeout: aDuration default: nil
+IpfsNamePath >> resolveNamesWithTimeout: aDuration [
+	^ self resolveNamesWithTimeout: aDuration default: nil
 ]
 
 { #category : #resolving }
-IpfsNamePath >> resolveWithTimeout: aDuration default: anObject [
+IpfsNamePath >> resolveNamesWithTimeout: aDuration default: anObject [
 	| pathString |
 	pathString := Ipfs nameResolve: self asString timeout: aDuration.
 	pathString

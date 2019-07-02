@@ -48,8 +48,9 @@ IpfsVariable >> load [
 { #category : #accessing }
 IpfsVariable >> store [
 	| oldPath oldCid newCid |
-	oldPath := key resolveWithTimeout: 1 second.
-	oldCid := oldPath asCid.
+	oldPath := key resolveNamesWithTimeout: 1 second.
+	self assert: oldPath relativePath isEmpty.
+	oldCid := oldPath cid.
 	newCid := value storeInIpfs.
 	newCid = oldCid ifTrue: [ ^ self ].
 	key publish: newCid.

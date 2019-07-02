@@ -14,6 +14,7 @@ Class {
 IpfsPath class >> fromString: aString [
 	| elements path |
 	elements := aString splitOn: $/.
+	elements size = 1 ifTrue: [ ^ elements first asIpfsCid asIpfsPath ].
 	self assert: elements size >= 3.
 	self assert: elements first = ''.
 	self assert: (#('ipfs' 'ipns') includes: elements second).
@@ -51,6 +52,16 @@ IpfsPath >> initialize [
 	linkSequence := OrderedCollection new.
 ]
 
+{ #category : #testing }
+IpfsPath >> isRaw [
+	^ false
+]
+
+{ #category : #'data access' }
+IpfsPath >> loadAndDecode [
+	^ Ipfs dagGet: self
+]
+
 { #category : #printing }
 IpfsPath >> printOn: aStream [
 	super printOn: aStream.
@@ -60,12 +71,19 @@ IpfsPath >> printOn: aStream [
 
 ]
 
+{ #category : #accessing }
+IpfsPath >> relativePath [
+	^ $/ join: linkSequence
+]
+
 { #category : #resolving }
 IpfsPath >> resolve [
+	"Resolve paths as much as possible, until remaining links stay inside the node."
 	self subclassResponsibility
 ]
 
 { #category : #resolving }
-IpfsPath >> resolveLinks [
+IpfsPath >> resolveNames [
+	"Resolve /ipns paths recursively until an /ipfs path is obtained."
 	self subclassResponsibility
 ]

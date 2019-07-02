@@ -57,7 +57,7 @@ IpfsKey >> isWaiting [
 { #category : #accessing }
 IpfsKey >> load [
 	| resolvedPath |
-	resolvedPath := self resolveWithTimeout: 1 second.
+	resolvedPath := self resolveNamesWithTimeout: 1 second.
 	resolvedPath ifNil: [ self error: 'Path could not be resolved' ].
 	^ resolvedPath cid loadLinkedObjects
 ]
@@ -106,9 +106,9 @@ IpfsKey >> resolve [
 ]
 
 { #category : #resolving }
-IpfsKey >> resolveWithTimeout: aDuration [
+IpfsKey >> resolveNamesWithTimeout: aDuration [
 	self waitForLastRequest.
-	^ self asIpfsPath resolveWithTimeout: aDuration
+	^ self asIpfsPath resolveNamesWithTimeout: aDuration
 ]
 
 { #category : #publishing }

@@ -6,6 +6,11 @@ String >> asIpfsCid [
 ]
 
 { #category : #'*IPFS' }
+String >> asIpfsPath [
+	^ IpfsPath fromString: self
+]
+
+{ #category : #'*IPFS' }
 String >> decodeFromIpfs [
 	^ self
 ]

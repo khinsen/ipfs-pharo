@@ -156,11 +156,11 @@ Ipfs >> cidPrefix: aCid [
 ]
 
 { #category : #IPLD }
-Ipfs >> dagGet: anIpfsCid [
+Ipfs >> dagGet: anIpfsCidOrPath [
 	| node |
 	node := self getRequest: 'dag/get' parameters:
-		(Dictionary with: #arg -> anIpfsCid asString).
-	anIpfsCid asIpfsCid isRaw
+		(Dictionary with: #arg -> anIpfsCidOrPath asString).
+	anIpfsCidOrPath asIpfsPath isRaw
 		ifTrue: [ ^ node asByteArray ]
 		ifFalse: [ ^ node convertIpfsCids ]
 ]

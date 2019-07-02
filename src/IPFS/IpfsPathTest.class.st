@@ -50,7 +50,7 @@ IpfsPathTest >> testResolveDagPath [
 	cid := (NeoJSONObject with: #foo -> #bar) storeInIpfs.
 	path := cid asIpfsPath.
 	linkPath := path / #foo.
-	resolvedPath := linkPath resolveLinks.
+	resolvedPath := linkPath resolve.
 	self assert: resolvedPath equals: linkPath.
 ]
 
@@ -60,6 +60,6 @@ IpfsPathTest >> testResolveDagPathThroughLink [
 	cid1 := (NeoJSONObject with: #foo -> #bar) storeInIpfs.
 	cid2 := (NeoJSONObject with: #data -> cid1) storeInIpfs.
 	path := cid2 asIpfsPath / #data / #foo.
-	resolvedPath := path resolveLinks.
+	resolvedPath := path resolve.
 	self assert: resolvedPath equals: cid1 asIpfsPath / #foo.
 ]

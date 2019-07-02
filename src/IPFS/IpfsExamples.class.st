@@ -86,6 +86,12 @@ IpfsExamples >> ipfsPathToWebExplorer [
 ]
 
 { #category : #examples }
+IpfsExamples >> loadNonResolvablePath [
+	<gtExample>
+	^ self nonResolvablePathIntoNestedDataStructure loadAndDecode
+]
+
+{ #category : #examples }
 IpfsExamples >> loadRawBlock [
 	<gtExample>
 	| block |
@@ -95,9 +101,26 @@ IpfsExamples >> loadRawBlock [
 ]
 
 { #category : #examples }
+IpfsExamples >> loadResolvedPath [
+	<gtExample>
+	^ self resolvedPathIntoNestedDataStructure loadAndDecode
+]
+
+{ #category : #examples }
 IpfsExamples >> localIpfsPeer [
 	<gtExample>
 	^ IpfsPeer local
+]
+
+{ #category : #examples }
+IpfsExamples >> nonResolvablePathIntoNestedDataStructure [
+	<gtExample>
+	| path |
+	path := self pathIntoNestedDataStructure / #a.
+	path := path resolve.
+	self assert: path relativePath equals: #a.
+	^ path
+
 ]
 
 { #category : #examples }
@@ -107,6 +130,20 @@ IpfsExamples >> openRawBlockInLocalWebExplorer [
 		'http://127.0.0.1:5001',
 		self ipfsPathToWebExplorer,
 		self rawBlockCid asString.
+
+]
+
+{ #category : #examples }
+IpfsExamples >> pathIntoNestedDataStructure [
+	<gtExample>
+	^ self pathToNestedDataStructure / #data
+
+]
+
+{ #category : #examples }
+IpfsExamples >> pathToNestedDataStructure [
+	<gtExample>
+	^ self cborCidForJSONMapWithReference asIpfsPath
 
 ]
 
@@ -122,6 +159,16 @@ IpfsExamples >> protobufCid [
 IpfsExamples >> rawBlockCid [
 	<gtExample>
 	^ #[1 2 3 2 1] storeInIpfs
+]
+
+{ #category : #examples }
+IpfsExamples >> resolvedPathIntoNestedDataStructure [
+	<gtExample>
+	| resolvedPath |
+	resolvedPath := self pathIntoNestedDataStructure resolve.
+	self assert: resolvedPath equals: self cborCidForJSONMap asIpfsPath.
+	self assert: resolvedPath relativePath equals: ''.
+	^ resolvedPath
 ]
 
 { #category : #examples }
