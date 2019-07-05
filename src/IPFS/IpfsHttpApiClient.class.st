@@ -7,15 +7,37 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'host',
-		'port'
+		'port',
+		'dataRequestTimeout'
 	],
 	#category : #'IPFS-0 - Server access'
 }
+
+{ #category : #accessing }
+IpfsHttpApiClient >> dataRequestTimeout [
+	^ dataRequestTimeout
+]
+
+{ #category : #accessing }
+IpfsHttpApiClient >> dataRequestTimeout: aDuration [
+	dataRequestTimeout := aDuration
+]
 
 { #category : #'http requests' }
 IpfsHttpApiClient >> getRequest: aString parameters: aDictionary [
 	| result |
 	result := self znClientForJsonResult
+		path: 'api/v0/', aString;
+		queryAddAll: aDictionary;
+		get.
+	^ result
+]
+
+{ #category : #'http requests' }
+IpfsHttpApiClient >> getRequest: aString parameters: aDictionary timeout: aDuration [
+	| result |
+	result := self znClientForJsonResult
+		timeout: aDuration asSeconds;
 		path: 'api/v0/', aString;
 		queryAddAll: aDictionary;
 		get.
@@ -35,6 +57,12 @@ IpfsHttpApiClient >> handleFailure: anException [
 	ipfsError messageText: (message at: #Message).
 	ipfsError signal.
 
+]
+
+{ #category : #initialization }
+IpfsHttpApiClient >> initialize [
+	super initialize.
+	self dataRequestTimeout: 1 hour.
 ]
 
 { #category : #'http requests' }

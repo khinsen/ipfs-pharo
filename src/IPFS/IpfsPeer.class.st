@@ -73,6 +73,7 @@ IpfsPeer >> generateKeyNamed: aSymbol [
 
 { #category : #initialization }
 IpfsPeer >> initializeWithHost: aString port: anInteger [
+	super initialize.
 	host := aString.
 	port := anInteger.
 	publishingTimeout := 10 minutes.
@@ -151,14 +152,12 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 { #category : #publishing }
 IpfsPeer >> publish: ipfsPath key: ipnsKey [
 	| result |
-	ZnConnectionTimeout
-		value: publishingTimeout asSeconds
-		during:
-			[ result := self getRequest: 'name/publish'
+	result := self getRequest: 'name/publish'
 						parameters: { #arg -> ipfsPath asString.
 										  #key -> ipnsKey name.
 										  #'allow-offline' -> true }
-										asDictionary ].
+										asDictionary
+						timeout: publishingTimeout.
 	self assert: (result at: #Name) = ipnsKey id.
 
 ]
@@ -166,15 +165,13 @@ IpfsPeer >> publish: ipfsPath key: ipnsKey [
 { #category : #publishing }
 IpfsPeer >> publish: ipfsPath key: ipnsKey lifetime: aDuration [
 	| result |
-	ZnConnectionTimeout
-		value: publishingTimeout asSeconds
-		during:
-			[	result := self getRequest: 'name/publish'
-									parameters: { #arg -> ipfsPath asString.
-													  #key -> ipnsKey name.
-													  #lifetime -> (aDuration asSeconds printString, 's').
-										 			  #'allow-offline' -> true }
-													asDictionary ].
+	result := self getRequest: 'name/publish'
+						parameters: { #arg -> ipfsPath asString.
+										  #key -> ipnsKey name.
+										  #lifetime -> (aDuration asSeconds printString, 's').
+										  #'allow-offline' -> true }
+										asDictionary
+						timeout: publishingTimeout.
 	self assert: (result at: #Name) = ipnsKey id.
 
 ]

@@ -125,6 +125,7 @@ Ipfs >> blockGet: aCid [
 	 to binary mode."
 	^ self znClient
 		beBinary;
+		timeout: self dataRequestTimeout asSeconds;
 		accept: 'text/plain';
 		path: 'api/v0/block/get';
 		queryAt: #arg add: aCid asString;
@@ -135,8 +136,9 @@ Ipfs >> blockGet: aCid [
 { #category : #IPFS }
 Ipfs >> blockSize: aCid [
 	| result |
-	result := self getRequest: 'block/stat' parameters:
-		(Dictionary with: #arg -> aCid asString).
+	result := self getRequest: 'block/stat'
+						parameters: (Dictionary with: #arg -> aCid asString)
+						timeout: self dataRequestTimeout.
 	^ result at: 'Size'.
 ]
 
@@ -158,8 +160,9 @@ Ipfs >> cidPrefix: aCid [
 { #category : #IPLD }
 Ipfs >> dagGet: anIpfsCidOrPath [
 	| node |
-	node := self getRequest: 'dag/get' parameters:
-		(Dictionary with: #arg -> anIpfsCidOrPath asString).
+	node := self getRequest: 'dag/get'
+					 parameters: (Dictionary with: #arg -> anIpfsCidOrPath asString)
+					 timeout: self dataRequestTimeout.
 	anIpfsCidOrPath asIpfsPath isRaw
 		ifTrue: [ ^ node asByteArray ]
 		ifFalse: [ ^ node convertIpfsCids ]
@@ -190,7 +193,9 @@ Ipfs >> dagPutRaw: anObject [
 { #category : #IPLD }
 Ipfs >> dagResolve: aString [
 	| result path remPath |
-	[	result := self getRequest: 'dag/resolve' parameters: { #arg -> aString } asDictionary.
+	[	result := self getRequest: 'dag/resolve'
+							parameters: { #arg -> aString } asDictionary
+							timeout: self dataRequestTimeout.
 		path := IpfsCidPath new cid: (IpfsCid fromString: ((result at: #Cid) at: #'/')).
 		remPath := result at: #RemPath.
 		remPath ifNotEmpty:
@@ -211,6 +216,7 @@ Ipfs >> host: anObject [
 
 { #category : #initializing }
 Ipfs >> initialize [
+	super initialize.
 	host := '127.0.0.1'.
 	port := 5001.
 
@@ -219,7 +225,9 @@ Ipfs >> initialize [
 { #category : #IPNS }
 Ipfs >> nameResolve: aString [
 	| result |
-	[	result := self getRequest: 'name/resolve' parameters: { #arg -> aString } asDictionary.
+	[	result := self getRequest: 'name/resolve'
+							parameters: { #arg -> aString } asDictionary
+							timeout: self dataRequestTimeout.
 		^ result at: #Path ]
 	on: IpfsError do: [ ^ nil ]
 ]
@@ -227,22 +235,22 @@ Ipfs >> nameResolve: aString [
 { #category : #IPNS }
 Ipfs >> nameResolve: aString timeout: aDuration [
 	| result |
-	[ 	ZnConnectionTimeout
-			value: aDuration asSeconds + 5 "5 extra seconds as an error margin"
-			during:
-				[	result := self getRequest: 'name/resolve'
-										parameters: { #arg -> aString.
-														  #'dht-timeout' -> (aDuration asSeconds printString, 's') }
-														asDictionary.
-					^ result at: #Path ] ]
-	on: IpfsError do: [ ^ nil ].	
+	[ result := self getRequest: 'name/resolve'
+						  parameters: { #arg -> aString.
+											 #'dht-timeout' -> (aDuration asSeconds printString, 's') }
+											asDictionary
+						  timeout: aDuration.
+	  ^ result at: #Path ]
+	on: IpfsError do: [ ^ nil ].
+
 ]
 
 { #category : #IPFS }
 Ipfs >> objectGet: aCid [
 	| result data links |
-	result := self getRequest: 'object/get' parameters:
-		(Dictionary with: #arg -> aCid asString).
+	result := self getRequest: 'object/get'
+						parameters: (Dictionary with: #arg -> aCid asString)
+						timeout: self dataRequestTimeout.
 	data := (result at: 'Data') asByteArray.
 	links := Dictionary new.
 	(result at: 'Links') do:
@@ -268,10 +276,12 @@ Ipfs >> port: anObject [
 { #category : #IPLD }
 Ipfs >> refs: anIpfsCid recursive: aBoolean [
 	| result |
+	"We can't use getRequest:parmeters: here because the return value is parsed as a stream."
 	result := self znClient
 		path: 'api/v0/refs';
 		queryAt: #arg add: anIpfsCid asString;
 		queryAt: #recursive add: aBoolean asString;
+		timeout: self dataRequestTimeout asSeconds;
 		get.
 	^ result
 		ifNil: [ Array new ]
