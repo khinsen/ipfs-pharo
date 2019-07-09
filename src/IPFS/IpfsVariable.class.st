@@ -49,8 +49,11 @@ IpfsVariable >> load [
 IpfsVariable >> store [
 	| oldPath oldCid newCid |
 	oldPath := key resolveNamesWithTimeout: 1 second.
-	self assert: oldPath relativePath isEmpty.
-	oldCid := oldPath cid.
+	oldPath
+		ifNotNil:
+		 [	self assert: oldPath relativePath isEmpty.
+			oldCid := oldPath cid.]
+		ifNil: [ oldCid := nil ].
 	newCid := value storeInIpfs.
 	newCid = oldCid ifTrue: [ ^ self ].
 	key publish: newCid.

@@ -21,6 +21,21 @@ Object >> encodeForIpfs [
 ]
 
 { #category : #'*IPFS' }
+Object >> resultOfIpfsRequest [
+	^ self
+]
+
+{ #category : #'*IPFS' }
 Object >> storeInIpfs [
 	^ Ipfs dagPut: self encodeForIpfs
+]
+
+{ #category : #'*IPFS' }
+Object >> updateIpfsRequest [
+	^ self
+]
+
+{ #category : #'*IPFS' }
+Object >> waitForIpfsRequest [
+	^ self
 ]

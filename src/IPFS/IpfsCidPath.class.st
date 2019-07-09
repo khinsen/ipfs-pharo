@@ -38,6 +38,16 @@ IpfsCidPath >> isRaw [
 	^ linkSequence isEmpty and: [ cid isRaw ]
 ]
 
+{ #category : #'data access' }
+IpfsCidPath >> loadObjectInBackground [
+	^ IpfsRequester loadObjectFromPath: self
+]
+
+{ #category : #accessing }
+IpfsCidPath >> name [
+	^ nil
+]
+
 { #category : #resolving }
 IpfsCidPath >> resolve [
 	^ Ipfs dagResolve: self asString

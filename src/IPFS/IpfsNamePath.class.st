@@ -22,6 +22,17 @@ IpfsNamePath >> asString [
 ]
 
 { #category : #accessing }
+IpfsNamePath >> cid [
+	^ nil
+]
+
+{ #category : #'data access' }
+IpfsNamePath >> loadObjectInBackground [
+	^ IpfsRequester resolveAndloadObjectFromPath: self
+
+]
+
+{ #category : #accessing }
 IpfsNamePath >> name [
 	^ name
 ]
@@ -64,4 +75,9 @@ IpfsNamePath >> resolveNamesWithTimeout: aDuration default: anObject [
 		ifNotNil: [ :s | ^ IpfsPath fromString: s ]
 		ifNil: [ ^ anObject ]
 	
+]
+
+{ #category : #resolving }
+IpfsNamePath >> substituteNameBy: anIpfsPath [
+	^ anIpfsPath / self relativePath
 ]

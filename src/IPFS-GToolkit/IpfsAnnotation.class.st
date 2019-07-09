@@ -6,7 +6,8 @@ Class {
 	#superclass : #GtAnnotation,
 	#instVars : [
 		'displayedName',
-		'referencedPath'
+		'referencedPath',
+		'objectToPreview'
 	],
 	#category : #'IPFS-GToolkit'
 }
@@ -58,7 +59,9 @@ IpfsAnnotation >> isPreviewDefined [
 
 { #category : #accessing }
 IpfsAnnotation >> objectToPreview [
-	^ self referencedPath resolve cid loadObject
+	^ objectToPreview ifNil:
+	 	[	objectToPreview := self referencedPath loadObjectInBackground ].
+
 ]
 
 { #category : #accessing }

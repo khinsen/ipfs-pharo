@@ -28,13 +28,18 @@ IpfsPath class >> fromString: aString [
 
 { #category : #adding }
 IpfsPath >> / aString [
-	linkSequence addAll: (aString splitOn: $/)
+	^ self deepCopy addLinks: (aString splitOn: $/)
 ]
 
 { #category : #comparing }
 IpfsPath >> = anIpfsPath [
 	^ self asString = anIpfsPath asString
 
+]
+
+{ #category : #private }
+IpfsPath >> addLinks: aLinkSequence [
+	linkSequence := linkSequence, aLinkSequence
 ]
 
 { #category : #accessing }
@@ -49,7 +54,7 @@ IpfsPath >> hash [
 
 { #category : #initialization }
 IpfsPath >> initialize [
-	linkSequence := OrderedCollection new.
+	linkSequence := Array new.
 ]
 
 { #category : #testing }
@@ -60,6 +65,16 @@ IpfsPath >> isRaw [
 { #category : #'data access' }
 IpfsPath >> loadAndDecode [
 	^ Ipfs dagGet: self
+]
+
+{ #category : #'data access' }
+IpfsPath >> loadObject [
+	^ self loadAndDecode decodeFromIpfs
+]
+
+{ #category : #'data access' }
+IpfsPath >> loadObjectInBackground [
+	self subclassResponsibility
 ]
 
 { #category : #printing }
