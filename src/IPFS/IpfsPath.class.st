@@ -28,7 +28,7 @@ IpfsPath class >> fromString: aString [
 
 { #category : #adding }
 IpfsPath >> / aString [
-	linkSequence add: aString
+	linkSequence addAll: (aString splitOn: $/)
 ]
 
 { #category : #comparing }

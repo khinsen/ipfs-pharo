@@ -9,13 +9,14 @@ Class {
 
 { #category : #testing }
 IpfsPathTest >> testPathConstruction [
-	| cid path |
+	| cid path1 path2 |
 	cid := 'foo' storeInIpfs.
-	path := cid asIpfsPath / 'link1' / 'link2'.
-	self assert: (path isKindOf: IpfsCidPath).
-	self assert: path cid equals: cid.
-	self assert: (path asString count: [ :c | c = $/ ]) equals: 4.
-
+	path1 := cid asIpfsPath / 'link1' / 'link2'.
+	path2 := cid asIpfsPath / 'link1/link2'.
+	self assert: (path1 isKindOf: IpfsCidPath).
+	self assert: path1 cid equals: cid.
+	self assert: (path1 asString count: [ :c | c = $/ ]) equals: 4.
+	self assert: path2 equals: path1.
 ]
 
 { #category : #testing }
