@@ -12,6 +12,16 @@ Class {
 	#category : #'IPFS-5 - Asynchronous requests'
 }
 
+{ #category : #inspecting }
+IpfsNameRequest >> gtStatusFor: aView [
+	<gtView>
+	^ aView textEditor 
+		title: 'Status' translated;
+		priority: -1;
+		look: BrGlamorousCodeEditorLook new;
+		text: [ ('Waiting for name resolution for ', name asString) asRopedText ]
+]
+
 { #category : #accessing }
 IpfsNameRequest >> name: aString [
 	name := aString

@@ -12,6 +12,16 @@ Class {
 	#category : #'IPFS-5 - Asynchronous requests'
 }
 
+{ #category : #inspecting }
+IpfsDataRequest >> gtStatusFor: aView [
+	<gtView>
+	^ aView textEditor 
+		title: 'Status' translated;
+		priority: -1;
+		look: BrGlamorousCodeEditorLook new;
+		text: [ ('Waiting for data for ', path asString) asRopedText ]
+]
+
 { #category : #accessing }
 IpfsDataRequest >> path: anIpfsPath [
 	path := anIpfsPath
