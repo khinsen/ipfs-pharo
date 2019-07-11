@@ -64,6 +64,12 @@ IpfsExamples >> cborCidForString [
 ]
 
 { #category : #examples }
+IpfsExamples >> deleteIpnsKey [
+	self ipnsKey delete
+
+]
+
+{ #category : #examples }
 IpfsExamples >> genericCid [
 	<gtExample>
 	"This is a CID pointing to an Ethereum block, for which there is no support
@@ -83,6 +89,25 @@ IpfsExamples >> gitObjectCid [
 IpfsExamples >> ipfsPathToWebExplorer [
 	<gtExample>
 	^ '/ipfs/QmfQkD8pBSBCBxWEwFSu4XaDVSWK6bjnNuaWZjMyQbyDub/#/explore/'
+]
+
+{ #category : #examples }
+IpfsExamples >> ipnsKey [
+	<gtExample>
+	<after: #deleteIpnsKey>
+	^ self localIpfsPeer generateKeyNamed: #PharoIPFSTest
+]
+
+{ #category : #examples }
+IpfsExamples >> ipnsPath [
+	<gtExample>
+	^ self ipnsKey asIpfsPath / #a
+]
+
+{ #category : #examples }
+IpfsExamples >> loadIpnsPath [
+	<gtExample>
+	^ self ipnsPath loadObject
 ]
 
 { #category : #examples }
@@ -156,9 +181,46 @@ IpfsExamples >> protobufCid [
 ]
 
 { #category : #examples }
+IpfsExamples >> publishCid [
+	<gtExample>
+	| cid key |
+	cid := self cborCidForJSONMap.
+	key := self ipnsKey.
+	key publish: cid.
+]
+
+{ #category : #examples }
+IpfsExamples >> publishPath [
+	<gtExample>
+	| path key |
+	path := self cborCidForJSONMap asIpfsPath / #a.
+	key := self ipnsKey.
+	key publish: path.
+	^ { key. path }
+]
+
+{ #category : #examples }
 IpfsExamples >> rawBlockCid [
 	<gtExample>
 	^ #[1 2 3 2 1] storeInIpfs
+]
+
+{ #category : #examples }
+IpfsExamples >> resolveIpnsKey [
+	<gtExample>
+	| pathAndKey path key resolvedPath |
+	pathAndKey := self publishPath.
+	path := pathAndKey first.
+	key := pathAndKey second.
+	resolvedPath := key resolve.
+	self assert: resolvedPath equals: path.
+	^ path
+]
+
+{ #category : #examples }
+IpfsExamples >> resolveIpnsPath [
+	<gtExample>
+	^ self ipnsPath resolve
 ]
 
 { #category : #examples }
