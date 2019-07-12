@@ -47,10 +47,13 @@ IpfsWiki >> gtMainPageFor: aView [
 { #category : #inspecting }
 IpfsWiki >> gtPagesFor: aView [
 	<gtView>
+	| pageNames |
+	pageNames := pages keys.
+	pageNames sort.
 	^ aView list
 		title: 'Pages' translated;
 		priority: -9;
-		items: [ pages values ];
+		items: [ pageNames collect: [ :name | pages at: name ] ];
 		itemFormat: [ :page | page name ]
 ]
 

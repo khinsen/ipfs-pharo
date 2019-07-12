@@ -18,7 +18,8 @@ IpfsWorldMenu class >> ipfsWorldMenuOn: aBuilder [
 		order: 0;
 		withSeparatorAfter;
 		label: 'Tutorial';
-		action: [ GtInspector openOn: IpfsTutorial ].
+		action: [ GtInspector openOn:
+			(IpfsCid fromString: 'bafyreihgkmbe7jlaxoo4yd7ivvk3jk7wokaambrvrxdfrssjagmc6eytq4') loadObject ].
 	(aBuilder item: #IpfsLocalPeer)
 		parent: #IPFS;
 		order: 1;
