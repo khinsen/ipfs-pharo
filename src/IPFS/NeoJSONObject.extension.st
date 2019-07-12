@@ -2,18 +2,13 @@ Extension { #name : #NeoJSONObject }
 
 { #category : #'*IPFS' }
 NeoJSONObject >> asPharoObject [
-	| objectType decoderPragmas decoderMethod |
-	objectType := self at: #type
-		ifAbsent: [ ^ self ].
-	decoderPragmas :=
-		(PragmaCollector filter:
-			[ :p | p keyword = #ipfsDecoder:
-						and: [ (p argumentAt: 1) = objectType ] ])
-					reset collected.
-	decoderPragmas ifEmpty: [ self error: 'no decoder method for type ', objectType ].
-	decoderPragmas size = 1 ifFalse: [ self error: 'multiple decoder methods for type ', objectType ].
-	decoderMethod := decoderPragmas first method.
-	^ decoderMethod valueWithReceiver: decoderMethod methodClass arguments: { self }
+	"Pharo objects are encoded as JSON maps with a single entry. The key of that entry determines
+	the decoder method that is used."
+	| objectType methodSelector |
+	self size = 1 ifFalse: [ ^ self ].
+	objectType := self associations first key.
+	methodSelector := ('decode', objectType, ':') asSymbol.
+	^ IpfsObjectDecoder perform: methodSelector with: (self at: objectType)
 ]
 
 { #category : #'*IPFS' }
