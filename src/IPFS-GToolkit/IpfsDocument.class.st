@@ -13,10 +13,9 @@ Class {
 	#category : #'IPFS-GToolkit'
 }
 
-{ #category : #'instance creation' }
-IpfsDocument class >> decodeIpfsObject: aDictionary [
-	<ipfsDecoder: #pillarDocument>
-	^ IpfsDocument name: (aDictionary at: #name) text: (aDictionary at: #text)
+{ #category : #storing }
+IpfsDocument class >> ipfsTag [
+	^ #PillarDocument
 ]
 
 { #category : #'instance creation' }
@@ -33,12 +32,13 @@ IpfsDocument >> basename [
 	^ self name
 ]
 
-{ #category : #converting }
+{ #category : #storing }
 IpfsDocument >> encodeForIpfs [
 	^ NeoJSONObject
-		with: #type -> #pillarDocument
-		with: #name -> self name
-		with: #text -> self text
+		with: self class ipfsTag ->
+			(NeoJSONObject 
+				with: #name -> self name
+				with: #text -> self text)
 ]
 
 { #category : #accessing }

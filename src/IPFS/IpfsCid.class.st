@@ -89,7 +89,7 @@ IpfsCid >> decodeFromIpfs [
 	^ self
 ]
 
-{ #category : #converting }
+{ #category : #storing }
 IpfsCid >> encodeForIpfs [
 	^ NeoJSONObject with: '/' -> cidBase32
 ]

@@ -24,7 +24,7 @@ IpfsLink >> doesNotUnderstand: aMessage [
 
 ]
 
-{ #category : #converting }
+{ #category : #storing }
 IpfsLink >> encodeForIpfs [
 	^ target storeInIpfs
 ]
