@@ -13,6 +13,11 @@ IpfsDocumentStorageProvider >> basename [
 	^ self name
 ]
 
+{ #category : #accessing }
+IpfsDocumentStorageProvider >> document [
+	^ document
+]
+
 { #category : #initialization }
 IpfsDocumentStorageProvider >> document: anIpfsDocument [
 	document := anIpfsDocument
@@ -28,6 +33,11 @@ IpfsDocumentStorageProvider >> evaluationReceiver [
 IpfsDocumentStorageProvider >> exists [
 	<return: #Boolean>
 	^ true
+]
+
+{ #category : #testing }
+IpfsDocumentStorageProvider >> isWikiPage [
+	^ document isWikiPage
 ]
 
 { #category : #accessing }

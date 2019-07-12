@@ -65,6 +65,11 @@ IpfsDocument >> gtDocumentFor: aView [
 			gtDocument gtShowMarkupActionFor: anAction ]
 ]
 
+{ #category : #testing }
+IpfsDocument >> isWikiPage [
+	^ false
+]
+
 { #category : #accessing }
 IpfsDocument >> name [
 	^ name
