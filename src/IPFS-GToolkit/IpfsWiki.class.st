@@ -71,3 +71,8 @@ IpfsWiki >> initialize [
 IpfsWiki >> pageNamed: aSymbol [
 	^ pages at: aSymbol ifAbsent: [ nil ]
 ]
+
+{ #category : #private }
+IpfsWiki >> removePage: aSymbol [
+	pages removeKey: aSymbol.
+]

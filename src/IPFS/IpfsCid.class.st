@@ -176,6 +176,14 @@ IpfsCid >> sizeOfRawData [
 
 ]
 
+{ #category : #printing }
+IpfsCid >> storeOn: aStream [
+	aStream nextPutAll: '(IpfsCid fromString: '.
+	cidBase32 storeOn: aStream.
+	aStream nextPut: $).
+
+]
+
 { #category : #accessing }
 IpfsCid >> version [
 	^ prefix first asSymbol

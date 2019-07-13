@@ -102,3 +102,11 @@ IpfsPath >> resolveNames [
 	"Resolve /ipns paths recursively until an /ipfs path is obtained."
 	self subclassResponsibility
 ]
+
+{ #category : #printing }
+IpfsPath >> storeOn: aStream [
+	aStream nextPutAll: '(IpfsPath fromString: '.
+	self asString storeOn: aStream.
+	aStream nextPut: $).
+
+]

@@ -1,5 +1,7 @@
 "
 !Tests for publishing (IPNS)
+
+Warning: these tests take a long time because IPNS is slow.
 "
 Class {
 	#name : #IpfsPublishingTest,
