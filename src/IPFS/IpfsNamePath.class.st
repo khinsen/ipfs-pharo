@@ -28,7 +28,7 @@ IpfsNamePath >> cid [
 
 { #category : #'data access' }
 IpfsNamePath >> loadObjectInBackground [
-	^ IpfsRequester resolveAndloadObjectFromPath: self
+	^ IpfsCache resolveAndloadObjectFromPath: self
 
 ]
 

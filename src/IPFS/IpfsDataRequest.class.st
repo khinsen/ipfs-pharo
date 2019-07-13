@@ -38,5 +38,5 @@ IpfsDataRequest >> printOn: aStream [
 
 { #category : #'data access' }
 IpfsDataRequest >> updateIpfsRequest [
-	^ IpfsRequester loadObjectFromPath: path
+	^ IpfsCache loadObjectFromPath: path
 ]

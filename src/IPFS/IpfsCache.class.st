@@ -1,10 +1,12 @@
 "
-!A proxy for requesting IPFS data asynchronously
+!A cache for results of data requests processed asynchronously
 
 This is a singleton that accepts requests for IPFS name resolution or for IPFS data objects, executes them asynchronously, and caches the results. Until the requested data is available, the return value will be an ${class:name=IpfsRequest}$.
+
+Note that there is no technical reason for this to be singleton. There could well be multiple coexisting caches. Making this a singleton was the quickest solution for making asynchronous requests from ${class:name=IpfsAnnotation}$. This will probably change in the future.
 "
 Class {
-	#name : #IpfsRequester,
+	#name : #IpfsCache,
 	#superclass : #Object,
 	#traits : 'TSingleton',
 	#classTraits : 'TSingleton classTrait',
@@ -16,40 +18,40 @@ Class {
 }
 
 { #category : #'data access' }
-IpfsRequester class >> loadObjectFromPath: anIpfsCidPath [
+IpfsCache class >> loadObjectFromPath: anIpfsCidPath [
 	^ self uniqueInstance loadObjectFromPath: anIpfsCidPath
 ]
 
 { #category : #'data access' }
-IpfsRequester class >> resolveAndloadObjectFromPath: anIpfsPath [
+IpfsCache class >> resolveAndloadObjectFromPath: anIpfsPath [
 	^ self uniqueInstance resolveAndloadObjectFromPath: anIpfsPath
 ]
 
 { #category : #'data access' }
-IpfsRequester class >> resolveName: aString [
+IpfsCache class >> resolveName: aString [
 	^ self uniqueInstance resolveName: aString
 ]
 
 { #category : #'data access' }
-IpfsRequester class >> resolveName: aString continuation: aBlock [
+IpfsCache class >> resolveName: aString continuation: aBlock [
 	^ self uniqueInstance resolveName: aString continuation: aBlock
 ]
 
 { #category : #'data access' }
-IpfsRequester class >> resolveNamePath: anIpfsNamePath [
+IpfsCache class >> resolveNamePath: anIpfsNamePath [
 	^ self uniqueInstance resolveNamePath: anIpfsNamePath
 
 ]
 
 { #category : #initialization }
-IpfsRequester >> initialize [
+IpfsCache >> initialize [
 	names := Dictionary new.
 	objects := Dictionary new.
 
 ]
 
 { #category : #'data access' }
-IpfsRequester >> loadObjectFromPath: anIpfsPath [
+IpfsCache >> loadObjectFromPath: anIpfsPath [
 	| pathString |
 	pathString := anIpfsPath asString.
 	(objects includesKey: pathString)
@@ -61,7 +63,7 @@ IpfsRequester >> loadObjectFromPath: anIpfsPath [
 ]
 
 { #category : #'data access' }
-IpfsRequester >> resolveAndloadObjectFromPath: anIpfsPath [
+IpfsCache >> resolveAndloadObjectFromPath: anIpfsPath [
 	| pathString |
 	pathString := anIpfsPath asString.
 	(objects includesKey: pathString)
@@ -79,7 +81,7 @@ IpfsRequester >> resolveAndloadObjectFromPath: anIpfsPath [
 ]
 
 { #category : #'data access' }
-IpfsRequester >> resolveName: aString [
+IpfsCache >> resolveName: aString [
 	(names includesKey: aString)
 		ifFalse:
 			[	names at: aString put:

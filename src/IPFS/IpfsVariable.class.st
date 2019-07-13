@@ -2,6 +2,8 @@
 !A (global) variable in IPFS
 
 This class associates an ${class:name=IpfsKey}$ with a Pharo object. The method ${method:name=IpfsVariable>>#store}$ stores the current value in IPFS, pins it, and publishes it as the new value of the key. Prior values are unpinned.
+
+Note that this has turned out not to be a viable way to handle global distributed data via IPFS, because the naming service, IPNS, is much too slow and unpredictable for now (mid-2019).
 "
 Class {
 	#name : #IpfsVariable,

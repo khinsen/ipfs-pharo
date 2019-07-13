@@ -40,7 +40,7 @@ IpfsCidPath >> isRaw [
 
 { #category : #'data access' }
 IpfsCidPath >> loadObjectInBackground [
-	^ IpfsRequester loadObjectFromPath: self
+	^ IpfsCache loadObjectFromPath: self
 ]
 
 { #category : #accessing }

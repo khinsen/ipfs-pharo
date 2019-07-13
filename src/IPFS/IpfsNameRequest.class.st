@@ -38,5 +38,5 @@ IpfsNameRequest >> printOn: aStream [
 
 { #category : #'data access' }
 IpfsNameRequest >> updateIpfsRequest [
-	^ IpfsRequester resolveName: name
+	^ IpfsCache resolveName: name
 ]
