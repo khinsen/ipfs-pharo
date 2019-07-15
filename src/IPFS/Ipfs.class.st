@@ -50,6 +50,26 @@ Ipfs class >> dagResolve: aString [
 ]
 
 { #category : #settings }
+Ipfs class >> ipfsFallbackPort [
+	^ self uniqueInstance fallbackPort
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsFallbackPort: anInteger [
+	^ self uniqueInstance fallbackPort: anInteger
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsFallbackServer [
+	^ self uniqueInstance fallbackHost
+]
+
+{ #category : #settings }
+Ipfs class >> ipfsFallbackServer: aString [
+	^ self uniqueInstance fallbackHost: aString
+]
+
+{ #category : #settings }
 Ipfs class >> ipfsPort [
 	^ self uniqueInstance port
 ]
@@ -77,13 +97,25 @@ Ipfs class >> ipfsSettingsOn: aBuilder [
 		description: 'The IPFS server used to access IPFS';
 		parent: #network;
 		with: [ 
-			(aBuilder setting: #ipfsServer)
-				label: 'IPFS Server' ;
-				description: 'The IPFS server (e.g 127.0.0.1)';
+			(aBuilder setting: #ipfsFallbackPort)
+				label: 'Fallback IPFS Port' ;
+				description: 'The port of the public IPFS server (e.g. 443)';
+				order: 4;
+				target: Ipfs.
+			(aBuilder setting: #ipfsFallbackServer)
+				label: 'Fallback IPFS Server' ;
+				description: 'A public IPFS server (e.g ipfs.io) to use as a fallback if no local Ipfs daemon is available.';
+				order: 3;
 				target: Ipfs.
 			(aBuilder setting: #ipfsPort)
 				label: 'IPFS Port' ;
 				description: 'The IPFS port (e.g. 5001)';
+				order: 2;
+				target: Ipfs.
+			(aBuilder setting: #ipfsServer)
+				label: 'IPFS Server' ;
+				description: 'The IPFS server (e.g 127.0.0.1)';
+				order: 1;
 				target: Ipfs ].
 ]
 
@@ -205,6 +237,26 @@ Ipfs >> dagResolve: aString [
 ]
 
 { #category : #accessing }
+Ipfs >> fallbackHost [
+	^ fallbackHost
+]
+
+{ #category : #accessing }
+Ipfs >> fallbackHost: anObject [
+	fallbackHost := anObject
+]
+
+{ #category : #accessing }
+Ipfs >> fallbackPort [
+	^ fallbackPort
+]
+
+{ #category : #accessing }
+Ipfs >> fallbackPort: anObject [
+	fallbackPort := anObject
+]
+
+{ #category : #accessing }
 Ipfs >> host [
 	^ host
 ]
@@ -219,7 +271,8 @@ Ipfs >> initialize [
 	super initialize.
 	host := '127.0.0.1'.
 	port := 5001.
-
+	fallbackHost := 'ipfs.io'.
+	fallbackPort := 443.
 ]
 
 { #category : #IPNS }

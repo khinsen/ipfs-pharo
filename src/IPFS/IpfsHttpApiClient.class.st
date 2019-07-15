@@ -8,6 +8,8 @@ Class {
 	#instVars : [
 		'host',
 		'port',
+		'fallbackHost',
+		'fallbackPort',
 		'dataRequestTimeout'
 	],
 	#category : #'IPFS-0 - Server access'
@@ -26,21 +28,32 @@ IpfsHttpApiClient >> dataRequestTimeout: aDuration [
 { #category : #'http requests' }
 IpfsHttpApiClient >> getRequest: aString parameters: aDictionary [
 	| result |
-	result := self znClientForJsonResult
+	[ result := self znClientForJsonResult
 		path: 'api/v0/', aString;
 		queryAddAll: aDictionary;
-		get.
+		get. ]
+	on: ConnectionTimedOut do:
+	[ result := self znFallbackClientForJsonResult
+		path: 'api/v0/', aString;
+		queryAddAll: aDictionary;
+		get. ].
 	^ result
 ]
 
 { #category : #'http requests' }
 IpfsHttpApiClient >> getRequest: aString parameters: aDictionary timeout: aDuration [
 	| result |
-	result := self znClientForJsonResult
+	[ result := self znClientForJsonResult
 		timeout: aDuration asSeconds;
 		path: 'api/v0/', aString;
 		queryAddAll: aDictionary;
-		get.
+		get ]
+	on: ConnectionTimedOut do:
+	[ result := self znFallbackClientForJsonResult
+		timeout: aDuration asSeconds;
+		path: 'api/v0/', aString;
+		queryAddAll: aDictionary;
+		get ].
 	^ result
 ]
 
@@ -106,6 +119,32 @@ IpfsHttpApiClient >> znClient [
 { #category : #'http requests' }
 IpfsHttpApiClient >> znClientForJsonResult [
 	^ self znClient
+		accept: 'application/json';
+		contentReader: [ :entity |
+								entity ifNil: [ nil ]
+										 ifNotNil: [ (NeoJSONReader on: entity contents readStream)
+															mapClass: NeoJSONObject;
+															next ] ];
+		yourself.
+
+]
+
+{ #category : #'http requests' }
+IpfsHttpApiClient >> znFallbackClient [
+	^ ZnClient new
+		systemPolicy;
+		beOneShot;
+		https;
+		host: fallbackHost;
+		port: fallbackPort;
+		ifFail: [ :exception | self handleFailure: exception ];
+		yourself.
+
+]
+
+{ #category : #'http requests' }
+IpfsHttpApiClient >> znFallbackClientForJsonResult [
+	^ self znFallbackClient
 		accept: 'application/json';
 		contentReader: [ :entity |
 								entity ifNil: [ nil ]
