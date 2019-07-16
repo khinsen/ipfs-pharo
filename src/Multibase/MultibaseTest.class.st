@@ -7,6 +7,40 @@ Class {
 	#category : #'Multibase-Tests '
 }
 
+{ #category : #running }
+MultibaseTest >> readReferenceDatasetFrom: anUrl [
+	| dataset encodings |
+	dataset :=
+		(ZnClient new
+			beOneShot;
+			get: anUrl;
+			entity) contents.
+	encodings := (dataset lines collect:
+		[ :each |
+			| record |
+			record := each splitOn: $,.
+			record first asSymbol ->
+				(record second trimBoth:
+					[ :char | char isSeparator or: [ char = $" ] ]) ])
+		asDictionary.
+	^ encodings
+]
+
+{ #category : #running }
+MultibaseTest >> runTestForReferenceDatasetFrom: anUrl [
+	| encodings bytes |
+	encodings := self readReferenceDatasetFrom: anUrl.
+	bytes := (encodings at: #encoding) asByteArray.
+	MultibaseCodec subclasses do:
+		[ :codecClass |
+			| codec encodedReferenceValue decoded |
+			codec := codecClass new.
+			encodedReferenceValue := encodings at: codec name.
+			self assert: encodedReferenceValue first equals: codec code.
+			decoded := codec decode: encodedReferenceValue allButFirst.
+			self assert: decoded equals: bytes.  ]
+]
+
 { #category : #testing }
 MultibaseTest >> testDecodeRandomBytes [
 	|  randomBytes digitString decoded |
@@ -24,5 +58,64 @@ MultibaseTest >> testDecodeRandomBytes [
 		digitString translateToLowercase.
 		decoded := MultibaseEncoder new decode: 'f', digitString.
 		self assert: decoded equals: randomBytes ]
+
+]
+
+{ #category : #testing }
+MultibaseTest >> testDecodeToInteger [
+	| randomInteger encoded |
+	100 timesRepeat:
+		[ randomInteger := 1000000000 atRandom.
+		  encoded := '9', randomInteger printString.
+		  self assert: (MultibaseEncoder new decodeToInteger: encoded)
+				 equals: randomInteger.
+		  encoded := 'f', (randomInteger radix: 16) translateToLowercase.
+		  self assert: (MultibaseEncoder new decodeToInteger: encoded)
+				 equals: randomInteger.
+		  encoded := '7', (randomInteger radix: 8).
+		  self assert: (MultibaseEncoder new decodeToInteger: encoded)
+				 equals: randomInteger.
+		  encoded := '0', (randomInteger radix: 2).
+		  self assert: (MultibaseEncoder new decodeToInteger: encoded)
+				 equals: randomInteger ]
+]
+
+{ #category : #testing }
+MultibaseTest >> testReferenceDataset1 [
+	| url |
+	url := 'https://github.com/multiformats/multibase/raw/master/tests/test1.csv'.
+	self runTestForReferenceDatasetFrom: url.
+
+]
+
+{ #category : #testing }
+MultibaseTest >> testReferenceDataset2 [
+	| url |
+	url := 'https://github.com/multiformats/multibase/raw/master/tests/test2.csv'.
+	self runTestForReferenceDatasetFrom: url.
+
+]
+
+{ #category : #testing }
+MultibaseTest >> testReferenceDataset3 [
+	| url |
+	url := 'https://github.com/multiformats/multibase/raw/master/tests/test3.csv'.
+	self runTestForReferenceDatasetFrom: url.
+
+]
+
+{ #category : #testing }
+MultibaseTest >> testReferenceDataset4 [
+	| url |
+	url := 'https://github.com/multiformats/multibase/raw/master/tests/test4.csv'.
+	self runTestForReferenceDatasetFrom: url.
+
+]
+
+{ #category : #testing }
+MultibaseTest >> testReferenceDataset5 [
+	| url |
+	url := 'https://github.com/multiformats/multibase/raw/master/tests/test5.csv'.
+	self runTestForReferenceDatasetFrom: url.
 
 ]

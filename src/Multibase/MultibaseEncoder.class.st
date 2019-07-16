@@ -11,6 +11,13 @@ MultibaseEncoder >> decode: aString [
 	^ codec decode: aString allButFirst
 ]
 
+{ #category : #decoding }
+MultibaseEncoder >> decodeToInteger: aString [
+	| codec |
+	codec := MultibaseCodec forCode: aString first.
+	^ codec decodeToInteger: aString allButFirst
+]
+
 { #category : #encoding }
 MultibaseEncoder >> encode: aByteArray [
 
