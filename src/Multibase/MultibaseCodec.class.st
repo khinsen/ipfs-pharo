@@ -7,7 +7,7 @@ The general principle of the encodings is to consider the byte sequence as a big
 # Leading zeros. The byte sequences [ 1 2 3 ] and [ 0 0 1 2 3 ] are obviously different, but describe the same integer value. The specific descriptions for *base2>https://github.com/multiformats/multibase/blob/master/rfcs/Base2.md* and *base10>https://github.com/multiformats/multibase/blob/master/rfcs/Base10.md* explain how to deal with this. From the examples, it seems that the principle of leading zeros explained for base10 is more generally used for bases that are not a power of 2 (e.g. base58). It is implemented in ${method:name=MultibaseCodec>>#decodeWithLeadingZeros:}$. The approach explained for base2 can be generalized to bases that are a power of 2 and is implemented in ${method:name=#decode:bitsPerDigit:}$.
 # Extraneous bits. The byte sequence [ 1 2 3 ] requires 24 bits and thus, for example, 5 characters in base32 (where each character represents 5 bits). But those 5 characters stand for 25 bits. From the provided *test cases>https://github.com/multiformats/multibase/tree/master/tests*, it looks like the integer value of the byte sequence is shifted to the left (adding zero bits at the right) to make it occupy the required number of bits. This is implemented in ${method:name=#decode:bitsPerDigit:}$.
  
-This implementation contains all the bases supported by the *Go reference implementation>https://github.com/multiformats/go-multibase*, except for the padded encodings (whose names end in 'pad').
+This implementation contains all the bases supported by the *Go reference implementation>https://github.com/multiformats/go-multibase*, except for the padded encodings (whose names contain 'pad').
 "
 Class {
 	#name : #MultibaseCodec,
@@ -17,6 +17,14 @@ Class {
 	],
 	#category : #'Multibase-Codecs'
 }
+
+{ #category : #accessing }
+MultibaseCodec class >> forBase: aSymbol [
+	^ (self allSubclasses
+		detect: [ :codec | codec new name = aSymbol ]
+		ifNone: [ MultibaseEncodingError signal: 'No codec for base $', aSymbol ])
+		new.
+]
 
 { #category : #accessing }
 MultibaseCodec class >> forCode: aCharacter [
@@ -43,7 +51,7 @@ MultibaseCodec >> code [
 	self subclassResponsibility
 ]
 
-{ #category : #decoding }
+{ #category : #encoding }
 MultibaseCodec >> decode: aString [
 	self subclassResponsibility
 ]
@@ -51,8 +59,6 @@ MultibaseCodec >> decode: aString [
 { #category : #decoding }
 MultibaseCodec >> decode: aString bitsPerDigit: bpd [
 	| intValue numberOfBytes bytes |
-	self bitsPerDigit ifNil:
-		[ self error: 'Codec should define a specific decoder' ].
 	numberOfBytes := aString size * bpd // 8.
 	intValue :=
 		(self decodeToInteger: aString)
@@ -103,6 +109,38 @@ MultibaseCodec >> encode: aByteArray [
 	self subclassResponsibility
 ]
 
+{ #category : #encoding }
+MultibaseCodec >> encode: aByteArray bitsPerDigit: bpd [
+	| numberOfDigits intValue shift reversedEncoding leadingZeros |
+	self assert: aByteArray isNotEmpty.
+	numberOfDigits := ((aByteArray size * 8) + (bpd-1)) // bpd.
+	shift := (numberOfDigits * bpd) - (aByteArray size * 8).
+	self assert: shift >= 0.
+	intValue := aByteArray asInteger bitShift: shift.
+	reversedEncoding := String streamContents: [ :stream |
+		self printReversed: intValue on: stream ].
+	leadingZeros := self alphabet first asString
+							repeat: (numberOfDigits - reversedEncoding size).
+	^ leadingZeros, reversedEncoding reversed
+]
+
+{ #category : #encoding }
+MultibaseCodec >> encodeWithLeadingZeros: aByteArray [
+	| intValue reversedEncoding |
+	self assert: aByteArray isNotEmpty.
+	intValue := aByteArray asInteger.
+	reversedEncoding := String streamContents: [ :stream |
+		| index |
+		self printReversed: intValue on: stream.
+		index := 1.
+		[ index < aByteArray size
+				and: [ (aByteArray at: index) isZero ] ]
+			whileTrue: [
+				stream nextPut: self alphabet first.
+				index := index + 1 ] ].
+	^ reversedEncoding reversed
+]
+
 { #category : #initialization }
 MultibaseCodec >> initialize [
 	super initialize.
@@ -113,4 +151,16 @@ MultibaseCodec >> initialize [
 MultibaseCodec >> name [
 	"The name of the base as defined by the multibase standard"
 	self subclassResponsibility
+]
+
+{ #category : #encoding }
+MultibaseCodec >> printReversed: anInteger on: aStream [
+	| intValue quotient remainder |
+	intValue := anInteger.
+	[ intValue > 0 ] whileTrue: [
+		quotient := intValue // base.
+		remainder := intValue - (quotient * base).
+		intValue := quotient.
+		aStream nextPut: (self alphabet at: remainder + 1) ]
+
 ]

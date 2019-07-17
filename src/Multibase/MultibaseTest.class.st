@@ -34,12 +34,14 @@ MultibaseTest >> runTestForReferenceDatasetFrom: anUrl [
 	bytes := (encodings at: #encoding) asByteArray.
 	MultibaseCodec allSubclasses do:
 		[ :codecClass |
-			| codec encodedReferenceValue decoded |
+			| codec encodedReferenceValue decoded encoded |
 			codec := codecClass new.
 			encodedReferenceValue := encodings at: codec name.
 			self assert: encodedReferenceValue first equals: codec code.
 			decoded := codec decode: encodedReferenceValue allButFirst.
-			self assert: decoded equals: bytes.  ]
+			self assert: decoded equals: bytes.
+			encoded := codec encode: bytes.
+			self assert: encoded equals: encodedReferenceValue allButFirst ]
 ]
 
 { #category : #testing }

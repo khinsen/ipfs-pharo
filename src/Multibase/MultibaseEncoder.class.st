@@ -1,3 +1,7 @@
+"
+!A *multibase>https://github.com/multiformats/multibase* encoder and decoder
+
+"
 Class {
 	#name : #MultibaseEncoder,
 	#superclass : #Object,
@@ -21,4 +25,11 @@ MultibaseEncoder >> decodeToInteger: aString [
 { #category : #encoding }
 MultibaseEncoder >> encode: aByteArray [
 
+]
+
+{ #category : #encoding }
+MultibaseEncoder >> encode: aByteArray base: aSymbol [
+	| codec |
+	codec := MultibaseCodec forBase: aSymbol.
+	^ codec code asString, (codec encode: aByteArray)
 ]

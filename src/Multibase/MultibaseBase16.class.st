@@ -24,6 +24,11 @@ MultibaseBase16 >> decode: aString [
 	^ self decode: aString bitsPerDigit: self bitsPerDigit
 ]
 
+{ #category : #encoding }
+MultibaseBase16 >> encode: aByteArray [
+	^ self encode: aByteArray bitsPerDigit: self bitsPerDigit
+]
+
 { #category : #definition }
 MultibaseBase16 >> name [
 	^ #base16

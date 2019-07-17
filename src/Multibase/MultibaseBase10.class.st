@@ -24,6 +24,11 @@ MultibaseBase10 >> decode: aString [
 	^ self decodeWithLeadingZeros: aString
 ]
 
+{ #category : #encoding }
+MultibaseBase10 >> encode: aByteArray [
+	^ self encodeWithLeadingZeros: aByteArray
+]
+
 { #category : #definition }
 MultibaseBase10 >> name [
 	^ #base10

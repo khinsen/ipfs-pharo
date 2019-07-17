@@ -24,6 +24,11 @@ MultibaseBase64 >> decode: aString [
 	^ self decode: aString bitsPerDigit: self bitsPerDigit
 ]
 
+{ #category : #encoding }
+MultibaseBase64 >> encode: aByteArray [
+	^ self encode: aByteArray bitsPerDigit: self bitsPerDigit
+]
+
 { #category : #definition }
 MultibaseBase64 >> name [
 	^ #base64

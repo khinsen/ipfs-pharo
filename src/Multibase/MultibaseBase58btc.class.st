@@ -24,6 +24,11 @@ MultibaseBase58btc >> decode: aString [
 	^ self decodeWithLeadingZeros: aString
 ]
 
+{ #category : #encoding }
+MultibaseBase58btc >> encode: aByteArray [
+	^ self encodeWithLeadingZeros: aByteArray
+]
+
 { #category : #definition }
 MultibaseBase58btc >> name [
 	^ #base58btc
