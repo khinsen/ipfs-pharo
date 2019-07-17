@@ -32,7 +32,7 @@ MultibaseTest >> runTestForReferenceDatasetFrom: anUrl [
 	| encodings bytes |
 	encodings := self readReferenceDatasetFrom: anUrl.
 	bytes := (encodings at: #encoding) asByteArray.
-	MultibaseCodec subclasses do:
+	MultibaseCodec allSubclasses do:
 		[ :codecClass |
 			| codec encodedReferenceValue decoded |
 			codec := codecClass new.

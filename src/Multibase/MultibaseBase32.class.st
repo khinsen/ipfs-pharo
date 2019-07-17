@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #definition }
+MultibaseBase32 >> alphabet [
+	^ 'abcdefghijklmnopqrstuvwxyz234567'
+]
+
+{ #category : #definition }
 MultibaseBase32 >> bitsPerDigit [
 	^ 5
 ]
@@ -14,9 +19,9 @@ MultibaseBase32 >> code [
 	^ $b
 ]
 
-{ #category : #definition }
-MultibaseBase32 >> digits [
-	^ 'abcdefghijklmnopqrstuvwxyz234567'
+{ #category : #decoding }
+MultibaseBase32 >> decode: aString [
+	^ self decode: aString bitsPerDigit: self bitsPerDigit
 ]
 
 { #category : #definition }

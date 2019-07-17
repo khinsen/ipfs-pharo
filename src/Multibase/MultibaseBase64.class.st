@@ -1,30 +1,30 @@
 Class {
-	#name : #MultibaseBase2,
+	#name : #MultibaseBase64,
 	#superclass : #MultibaseCodec,
 	#category : #'Multibase-Codecs'
 }
 
 { #category : #definition }
-MultibaseBase2 >> alphabet [
-	^ '01'
+MultibaseBase64 >> alphabet [
+	^ 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 ]
 
 { #category : #definition }
-MultibaseBase2 >> bitsPerDigit [
-	^ 1
+MultibaseBase64 >> bitsPerDigit [
+	^ 6
 ]
 
 { #category : #definition }
-MultibaseBase2 >> code [
-	^ $0
+MultibaseBase64 >> code [
+	^ $m
 ]
 
 { #category : #decoding }
-MultibaseBase2 >> decode: aString [
+MultibaseBase64 >> decode: aString [
 	^ self decode: aString bitsPerDigit: self bitsPerDigit
 ]
 
 { #category : #definition }
-MultibaseBase2 >> name [
-	^ #base2
+MultibaseBase64 >> name [
+	^ #base64
 ]
