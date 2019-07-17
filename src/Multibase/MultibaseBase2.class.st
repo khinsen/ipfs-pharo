@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #definition }
+MultibaseBase2 >> bitsPerDigit [
+	^ 1
+]
+
+{ #category : #definition }
 MultibaseBase2 >> code [
 	^ $0
 ]

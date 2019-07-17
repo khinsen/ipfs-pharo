@@ -17,11 +17,12 @@ MultibaseTest >> readReferenceDatasetFrom: anUrl [
 			entity) contents.
 	encodings := (dataset lines collect:
 		[ :each |
-			| record |
+			| record string |
 			record := each splitOn: $,.
-			record first asSymbol ->
-				(record second trimBoth:
-					[ :char | char isSeparator or: [ char = $" ] ]) ])
+			string := record second trimBoth:
+							[ :char | char isSeparator or: [ char = $" ] ].
+			string := string copyReplaceAll: '\x00' with: Character null asString.
+			record first asSymbol -> string ])
 		asDictionary.
 	^ encodings
 ]
@@ -70,9 +71,6 @@ MultibaseTest >> testDecodeToInteger [
 		  self assert: (MultibaseEncoder new decodeToInteger: encoded)
 				 equals: randomInteger.
 		  encoded := 'f', (randomInteger radix: 16) translateToLowercase.
-		  self assert: (MultibaseEncoder new decodeToInteger: encoded)
-				 equals: randomInteger.
-		  encoded := '7', (randomInteger radix: 8).
 		  self assert: (MultibaseEncoder new decodeToInteger: encoded)
 				 equals: randomInteger.
 		  encoded := '0', (randomInteger radix: 2).
