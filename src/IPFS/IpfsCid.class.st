@@ -52,8 +52,12 @@ IpfsCid class >> fromDictionary: aDictionary [
 
 { #category : #'instance creation' }
 IpfsCid class >> fromString: aString [
-	^ self fromBase32: (Ipfs cidBase32: aString trimBoth).
-
+	| trimmedString base32 |
+	trimmedString := aString trimBoth.
+	base32 := (trimmedString beginsWith: 'b')
+		ifTrue: [ trimmedString ]
+		ifFalse: [ Ipfs cidBase32: trimmedString ].
+	^ self fromBase32: base32
 ]
 
 { #category : #comparing }

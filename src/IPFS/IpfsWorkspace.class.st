@@ -54,11 +54,10 @@ IpfsWorkspace >> at: aSymbol put: aValue [
 
 { #category : #updating }
 IpfsWorkspace >> generateDataMethodFor: key cid: anIpfsCid [
-	| selector |
-	selector := self class compile:
+	self class compile:
 		'load', key asString, Character cr asString,
-		'   data at: ', key storeString, ' put: ', anIpfsCid storeString, ' loadObject'.
-	(self class methodDict at: selector) protocol: 'data'
+		'   data at: ', key storeString, ' put: ', anIpfsCid storeString, ' loadObject'
+		classified: 'data'
 ]
 
 { #category : #initialization }
