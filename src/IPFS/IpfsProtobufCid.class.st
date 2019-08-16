@@ -5,7 +5,7 @@ These nodes are used in the first-generation IPFS file layer. The next-generatio
 "
 Class {
 	#name : #IpfsProtobufCid,
-	#superclass : #IpfsCid,
+	#superclass : #IpfsCidOldImplementation,
 	#category : #'IPFS-2 - Linked data'
 }
 

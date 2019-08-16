@@ -14,15 +14,15 @@ Class {
 IpfsPath class >> fromString: aString [
 	| elements path |
 	elements := aString splitOn: $/.
-	elements size = 1 ifTrue: [ ^ elements first asIpfsCid asIpfsPath ].
+	elements size = 1
+		ifTrue: [ ^ elements first asIpfsCid asIpfsPath ].
 	self assert: elements size >= 3.
 	self assert: elements first = ''.
 	self assert: (#('ipfs' 'ipns') includes: elements second).
-	path := (elements second = #ipfs)
-			ifTrue: [ IpfsCidPath new cid: (IpfsCid fromString: elements third) ]
-			ifFalse: [ IpfsNamePath new name: elements third ].
-	4 to: elements size do:
-		[ :i | path := path / (elements at: i) ].
+	path := elements second = #ipfs
+		ifTrue: [ IpfsCidPath new cid: (IpfsCid fromString: elements third) ]
+		ifFalse: [ IpfsNamePath new name: elements third ].
+	4 to: elements size do: [ :i | path := path / (elements at: i) ].
 	^ path
 ]
 

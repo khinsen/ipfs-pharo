@@ -5,7 +5,7 @@ A raw block stores a byte sequence that is not interpreted by IPFS software in a
 "
 Class {
 	#name : #IpfsRawCid,
-	#superclass : #IpfsCid,
+	#superclass : #IpfsCidOldImplementation,
 	#category : #'IPFS-2 - Blocks'
 }
 

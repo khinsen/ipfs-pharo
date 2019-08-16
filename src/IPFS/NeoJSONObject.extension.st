@@ -2,9 +2,8 @@ Extension { #name : #NeoJSONObject }
 
 { #category : #'*IPFS' }
 NeoJSONObject >> convertIpfsCids [
-	(self size = 1
-		and: [ self keys first = '/' ])
-		ifTrue: [ ^ IpfsCid fromDictionary: self ].
+	(self size = 1 and: [ self keys first = '/' ])
+		ifTrue: [ ^ IpfsCid fromJSON: self ].
 	^ self collect: [ :each | each convertIpfsCids ]
 ]
 

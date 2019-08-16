@@ -203,37 +203,42 @@ Ipfs >> dagGet: anIpfsCidOrPath [
 { #category : #IPLD }
 Ipfs >> dagPut: anObject [
 	| result |
-	result := self postRequest: 'dag/put'
+	result := self
+		postRequest: 'dag/put'
 		contents: (NeoJSONWriter toString: anObject)
-		parameters: (Dictionary with: #arg ->  '').
-	^ IpfsCid fromDictionary: (result at: 'Cid').
-
+		parameters: (Dictionary with: #arg -> '').
+	^ IpfsCid fromJSON: (result at: 'Cid')
 ]
 
 { #category : #IPLD }
 Ipfs >> dagPutRaw: anObject [
 	| result |
-	result := self postRequest: 'dag/put'
+	result := self
+		postRequest: 'dag/put'
 		contents: anObject asByteArray
-		parameters: (Dictionary with: #arg ->  ''
-									  with: #f -> 'raw'
-									  with: #'input-enc' -> 'raw').
-	^ IpfsCid fromDictionary: (result at: 'Cid').
-
+		parameters:
+			(Dictionary
+				with: #arg -> ''
+				with: #f -> 'raw'
+				with: #'input-enc' -> 'raw').
+	^ IpfsCid fromJSON: (result at: 'Cid')
 ]
 
 { #category : #IPLD }
 Ipfs >> dagResolve: aString [
 	| result path remPath |
-	[	result := self getRequest: 'dag/resolve'
-							parameters: { #arg -> aString } asDictionary
-							timeout: self dataRequestTimeout.
-		path := IpfsCidPath new cid: (IpfsCid fromString: ((result at: #Cid) at: #'/')).
-		remPath := result at: #RemPath.
-		remPath ifNotEmpty:
-			[ (remPath splitOn: $/) do: [ :each | path := path / each ] ].
-		^ path ]
-	on: IpfsError do: [ ^ nil ]
+	[ result := self
+		getRequest: 'dag/resolve'
+		parameters: {(#arg -> aString)} asDictionary
+		timeout: self dataRequestTimeout.
+	path := IpfsCidPath new
+		cid: (IpfsCid fromString: ((result at: #Cid) at: #/)).
+	remPath := result at: #RemPath.
+	remPath
+		ifNotEmpty: [ (remPath splitOn: $/) do: [ :each | path := path / each ] ].
+	^ path ]
+		on: IpfsError
+		do: [ ^ nil ]
 ]
 
 { #category : #accessing }
@@ -301,19 +306,21 @@ Ipfs >> nameResolve: aString timeout: aDuration [
 { #category : #IPFS }
 Ipfs >> objectGet: aCid [
 	| result data links |
-	result := self getRequest: 'object/get'
-						parameters: (Dictionary with: #arg -> aCid asString)
-						timeout: self dataRequestTimeout.
+	result := self
+		getRequest: 'object/get'
+		parameters: (Dictionary with: #arg -> aCid asString)
+		timeout: self dataRequestTimeout.
 	data := (result at: 'Data') asByteArray.
 	links := Dictionary new.
-	(result at: 'Links') do:
-		[ :link |
-			links at: (link at: 'Name')
-					put: (IpfsProtoBufLink cid: (IpfsCid fromString: (link at: 'Hash'))
-									   size: ((link at: 'Size') asNumber) )].
-	^ IpfsObject
-		data: data
-		links: links.
+	(result at: 'Links')
+		do: [ :link | 
+			links
+				at: (link at: 'Name')
+				put:
+					(IpfsProtoBufLink
+						cid: (IpfsCid fromString: (link at: 'Hash'))
+						size: (link at: 'Size') asNumber) ].
+	^ IpfsObject data: data links: links
 ]
 
 { #category : #accessing }

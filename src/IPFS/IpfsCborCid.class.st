@@ -5,7 +5,7 @@ These are (or at least will be) the most common nodes in the IPLD DAG. They cont
 "
 Class {
 	#name : #IpfsCborCid,
-	#superclass : #IpfsCid,
+	#superclass : #IpfsCidOldImplementation,
 	#category : #'IPFS-2 - Linked data'
 }
 

@@ -5,7 +5,7 @@ This class covers all codecs for which there is no specific subclass of ${class:
 "
 Class {
 	#name : #IpfsGenericCid,
-	#superclass : #IpfsCid,
+	#superclass : #IpfsCidOldImplementation,
 	#category : #'IPFS-2 - Linked data'
 }
 
