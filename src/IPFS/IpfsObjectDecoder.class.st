@@ -12,8 +12,8 @@ IpfsObjectDecoder class >> decodeDictionary: aListOfPairs [
 	| decodedDictionary |
 	decodedDictionary := Dictionary new.
 	aListOfPairs do:
-		[ :each | decodedDictionary at: each first
-											put: each second ].
+		[ :each | decodedDictionary at: each first decodeFromIpfs
+											put: each second decodeFromIpfs ].
 	^ decodedDictionary
 
 ]
