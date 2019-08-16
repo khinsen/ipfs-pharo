@@ -169,14 +169,6 @@ Ipfs >> blockSize: aCid [
 	^ result at: 'Size'.
 ]
 
-{ #category : #CIDs }
-Ipfs >> cidPrefix: aCid [
-	| result |
-	result := self getRequest: 'cid/format'
-						parameters: { #f -> ' %v/%c/%h/%L'. #arg -> aCid asString } asDictionary.
-	^ (result at: 'Formatted') splitOn: $/
-]
-
 { #category : #IPLD }
 Ipfs >> dagGet: anIpfsCidOrPath [
 	| node |
@@ -325,12 +317,19 @@ Ipfs >> port: anObject [
 Ipfs >> refs: anIpfsCid recursive: aBoolean [
 	| result |
 	"We can't use getRequest:parmeters: here because the return value is parsed as a stream."
-	result := self znClient
+	[ result := self znClient
 		path: 'api/v0/refs';
 		queryAt: #arg add: anIpfsCid asString;
 		queryAt: #recursive add: aBoolean asString;
 		timeout: self dataRequestTimeout asSeconds;
-		get.
+		get ]
+		on: ConnectionTimedOut
+		do: [ result := self znFallbackClient
+				path: 'api/v0/refs';
+				queryAt: #arg add: anIpfsCid asString;
+				queryAt: #recursive add: aBoolean asString;
+				timeout: self dataRequestTimeout asSeconds;
+				get ].
 	^ result
 		ifNil: [ Array new ]
 		ifNotNil: [ self parseReferenceList: result ]
