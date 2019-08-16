@@ -25,11 +25,6 @@ Ipfs class >> blockSize: aCid [
 ]
 
 { #category : #IPLD }
-Ipfs class >> cidBase32: aString [
-	^ self uniqueInstance cidBase32: aString
-]
-
-{ #category : #IPLD }
 Ipfs class >> dagGet: aCID [
 	^ self uniqueInstance dagGet: aCID
 ]
@@ -172,13 +167,6 @@ Ipfs >> blockSize: aCid [
 						parameters: (Dictionary with: #arg -> aCid asString)
 						timeout: self dataRequestTimeout.
 	^ result at: 'Size'.
-]
-
-{ #category : #CIDs }
-Ipfs >> cidBase32: aString [
-	| result |
-	result := self getRequest: 'cid/base32' parameters: { #arg -> aString } asDictionary.
-	^ result at: 'Formatted'
 ]
 
 { #category : #CIDs }
