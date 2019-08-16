@@ -26,14 +26,16 @@ IpfsByteLevelCid class >> fromCidV0: aString [
 
 { #category : #'instance creation' }
 IpfsByteLevelCid class >> fromString: aString [
-	| bytes |
-	(aString size = 46 and: [ aString beginsWith: 'Qm' ])
-		ifTrue: [ ^ self fromCidV0: aString ].
-	bytes := MultibaseEncoder new decode: aString.
+	| trimmedString bytes |
+	trimmedString := aString trimBoth.
+	"Deal with v0 CIDs by converting them to v1 CIDs"
+	(trimmedString size = 46 and: [ trimmedString beginsWith: 'Qm' ])
+		ifTrue: [ ^ self fromCidV0: trimmedString ].
+	"Handle v1 CIDs"
+	bytes := MultibaseEncoder new decode: trimmedString.
 	bytes first = 18
 		ifTrue: [ self error: 'Incorrectly encoded CIDv0' ].
-	^ (self new: bytes size)
-		replaceFrom: 1 to: bytes size with: bytes.
+	^ (self new: bytes size) replaceFrom: 1 to: bytes size with: bytes
 ]
 
 { #category : #'self-update' }
@@ -59,6 +61,16 @@ IpfsByteLevelCid class >> updateCodecTable [
 ]
 
 { #category : #converting }
+IpfsByteLevelCid >> asIpfsCid [
+	^ self
+]
+
+{ #category : #converting }
+IpfsByteLevelCid >> asIpfsPath [
+	^ IpfsCidPath new cid: self
+]
+
+{ #category : #converting }
 IpfsByteLevelCid >> asString [
 	^ self encodeInBase: #base32
 ]
@@ -70,8 +82,54 @@ IpfsByteLevelCid >> codecForCode: anInteger [
 ]
 
 { #category : #converting }
+IpfsByteLevelCid >> decodeFromIpfs [
+	^ self
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> decodeLinkedObjectsFromIpfs [
+	^ IpfsLink to: self loadLinkedObjects
+]
+
+{ #category : #storing }
+IpfsByteLevelCid >> encodeForIpfs [
+	^ NeoJSONObject with: '/' -> self asString
+]
+
+{ #category : #converting }
 IpfsByteLevelCid >> encodeInBase: aSymbol [
 	^ MultibaseEncoder new encode: self base: aSymbol
+]
+
+{ #category : #testing }
+IpfsByteLevelCid >> isRaw [
+	^ (self parse at: #codec) = 'raw'
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> loadAndDecode [
+	^ Ipfs dagGet: self
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> loadLinkedObjects [
+	^ self loadAndDecode decodeLinkedObjectsFromIpfs
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> loadObject [
+	^ self loadAndDecode decodeFromIpfs
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> loadRawBlock [
+	^ Ipfs blockGet: self asString
+
+]
+
+{ #category : #converting }
+IpfsByteLevelCid >> neoJsonOn: neoJSONWriter [
+	neoJSONWriter writeMap: { '/' -> self asString } asDictionary
 ]
 
 { #category : #parsing }
@@ -98,6 +156,37 @@ IpfsByteLevelCid >> printOn: aStream [
 			  nextPut: $(;
 			  nextPutAll: self asString;
 			  nextPut: $).
+
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> recursiveReferences [
+	^ Ipfs refs: self recursive: true
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> references [
+	^ Ipfs refs: self recursive: false
+]
+
+{ #category : #resolving }
+IpfsByteLevelCid >> resolveLink: aString [
+	self assert: self isRaw not description: 'Raw data contains no links'.
+	^ self loadAndDecode at: aString
+]
+
+{ #category : #resolving }
+IpfsByteLevelCid >> resolveLinks: aLinkSequence [
+	| nextInChain |
+	aLinkSequence ifEmpty: [ ^ self ].
+	nextInChain := self resolveLink: aLinkSequence first.
+	aLinkSequence size = 1 ifTrue: [ ^ nextInChain ].
+	^ nextInChain resolveLinks: aLinkSequence allButFirst.
+]
+
+{ #category : #'data access' }
+IpfsByteLevelCid >> sizeOfRawData [
+	^ Ipfs blockSize: self asString
 
 ]
 
