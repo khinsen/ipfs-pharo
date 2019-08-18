@@ -1,6 +1,23 @@
 Extension { #name : #IpfsCid }
 
 { #category : #'*IPFS-GToolkit' }
+IpfsCid >> embeddedViewShowing: aBlock For: aView [
+	^ aView explicit
+		stencil: [ | aContainer dataView |
+			aContainer := BlElement new
+				margin: (BlInsets all: 20);
+				background: Color white;
+				look: BrShadowLook;
+				constraintsDo: [ :c | 
+					c horizontal matchParent.
+					c vertical matchParent ].
+			dataView := aBlock value gtViewsFor: aView.
+			dataView
+				asElementDo: [ :aNewElement | aContainer addChild: aNewElement ].
+			aContainer ]
+]
+
+{ #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtActionInspectObjectFor: anAction [
 	<gtAction>
 	^ anAction button
@@ -35,12 +52,10 @@ IpfsCid >> gtCidDataFor: aView [
 
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtDataFor: aView [
-	<gtView>	| view |
-	view := self loadAndDecode ipfsDataViewFor: aView.
-	^ view
+	<gtView>
+	^ (self embeddedViewShowing: [ self loadAndDecode ] For: aView)
 		title: 'Data';
-		priority: -6;
-		yourself
+		priority: -6
 ]
 
 { #category : #'*IPFS-GToolkit' }
@@ -50,11 +65,19 @@ IpfsCid >> gtDisplayOn: stream [
 ]
 
 { #category : #'*IPFS-GToolkit' }
+IpfsCid >> gtRawBlockFor: aView [
+	<gtView>
+	^ (self embeddedViewShowing: [ self loadRawBlock ] For: aView)
+		title: 'Raw block';
+		priority: -5
+]
+
+{ #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtReferencesFor: aView [
 	<gtView>
 	^ aView list
 		title: 'References';
-		priority: -5;
+		priority: -4;
 		items: [ self references ];
 		itemFormat: [ :aCid | aCid asString ]
 
