@@ -150,14 +150,22 @@ Ipfs class >> refs: aCID recursive: aBoolean [
 Ipfs >> blockGet: aCid [
 	"This method cannot use getRequest:parameters: because it has to switch the ZnClient
 	 to binary mode."
-	^ self znClient
+
+	[ ^ self znClient
 		beBinary;
 		timeout: self dataRequestTimeout asSeconds;
 		accept: 'text/plain';
 		path: 'api/v0/block/get';
 		queryAt: #arg add: aCid asString;
-		get.
-
+		get ]
+	on: ConnectionTimedOut
+		do: [ ^ self znFallbackClient
+		beBinary;
+		timeout: self dataRequestTimeout asSeconds;
+		accept: 'text/plain';
+		path: 'api/v0/block/get';
+		queryAt: #arg add: aCid asString;
+		get ]
 ]
 
 { #category : #IPFS }
