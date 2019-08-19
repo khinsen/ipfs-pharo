@@ -18,20 +18,6 @@ IpfsCid >> embeddedViewShowing: aBlock For: aView [
 ]
 
 { #category : #'*IPFS-GToolkit' }
-IpfsCid >> gtActionInspectObjectFor: anAction [
-	<gtAction>
-	^ anAction button
-		icon: BrGlamorousIcons fromhere;
-		priority: 30;
-		action: [ :aButton | 
-			aButton
-				fireEvent:
-					(GtPhlowObjectToSpawn new
-						object: self loadObject;
-						sourceElement: aButton) ]
-]
-
-{ #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtCidDataFor: aView [
 	<gtView>
 	| cidData |
