@@ -25,15 +25,15 @@ IpfsCid >> gtCidDataFor: aView [
 	^ aView columnedList
 		title: 'CID';
 		priority: -10;
-		items: [ {	#Base32 -> (self encodeInBase: #base32).
-						#Version -> (cidData at: #version).
-						#Codec -> (cidData at: #codec).
-"						#'Hash function' -> self hashFunction.
-						#'Hash length' -> self hashLength.
-"						 } ];
+		items: [ {(#Base32 -> (self encodeInBase: #base32)).
+			(#Version -> (cidData at: #version)).
+			(#Codec -> (cidData at: #codec)).
+			(#'Hash function' -> (cidData at: #hashFunction)).
+			(#'Hash length' -> (cidData at: #hashLength)).
+			} ];
 		column: 'Key' item: [ :aField | aField key ];
 		column: 'Value' item: [ :aField | aField value ];
-		send: [ :aField | aField value ].
+		send: [ :aField | aField value ]
 ]
 
 { #category : #'*IPFS-GToolkit' }
