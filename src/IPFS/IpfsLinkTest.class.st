@@ -44,7 +44,7 @@ IpfsLinkTest >> testStoreLinkedObjects [
 	leaf2 := 42.
 	tree := { IpfsLink to: leaf1. IpfsLink to: leaf2 }.
 	cid := tree storeInIpfs.
-	retrievedTree := cid loadAndDecode.
+	retrievedTree := cid loadJson.
 	self assert: retrievedTree
 		  equals: { leaf1 storeInIpfs. leaf2 storeInIpfs }.
 

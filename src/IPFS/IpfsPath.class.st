@@ -63,13 +63,13 @@ IpfsPath >> isRaw [
 ]
 
 { #category : #'data access' }
-IpfsPath >> loadAndDecode [
+IpfsPath >> loadJson [
 	^ Ipfs dagGet: self
 ]
 
 { #category : #'data access' }
 IpfsPath >> loadObject [
-	^ self loadAndDecode decodeFromIpfs
+	^ self loadJson decodeFromIpfs
 ]
 
 { #category : #'data access' }

@@ -179,22 +179,22 @@ IpfsCid >> isRaw [
 ]
 
 { #category : #'data access' }
-IpfsCid >> loadAndDecode [
+IpfsCid >> loadJson [
 	^ Ipfs dagGet: self
 ]
 
 { #category : #'data access' }
 IpfsCid >> loadLinkedObjects [
-	^ self loadAndDecode decodeLinkedObjectsFromIpfs
+	^ self loadJson decodeLinkedObjectsFromIpfs
 ]
 
 { #category : #'data access' }
 IpfsCid >> loadObject [
-	^ self loadAndDecode decodeFromIpfs
+	^ self loadJson decodeFromIpfs
 ]
 
 { #category : #'data access' }
-IpfsCid >> loadRawBlock [
+IpfsCid >> loadRaw [
 	^ Ipfs blockGet: self asString
 
 ]
@@ -256,7 +256,7 @@ IpfsCid >> references [
 { #category : #resolving }
 IpfsCid >> resolveLink: aString [
 	self assert: self isRaw not description: 'Raw data contains no links'.
-	^ self loadAndDecode at: aString
+	^ self loadJson at: aString
 ]
 
 { #category : #resolving }

@@ -113,14 +113,14 @@ IpfsExamples >> loadIpnsPath [
 { #category : #examples }
 IpfsExamples >> loadNonResolvablePath [
 	<gtExample>
-	^ self nonResolvablePathIntoNestedDataStructure loadAndDecode
+	^ self nonResolvablePathIntoNestedDataStructure loadJson
 ]
 
 { #category : #examples }
 IpfsExamples >> loadRawBlock [
 	<gtExample>
 	| block |
-	block := self rawBlockCid loadAndDecode.
+	block := self rawBlockCid loadJson.
 	self assert: block equals: #[1 2 3 2 1].
 	^ block
 ]
@@ -128,7 +128,7 @@ IpfsExamples >> loadRawBlock [
 { #category : #examples }
 IpfsExamples >> loadResolvedPath [
 	<gtExample>
-	^ self resolvedPathIntoNestedDataStructure loadAndDecode
+	^ self resolvedPathIntoNestedDataStructure loadJson
 ]
 
 { #category : #examples }

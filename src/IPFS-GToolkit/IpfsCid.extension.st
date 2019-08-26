@@ -53,7 +53,7 @@ IpfsCid >> gtCidDataFor: aView [
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtDataFor: aView [
 	<gtView>
-	^ (self embeddedViewShowing: [ self loadAndDecode ] For: aView)
+	^ (self embeddedViewShowing: [ self loadJson ] For: aView)
 		title: 'Data';
 		priority: -6
 ]
@@ -67,7 +67,7 @@ IpfsCid >> gtDisplayOn: stream [
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtRawBlockFor: aView [
 	<gtView>
-	^ (self embeddedViewShowing: [ self loadRawBlock ] For: aView)
+	^ (self embeddedViewShowing: [ self loadRaw ] For: aView)
 		title: 'Raw block';
 		priority: -5
 ]

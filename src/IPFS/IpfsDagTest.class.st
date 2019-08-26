@@ -11,7 +11,7 @@ Class {
 { #category : #testing }
 IpfsDagTest >> testIPFSCLIDocumentation [
 	| dagNode |
-	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid loadAndDecode.
+	dagNode := 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid loadJson.
 	self assert: (dagNode at: 'data') equals: 'CAE='.
 	self assert: (dagNode at: 'links') size equals: 6.
 	(dagNode at: 'links') do:
@@ -26,7 +26,7 @@ IpfsDagTest >> testLinkedData [
 	cid1 := data1 storeInIpfs.
 	data2 := NeoJSONObject with: 'data' -> cid1.
 	cid2 := data2 storeInIpfs.
-	retrieved := cid2 loadAndDecode.
+	retrieved := cid2 loadJson.
 	self assert: retrieved equals: data2.
 ]
 
@@ -63,7 +63,7 @@ IpfsDagTest >> testRandomArrays [
 			array := Array new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
 			cid := array storeInIpfs.
-			retrievedArray := cid loadAndDecode.
+			retrievedArray := cid loadJson.
 			self assert: retrievedArray equals: array ]
 
 ]
@@ -75,7 +75,7 @@ IpfsDagTest >> testRandomByteArrays [
 			array := ByteArray new: (1 to: 1000) atRandom.
 			(1 to: array size) do: [ :each | array at: each put: (0 to: 100) atRandom ].
 			cid := array storeInIpfs.
-			retrievedObject := cid loadAndDecode.
+			retrievedObject := cid loadJson.
 			self assert: retrievedObject equals: array ]
 
 ]
@@ -116,7 +116,7 @@ IpfsDagTest >> testStoreAndLoad [
 		[ :object |
 			| cid retrievedObject |
 			cid := object storeInIpfs.
-			retrievedObject := cid loadAndDecode.
+			retrievedObject := cid loadJson.
 			self assert: retrievedObject equals: object ]
 
 ]
@@ -126,7 +126,7 @@ IpfsDagTest >> testStoreAndLoadAsRaw [
 	| data cid retrievedData |
 	data := NeoJSONObject with: 'foo' -> 'bar'.
 	cid := data storeInIpfs.
-	retrievedData := cid loadRawBlock.
+	retrievedData := cid loadRaw.
 	self assert: retrievedData
 		  equals:
 			#[16rA1 "Data item field:
@@ -149,7 +149,7 @@ IpfsDagTest >> testStoreAndLoadRawAndTestSize [
 	| bytes cid retrievedBytes |
 	bytes := #[1 2 3 4 3 2 1].
 	cid := bytes storeInIpfs.
-	retrievedBytes := cid loadAndDecode.
+	retrievedBytes := cid loadJson.
 	self assert: retrievedBytes equals: bytes.
 	self assert: cid sizeOfRawData equals: bytes size.
 ]
