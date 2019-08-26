@@ -8,6 +8,16 @@ Class {
 }
 
 { #category : #decoding }
+IpfsObjectDecoder class >> decodeDate: aString [
+	^ Date fromString: aString
+]
+
+{ #category : #decoding }
+IpfsObjectDecoder class >> decodeDateAndTime: aString [
+	^ DateAndTime fromString: aString
+]
+
+{ #category : #decoding }
 IpfsObjectDecoder class >> decodeDictionary: aListOfPairs [
 	| decodedDictionary |
 	decodedDictionary := Dictionary new.
@@ -16,4 +26,9 @@ IpfsObjectDecoder class >> decodeDictionary: aListOfPairs [
 											put: each second decodeFromIpfs ].
 	^ decodedDictionary
 
+]
+
+{ #category : #decoding }
+IpfsObjectDecoder class >> decodeTime: aString [
+	^ Time fromString: aString
 ]

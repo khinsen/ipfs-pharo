@@ -16,6 +16,15 @@ IpfsPharoObjectTest >> storeLoadCheck: anObject [
 ]
 
 { #category : #testing }
+IpfsPharoObjectTest >> testStoreAndLoadDatesAndTimes [
+	| testValues |
+	testValues := {DateAndTime now.
+	Date today.
+	Time now}.
+	testValues do: [ :object | self storeLoadCheck: object ]
+]
+
+{ #category : #testing }
 IpfsPharoObjectTest >> testStoreAndLoadDictionary [
 	| testValues |
 	testValues :=
