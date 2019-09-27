@@ -54,56 +54,6 @@ IpfsCid class >> fromString: aString [
 	^ (self new: bytes size) replaceFrom: 1 to: bytes size with: bytes
 ]
 
-{ #category : #'self-update' }
-IpfsCid class >> updateCodecTable: multiformatTable [
-	| map |
-	map := ((multiformatTable
-		select: [ :each | each second = 'ipld'])
-		collect:
-			[ :each | (each third copyReplaceAll: '0x' with: '16r') asNumber -> each first ])
-		asDictionary.
-	self
-		compile:
-			'codecForCode: anInteger' , Character cr asString
-				, '"Automatically generated method, do not edit!"'
-				, Character cr asString , '   ^ ' , map storeString
-				, ' at: anInteger'
-		classified: 'parsing'
-]
-
-{ #category : #'self-update' }
-IpfsCid class >> updateHashTable: multiformatTable [
-	| map |
-	map := ((multiformatTable
-		select: [ :each | each second = 'multihash' and: [each third size = 4]
-								"take only the multihash records with a one-byte code" ])
-		collect:
-			[ :each | (each third copyReplaceAll: '0x' with: '16r') asNumber -> each first ])
-		asDictionary.
-	self
-		compile:
-			'hashFunctionForCode: anInteger' , Character cr asString
-				, '"Automatically generated method, do not edit!"'
-				, Character cr asString , '   ^ ' , map storeString
-				, ' at: anInteger'
-		classified: 'parsing'
-]
-
-{ #category : #'self-update' }
-IpfsCid class >> updateMultiformatTables [
-	| url table |
-	url := 'https://raw.githubusercontent.com/multiformats/multicodec/master/table.csv'.
-	table := (ZnClient new
-			beOneShot;
-			get: url;
-			entity)
-		contents.
-	table := table allButFirst lines
-		collect: [ :each | (each splitOn: $,) collect: #trimBoth ].
-	self updateCodecTable: table.
-	self updateHashTable: table
-]
-
 { #category : #converting }
 IpfsCid >> asIpfsCid [
 	^ self
@@ -117,12 +67,6 @@ IpfsCid >> asIpfsPath [
 { #category : #converting }
 IpfsCid >> asString [
 	^ self encodeInBase: #base32
-]
-
-{ #category : #parsing }
-IpfsCid >> codecForCode: anInteger [
-"Automatically generated method, do not edit!"
-   ^ ((Dictionary new) add: (144->'eth-block'); add: (145->'eth-block-list'); add: (146->'eth-tx-trie'); add: (147->'eth-tx'); add: (148->'eth-tx-receipt-trie'); add: (149->'eth-tx-receipt'); add: (150->'eth-state-trie'); add: (151->'eth-account-snapshot'); add: (152->'eth-storage-trie'); add: (192->'zcash-block'); add: (193->'zcash-tx'); add: (240->'dash-block'); add: (241->'dash-tx'); add: (250->'swarm-manifest'); add: (251->'swarm-feed'); add: (112->'dag-pb'); add: (113->'dag-cbor'); add: (114->'libp2p-key'); add: (208->'stellar-block'); add: (209->'stellar-tx'); add: (297->'dag-json'); add: (120->'git-raw'); add: (123->'torrent-info'); add: (124->'torrent-file'); add: (129->'leofcoin-block'); add: (130->'leofcoin-tx'); add: (131->'leofcoin-pr'); add: (85->'raw'); add: (176->'bitcoin-block'); add: (177->'bitcoin-tx'); add: (224->'decred-block'); add: (225->'decred-tx'); yourself) at: anInteger
 ]
 
 { #category : #converting }
@@ -143,12 +87,6 @@ IpfsCid >> encodeForIpfs [
 { #category : #converting }
 IpfsCid >> encodeInBase: aSymbol [
 	^ MultibaseEncoder new encode: self base: aSymbol
-]
-
-{ #category : #parsing }
-IpfsCid >> hashFunctionForCode: anInteger [
-"Automatically generated method, do not edit!"
-   ^ ((Dictionary new) add: (0->'identity'); add: (29->'keccak-512'); add: (86->'dbl-sha2-256'); add: (34->'murmur3-128'); add: (35->'murmur3-32'); add: (212->'md4'); add: (213->'md5'); add: (214->'bmt'); add: (17->'sha1'); add: (18->'sha2-256'); add: (19->'sha2-512'); add: (20->'sha3-512'); add: (21->'sha3-384'); add: (22->'sha3-256'); add: (23->'sha3-224'); add: (24->'shake-128'); add: (25->'shake-256'); add: (26->'keccak-224'); add: (27->'keccak-256'); add: (28->'keccak-384'); yourself) at: anInteger
 ]
 
 { #category : #testing }
@@ -194,9 +132,9 @@ IpfsCid >> parse [
 	fields at: #version put: (MultiformatsVarIntParser new fromByteStream: bytes).
 	"The codec is specified by one byte whose meaning is defined by convention.
 	 Full table: https://github.com/multiformats/multicodec/blob/master/table.csv."
-	fields at: #codec put: (self codecForCode: bytes next).
+	fields at: #codec put: (MultiformatsCodeTable codecForCode: bytes next).
 	"The hash function is specified by a code (from the same table as the codec). That code is a    	varint, but out of laziness we accept only one-byte codes for now."
-	fields at: #hashFunction put: (self hashFunctionForCode: bytes next).
+	fields at: #hashFunction put: (MultiformatsCodeTable hashFunctionForCode: bytes next).
 	"The hash length is a varint"
 	fields at: #hashLength put: (MultiformatsVarIntParser new fromByteStream: bytes).
 	"Check that the following bytes are no more nor less than the hash"

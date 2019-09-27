@@ -1,18 +1,8 @@
 "
-! Parser for varints as used in Multiformats
+!Parser for varints as used in Multiformats
 
-https://github.com/multiformats/unsigned-varint
-
-Practical maximum of 9 bytes (for security)
-
-For security, to avoid memory attacks, we use a ""practical max"" of 9 bytes. Though there is no theoretical limit, and future specs can grow this number if it is truly necessary to have code or length values equal to or larger than 2^63.
-
-For the forseeable future:
-
-    Implementations MUST restrict the size of the varint to a max of 9 bytes (63 bits).
-    A multiformat spec MAY explicitly declare a smaller maximum when using varints.
-    A multiformat spec MAY NOT explicitly declare a larger maximum when using varints without first changing this spec.
-
+Varint is a variable-length encoding of arbitrary-size unsigned integers.
+For the details, see the *specification>https://github.com/multiformats/unsigned-varint*.
 
 "
 Class {
