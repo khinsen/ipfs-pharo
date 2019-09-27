@@ -21,9 +21,10 @@ BaselineOfIPFS >> baseline: spec [
 			with: [ spec repository: 'github://feenkcom/gtoolkit:release/src' ].
 
 		spec
+			package: 'Multiformats';
 			package: 'Multibase';
 			package: 'IPFS'
-				with: [ spec requires: #('SingletonTrait' 'NeoJSON' 'Multibase') ];
+				with: [ spec requires: #('SingletonTrait' 'NeoJSON' 'Multibase' 'Multiformats') ];
 			package: 'IPFS-GToolkit'
 				with: [ spec requires: #('IPFS' 'GToolkit') ];
 			package: 'BaselineOfIPFS'.

@@ -55,28 +55,6 @@ IpfsCid class >> fromString: aString [
 ]
 
 { #category : #'self-update' }
-IpfsCid class >> updateCodecTable [
-	| url table map |
-	url := 'https://raw.githubusercontent.com/multiformats/multicodec/master/table.csv'.
-	table :=
-		(ZnClient new
-			beOneShot;
-			get: url;
-			entity) contents.
-	map := (((table allButFirst lines
-		collect: [ :each | (each splitOn: $,) collect: #trimBoth ])
-		select: [ :each | each second = 'ipld' ])
-		collect: [ :each | (each third copyReplaceAll: '0x' with: '16r') asNumber
-									-> each first ])
-		asDictionary.
-	self compile:
-			'codecForCode: anInteger', Character cr asString,
-			'"Automatically generated method, do not edit!"', Character cr asString,
-			'   ^ ', map storeString, ' at: anInteger'
-		  classified: 'parsing'
-]
-
-{ #category : #'self-update' }
 IpfsCid class >> updateCodecTable: multiformatTable [
 	| map |
 	map := ((multiformatTable
@@ -206,30 +184,24 @@ IpfsCid >> neoJsonOn: neoJSONWriter [
 
 { #category : #parsing }
 IpfsCid >> parse [
-	"Parses the byte sequence according to the CID specification, taking some shortcuts
-	 but checking if they are applicable. May raise an error for future CID formats.
+	"Parses the byte sequence according to the CID specification.
+	 May raise an error for future CID formats.
 	 Answers a dictionary with the parsed fields."
-
-	| fields |
+	| bytes fields |
+	bytes := self readStream.
 	fields := OrderedDictionary new.
-	"The version is a varint, but that will matter only when the version number
-	 reaches 128. Today (2019) it's always 1"
-	fields at: #version put: self first.
-	(fields at: #version) > 127
-		ifTrue: [ self error: 'Unsupported CID version' ].
+	"The version number is a varint."
+	fields at: #version put: (MultiformatsVarIntParser new fromByteStream: bytes).
 	"The codec is specified by one byte whose meaning is defined by convention.
 	 Full table: https://github.com/multiformats/multicodec/blob/master/table.csv."
-	fields at: #codec put: (self codecForCode: self second).
+	fields at: #codec put: (self codecForCode: bytes next).
 	"The hash function is specified by a code (from the same table as the codec). That code is a    	varint, but out of laziness we accept only one-byte codes for now."
-	fields at: #hashFunction put: (self hashFunctionForCode: self third).
-	"The hash length is a varint as well - same shortcut for now."
-	self
-		assert: self fourth < 128
-		description: 'Full varints not yet implemented'.
-	fields at: #hashLength put: self fourth.
+	fields at: #hashFunction put: (self hashFunctionForCode: bytes next).
+	"The hash length is a varint"
+	fields at: #hashLength put: (MultiformatsVarIntParser new fromByteStream: bytes).
 	"Check that the following bytes are no more nor less than the hash"
 	self
-		assert: self size = (4 + (fields at: #hashLength))
+		assert: (self size - bytes position ) = (fields at: #hashLength)
 		description: 'wrong size of CID data'.
 	^ fields
 ]
