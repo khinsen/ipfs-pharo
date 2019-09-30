@@ -1,3 +1,17 @@
+"
+!Mapper between Pharo objects and NeoJSONObjects
+
+An IpfsMapper is required for storing arbitrary Pharo objects in IPFS (${method:name=Object>>#storeInIpfsUsing:}$), and for reconstructing these objects when loading data (${method:name=IpfsCid>>#loadObjectUsing:}$ and ${method:name=IpfsCid>>#loadLinkedObjectsUsing:}$)
+
+The basic JSON data types (numbers, strings, null) are not always are not handled by the mapper. They always map to Pharo numbers, strings, and nil (${class:name=UndefinedObject}$).
+
+Encoding is class-based. The encoder for a class returns a ${class:name=NeoJSONObject}$ with a single entry whose key is a class-specific tag (a ${class:name=Symbol}$) that identifies the decoder to be used upon loading. The value can be any JSON data.
+
+Decoding is tag-based. NeoJSONObjects retrieved from IPFS are decoded only if they have exactly one entry, whose key must be a ${class:name=Symbol}$ used as a tag. The decoder for a tag receives the value (arbitrary JSON data) as its argument and constructs the decoded Pharo object from it.
+
+The class ${class:name=IpfsDefaultMapper}$ defines a set of default mappings for frequently used Pharo objects. It can be extended by subclassing. Directly subclassing ${class:name=IpfsMapper}$ permits the definition of alternate encodings for the classes handled by the default mapper.
+
+"
 Class {
 	#name : #IpfsMapper,
 	#superclass : #Object,

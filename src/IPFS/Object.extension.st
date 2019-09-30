@@ -6,28 +6,13 @@ Object >> convertIpfsCids [
 ]
 
 { #category : #'*IPFS' }
-Object >> decodeFromIpfs [
-	self subclassResponsibility
-]
-
-{ #category : #'*IPFS' }
 Object >> decodeFromIpfsUsing: anIpfsMapper [
 	self subclassResponsibility
 ]
 
 { #category : #'*IPFS' }
-Object >> decodeLinkedObjectsFromIpfs [
-	^ self decodeFromIpfs
-]
-
-{ #category : #'*IPFS' }
 Object >> decodeLinkedObjectsFromIpfsUsing: anIpfsMapper [
 	^ self decodeFromIpfsUsing: anIpfsMapper
-]
-
-{ #category : #'*IPFS' }
-Object >> encodeForIpfs [
-	self subclassResponsibility 
 ]
 
 { #category : #'*IPFS' }
@@ -42,7 +27,7 @@ Object >> resultOfIpfsRequest [
 
 { #category : #'*IPFS' }
 Object >> storeInIpfs [
-	^ Ipfs dagPut: self encodeForIpfs
+	^ Ipfs dagPut: (self encodeForIpfsUsing: IpfsDefaultMapper default)
 ]
 
 { #category : #'*IPFS' }

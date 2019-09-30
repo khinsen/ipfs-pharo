@@ -70,28 +70,13 @@ IpfsCid >> asString [
 ]
 
 { #category : #converting }
-IpfsCid >> decodeFromIpfs [
-	^ self
-]
-
-{ #category : #converting }
 IpfsCid >> decodeFromIpfsUsing: anIpfsMapper [
 	^ self
 ]
 
 { #category : #'data access' }
-IpfsCid >> decodeLinkedObjectsFromIpfs [
-	^ IpfsLink to: self loadLinkedObjects
-]
-
-{ #category : #'data access' }
 IpfsCid >> decodeLinkedObjectsFromIpfsUsing: anIpfsMapper [
 	^ IpfsLink to: (self loadLinkedObjectsUsing: anIpfsMapper)
-]
-
-{ #category : #storing }
-IpfsCid >> encodeForIpfs [
-	^ NeoJSONObject with: '/' -> self asString
 ]
 
 { #category : #converting }
@@ -111,7 +96,7 @@ IpfsCid >> loadJson [
 
 { #category : #'data access' }
 IpfsCid >> loadLinkedObjects [
-	^ self loadJson decodeLinkedObjectsFromIpfs
+	^ self loadLinkedObjectsUsing: IpfsDefaultMapper default
 ]
 
 { #category : #'data access' }
@@ -121,7 +106,7 @@ IpfsCid >> loadLinkedObjectsUsing: anIpfsMapper [
 
 { #category : #'data access' }
 IpfsCid >> loadObject [
-	^ self loadJson decodeFromIpfs
+	^ self loadObjectUsing: IpfsDefaultMapper default
 ]
 
 { #category : #'data access' }

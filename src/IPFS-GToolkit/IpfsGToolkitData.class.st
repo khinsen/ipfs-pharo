@@ -13,6 +13,6 @@ IpfsGToolkitData >> loadTutorial [
 		at: #Tutorial
 		put:
 			(IpfsCid
-				fromString: 'bafyreihgkmbe7jlaxoo4yd7ivvk3jk7wokaambrvrxdfrssjagmc6eytq4')
+				fromString: 'bafyreicahbf33nelgm5fzyiffbdxd6z6vmi4btck5a335qwi3bwihefsni')
 				loadObject
 ]

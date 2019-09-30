@@ -25,11 +25,6 @@ IpfsLink >> doesNotUnderstand: aMessage [
 ]
 
 { #category : #storing }
-IpfsLink >> encodeForIpfs [
-	^ target storeInIpfs
-]
-
-{ #category : #storing }
 IpfsLink >> encodeForIpfsUsing: anIpfsMapper [
 	^ target storeInIpfsUsing: anIpfsMapper
 ]

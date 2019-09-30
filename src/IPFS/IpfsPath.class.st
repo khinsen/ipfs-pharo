@@ -69,12 +69,17 @@ IpfsPath >> loadJson [
 
 { #category : #'data access' }
 IpfsPath >> loadObject [
-	^ self loadJson decodeFromIpfs
+	^ self loadObjectUsing: IpfsDefaultMapper default
 ]
 
 { #category : #'data access' }
 IpfsPath >> loadObjectInBackground [
 	self subclassResponsibility
+]
+
+{ #category : #'data access' }
+IpfsPath >> loadObjectUsing: anIpfsMapper [
+	^ self loadJson decodeFromIpfsUsing: anIpfsMapper
 ]
 
 { #category : #printing }

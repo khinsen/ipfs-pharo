@@ -34,12 +34,6 @@ IpfsWiki >> createOrRetrievePageNamed: aSymbol [
 						text: self initalPageContents ]
 ]
 
-{ #category : #storing }
-IpfsWiki >> encodeForIpfs [
-	^ NeoJSONObject with: #IpfsWiki ->
-		(pages collect: [ :each | each storeInIpfs ])
-]
-
 { #category : #inspecting }
 IpfsWiki >> gtMainPageFor: aView [
 	<gtView>

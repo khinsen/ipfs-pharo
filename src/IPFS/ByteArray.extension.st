@@ -1,11 +1,6 @@
 Extension { #name : #ByteArray }
 
 { #category : #'*IPFS' }
-ByteArray >> decodeFromIpfs [
-	^ self
-]
-
-{ #category : #'*IPFS' }
 ByteArray >> decodeFromIpfsUsing: anIpfsMapper [
 	^ self
 ]

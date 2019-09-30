@@ -11,17 +11,7 @@ String >> asIpfsPath [
 ]
 
 { #category : #'*IPFS' }
-String >> decodeFromIpfs [
-	^ self
-]
-
-{ #category : #'*IPFS' }
 String >> decodeFromIpfsUsing: anIpfsMapper [
-	^ self
-]
-
-{ #category : #'*IPFS' }
-String >> encodeForIpfs [
 	^ self
 ]
 

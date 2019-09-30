@@ -36,24 +36,6 @@ IpfsPharoObjectTest >> testStoreAndLoadDictionary [
 ]
 
 { #category : #testing }
-IpfsPharoObjectTest >> testStoreAndLoadIpfsDocument [
-	| document |
-	document := IpfsDocument name: #Test text: 'This is a test document'.
-	self storeLoadCheck: document.
-]
-
-{ #category : #testing }
-IpfsPharoObjectTest >> testStoreAndLoadIpfsWiki [
-	| wiki |
-	wiki := IpfsWiki new.
-	(wiki createOrRetrievePageNamed: #Page1)
-		text: 'Text of page 1'. 
-	(wiki createOrRetrievePageNamed: #Page2)
-		text: 'Text of page 2'. 
-	self storeLoadCheck: wiki.
-]
-
-{ #category : #testing }
 IpfsPharoObjectTest >> testStoreAndLoadLinkedObjects [
 	| cid1 cid2 |
 	cid1 := 'foo' storeInIpfs.

@@ -1,8 +1,27 @@
+"
+!The default mapper for storing Pharo objects in IPFS
+
+See ${class:name=IpfsMapper}$ for documentation.
+"
 Class {
 	#name : #IpfsDefaultMapper,
 	#superclass : #IpfsMapper,
+	#classInstVars : [
+		'defaultInstance'
+	],
 	#category : #'IPFS-2 - Linked data'
 }
+
+{ #category : #default }
+IpfsDefaultMapper class >> default [
+	^ defaultInstance ifNil: [ defaultInstance := self new ]
+]
+
+{ #category : #default }
+IpfsDefaultMapper class >> reset [
+	<script>
+	defaultInstance := nil.
+]
 
 { #category : #initialization }
 IpfsDefaultMapper >> initialize [

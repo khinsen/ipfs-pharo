@@ -6,18 +6,8 @@ Array >> convertIpfsCids [
 ]
 
 { #category : #'*IPFS' }
-Array >> decodeFromIpfs [
-	^ self collect: [ :each | each decodeFromIpfs ]
-]
-
-{ #category : #'*IPFS' }
 Array >> decodeFromIpfsUsing: anIpfsMapper [
 	^ self collect: [ :each | each decodeFromIpfsUsing: anIpfsMapper ]
-]
-
-{ #category : #'*IPFS' }
-Array >> decodeLinkedObjectsFromIpfs [
-	^ self collect: [ :each | each decodeLinkedObjectsFromIpfs ]
 ]
 
 { #category : #'*IPFS' }

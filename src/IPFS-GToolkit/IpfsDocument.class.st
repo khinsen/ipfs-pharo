@@ -38,15 +38,6 @@ IpfsDocument >> basename [
 	^ self name
 ]
 
-{ #category : #storing }
-IpfsDocument >> encodeForIpfs [
-	^ NeoJSONObject
-		with: self class ipfsTag ->
-			(NeoJSONObject 
-				with: #name -> self name
-				with: #text -> self text)
-]
-
 { #category : #accessing }
 IpfsDocument >> evaluationReceiver [
 	<return: #Object>
