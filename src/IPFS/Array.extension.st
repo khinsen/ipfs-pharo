@@ -11,6 +11,16 @@ Array >> decodeFromIpfs [
 ]
 
 { #category : #'*IPFS' }
+Array >> decodeFromIpfsUsing: anIpfsMapper [
+	^ self collect: [ :each | each decodeFromIpfsUsing: anIpfsMapper ]
+]
+
+{ #category : #'*IPFS' }
 Array >> decodeLinkedObjectsFromIpfs [
 	^ self collect: [ :each | each decodeLinkedObjectsFromIpfs ]
+]
+
+{ #category : #'*IPFS' }
+Array >> decodeLinkedObjectsFromIpfsUsing: anIpfsMapper [
+	^ self collect: [ :each | each decodeLinkedObjectsFromIpfsUsing: anIpfsMapper ]
 ]

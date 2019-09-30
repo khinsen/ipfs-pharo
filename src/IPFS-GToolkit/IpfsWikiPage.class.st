@@ -14,7 +14,7 @@ Class {
 
 { #category : #storing }
 IpfsWikiPage class >> ipfsTag [
-	^ #IpfsWikiPage
+	^ #WikiPage
 ]
 
 { #category : #testing }

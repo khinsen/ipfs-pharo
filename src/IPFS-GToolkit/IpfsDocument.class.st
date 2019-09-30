@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'name',
 		'text',
-		'references',
 		'gtDocument'
 	],
 	#category : #'IPFS-GToolkit'
@@ -24,6 +23,13 @@ IpfsDocument class >> name: aSymbol text: aString [
 		name: aSymbol;
 		text: aString;
 		yourself
+]
+
+{ #category : #comparing }
+IpfsDocument >> = other [
+	^ self class = other class
+		and: [ self name = other name
+			and: [ self text = other text ] ]
 ]
 
 { #category : #accessing }
@@ -63,6 +69,11 @@ IpfsDocument >> gtDocumentFor: aView [
 			gtDocument gtSaveActionFor: anAction ];
 		action: [ :anAction | 
 			gtDocument gtShowMarkupActionFor: anAction ]
+]
+
+{ #category : #comparing }
+IpfsDocument >> hash [
+	^ text hash xor: name hash
 ]
 
 { #category : #testing }

@@ -11,6 +11,12 @@ Class {
 	#category : #'IPFS-GToolkit'
 }
 
+{ #category : #comparing }
+IpfsWiki >> = other [
+	^ self class = other class
+		and: [ pages = other pages ]
+]
+
 { #category : #private }
 IpfsWiki >> addPage: anIpfsWikiPage [
 	"For use by IpfsObjectDecoder>>#decodeIpfsWiki:"
@@ -57,6 +63,11 @@ IpfsWiki >> gtPagesFor: aView [
 		itemFormat: [ :page | page name ]
 ]
 
+{ #category : #comparing }
+IpfsWiki >> hash [
+	^ pages inject: 0 into: [ :hash :page | hash xor: page hash ]
+]
+
 { #category : #initialization }
 IpfsWiki >> initalPageContents [
 	^ '!New page'
@@ -70,6 +81,11 @@ IpfsWiki >> initialize [
 { #category : #accessing }
 IpfsWiki >> pageNamed: aSymbol [
 	^ pages at: aSymbol ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+IpfsWiki >> pages [
+	^ pages
 ]
 
 { #category : #private }

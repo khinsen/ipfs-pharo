@@ -74,9 +74,19 @@ IpfsCid >> decodeFromIpfs [
 	^ self
 ]
 
+{ #category : #converting }
+IpfsCid >> decodeFromIpfsUsing: anIpfsMapper [
+	^ self
+]
+
 { #category : #'data access' }
 IpfsCid >> decodeLinkedObjectsFromIpfs [
 	^ IpfsLink to: self loadLinkedObjects
+]
+
+{ #category : #'data access' }
+IpfsCid >> decodeLinkedObjectsFromIpfsUsing: anIpfsMapper [
+	^ IpfsLink to: (self loadLinkedObjectsUsing: anIpfsMapper)
 ]
 
 { #category : #storing }
@@ -105,8 +115,18 @@ IpfsCid >> loadLinkedObjects [
 ]
 
 { #category : #'data access' }
+IpfsCid >> loadLinkedObjectsUsing: anIpfsMapper [
+	^ self loadJson decodeLinkedObjectsFromIpfsUsing: anIpfsMapper
+]
+
+{ #category : #'data access' }
 IpfsCid >> loadObject [
 	^ self loadJson decodeFromIpfs
+]
+
+{ #category : #'data access' }
+IpfsCid >> loadObjectUsing: anIpfsMapper [
+	^ self loadJson decodeFromIpfsUsing: anIpfsMapper
 ]
 
 { #category : #'data access' }

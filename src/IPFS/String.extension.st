@@ -16,6 +16,16 @@ String >> decodeFromIpfs [
 ]
 
 { #category : #'*IPFS' }
+String >> decodeFromIpfsUsing: anIpfsMapper [
+	^ self
+]
+
+{ #category : #'*IPFS' }
 String >> encodeForIpfs [
+	^ self
+]
+
+{ #category : #'*IPFS' }
+String >> encodeForIpfsUsing: anIpfsMapper [
 	^ self
 ]

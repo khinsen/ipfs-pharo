@@ -6,6 +6,16 @@ Boolean >> decodeFromIpfs [
 ]
 
 { #category : #'*IPFS' }
+Boolean >> decodeFromIpfsUsing: anIpfsMapper [
+	^ self
+]
+
+{ #category : #'*IPFS' }
 Boolean >> encodeForIpfs [
+	^ self
+]
+
+{ #category : #'*IPFS' }
+Boolean >> encodeForIpfsUsing: anIpfsMapper [
 	^ self
 ]

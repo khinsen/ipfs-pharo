@@ -9,9 +9,10 @@ Class {
 
 { #category : #'testing support' }
 IpfsPharoObjectTest >> storeLoadCheck: anObject [
-	| cid retrievedObject |
-	cid := anObject storeInIpfs.
-	retrievedObject := cid loadObject.
+	| mapper cid retrievedObject |
+	mapper := IpfsDefaultMapper new.
+	cid := anObject storeInIpfsUsing: mapper.
+	retrievedObject := cid loadObjectUsing: mapper.
 	self assert: retrievedObject equals: anObject
 ]
 
@@ -32,6 +33,24 @@ IpfsPharoObjectTest >> testStoreAndLoadDictionary [
 			Dictionary with: #foo -> #(1 2 3).
 			Dictionary with: true -> Dictionary new with: false -> { 1 -> 2 } asDictionary }.
 	testValues do: [ :object | self storeLoadCheck: object ]
+]
+
+{ #category : #testing }
+IpfsPharoObjectTest >> testStoreAndLoadIpfsDocument [
+	| document |
+	document := IpfsDocument name: #Test text: 'This is a test document'.
+	self storeLoadCheck: document.
+]
+
+{ #category : #testing }
+IpfsPharoObjectTest >> testStoreAndLoadIpfsWiki [
+	| wiki |
+	wiki := IpfsWiki new.
+	(wiki createOrRetrievePageNamed: #Page1)
+		text: 'Text of page 1'. 
+	(wiki createOrRetrievePageNamed: #Page2)
+		text: 'Text of page 2'. 
+	self storeLoadCheck: wiki.
 ]
 
 { #category : #testing }

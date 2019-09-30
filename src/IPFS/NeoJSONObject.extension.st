@@ -17,9 +17,20 @@ NeoJSONObject >> decodeFromIpfs [
 ]
 
 { #category : #'*IPFS' }
+NeoJSONObject >> decodeFromIpfsUsing: anIpfsMapper [
+	^ anIpfsMapper decode: self
+]
+
+{ #category : #'*IPFS' }
 NeoJSONObject >> decodeLinkedObjectsFromIpfs [
 	^ (self collect: [ :each | each decodeLinkedObjectsFromIpfs ])
 		asPharoObject.
+]
+
+{ #category : #'*IPFS' }
+NeoJSONObject >> decodeLinkedObjectsFromIpfsUsing: anIpfsMapper [
+	^ anIpfsMapper decode:
+		(self collect: [ :each | each decodeLinkedObjectsFromIpfsUsing: anIpfsMapper ]).
 ]
 
 { #category : #'*IPFS' }

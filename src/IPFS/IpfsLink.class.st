@@ -29,6 +29,11 @@ IpfsLink >> encodeForIpfs [
 	^ target storeInIpfs
 ]
 
+{ #category : #storing }
+IpfsLink >> encodeForIpfsUsing: anIpfsMapper [
+	^ target storeInIpfsUsing: anIpfsMapper
+]
+
 { #category : #initialization }
 IpfsLink >> initializeWithTarget: anObject [
 	target := anObject
