@@ -75,3 +75,31 @@ IpfsDefaultMapper >> mappingForTime [
 	self decodeTag: #Time as:
 		[ :aString | Time fromString: aString ].
 ]
+
+{ #category : #mapping }
+IpfsDefaultMapper >> mappingForWeek [
+	self encodeClass: Week as:
+		[ :aWeek |
+			| thursday year weekNumber |
+			self assert: aWeek start dayOfWeekName equals: #Monday.
+			"The year is the Gregorian year of the Thursday."
+			thursday := aWeek start + 3 days.
+			year := thursday year.
+			weekNumber := (thursday - (Year year: year) correctFirstThursday) asDays // 7 + 1.
+			NeoJSONObject with:
+				#Week -> ((year printPaddedWith: $0 to: 4),
+							'-W', (weekNumber printPaddedWith: $0 to: 2)) ].
+	self decodeTag: #Week as:
+		[ :aString |
+			| parts year weekNumber |
+			parts := $- split: aString.
+			year := parts first asNumber.
+			weekNumber := parts second allButFirst asNumber.
+			Week year: year isoWeek: weekNumber ].
+]
+
+{ #category : #mapping }
+IpfsDefaultMapper >> mappingForYear [
+	self encodeClass: Year as: [ :aYear | NeoJSONObject with: #Year -> aYear year ].
+	self decodeTag: #Year as: [ :anInteger | Year year: anInteger ].
+]
