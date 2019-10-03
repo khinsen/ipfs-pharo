@@ -26,7 +26,7 @@ IpfsDefaultMapper class >> reset [
 { #category : #initialization }
 IpfsDefaultMapper >> initialize [
 	super initialize.
-	self class methods select: [ :each | each selector beginsWith: 'mappingFor' ] thenDo:
+	IpfsDefaultMapper methods select: [ :each | each selector beginsWith: 'mappingFor' ] thenDo:
 		[ :each | each valueWithReceiver: self arguments: Array new ].
 ]
 
