@@ -189,6 +189,16 @@ IpfsCid >> sizeOfRawData [
 
 ]
 
+{ #category : #accessing }
+IpfsCid >> species [
+	^ ByteArray
+]
+
+{ #category : #'data access' }
+IpfsCid >> storeInIpfs [
+	^ Ipfs dagPut: (self encodeForIpfsUsing: IpfsDefaultMapper default)
+]
+
 { #category : #printing }
 IpfsCid >> storeOn: aStream [
 	aStream nextPutAll: '(IpfsCid fromString: '.

@@ -34,7 +34,7 @@ IpfsMapper >> decode: jsonObject [
 	^ jsonObject collect: [ :each | each decodeFromIpfsUsing: self ]
 ]
 
-{ #category : #mapping }
+{ #category : #decoding }
 IpfsMapper >> decodeTag: aSymbol as: aBlock [
 	decoders at: aSymbol put: aBlock
 ]
@@ -49,7 +49,7 @@ IpfsMapper >> encode: anObject [
 	self error: 'No mapping for class ', anObject className
 ]
 
-{ #category : #mapping }
+{ #category : #encoding }
 IpfsMapper >> encodeClass: aClass as: aBlock [
 	encoders at: aClass put: aBlock
 ]
@@ -60,6 +60,13 @@ IpfsMapper >> initialize [
 	decoders := Dictionary new.
 	self mappingForSequenceableCollection.
 	self mappingForNeoJSONObject.
+	self mappingForIpfsCid.
+]
+
+{ #category : #mapping }
+IpfsMapper >> mappingForIpfsCid [
+	self encodeClass: IpfsCid as:
+		[ :aCid | NeoJSONObject with: #'/' -> aCid asString ]
 ]
 
 { #category : #mapping }
