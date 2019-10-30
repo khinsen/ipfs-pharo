@@ -81,7 +81,7 @@ IpfsDefaultMapper >> mappingForWeek [
 	self encodeClass: Week as:
 		[ :aWeek |
 			| thursday year weekNumber |
-			self assert: aWeek start dayOfWeekName equals: #Monday.
+			self assert: aWeek start dayOfWeekName = #Monday.
 			"The year is the Gregorian year of the Thursday."
 			thursday := aWeek start + 3 days.
 			year := thursday year.
