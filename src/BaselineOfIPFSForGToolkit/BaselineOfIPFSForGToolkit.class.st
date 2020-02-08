@@ -24,7 +24,7 @@ BaselineOfIPFSForGToolkit >> baseline: spec [
 				with: [ spec requires: #('SingletonTrait' 'NeoJSON' 'Multibase' 'Multiformats') ];
 			package: 'IPFS-GToolkit'
 				with: [ spec requires: #('IPFS') ];
-			package: 'BaselineOfIPFS'.
+			package: 'BaselineOfIPFSForGToolkit'.
 
 		spec
 			group: 'default' with: #('IPFS-GToolkit').
