@@ -34,7 +34,7 @@ IpfsPeer >> allCids [
 	| result |
 	result := self znClient
 		path: 'api/v0/refs/local';
-		get.
+		post.
 	^ self parseReferenceList: result.
 
 ]
@@ -43,7 +43,7 @@ IpfsPeer >> allCids [
 IpfsPeer >> collectGarbage [
 	^ self znClientForJsonResult
 		path: 'api/v0/repo/gc';
-		get
+		post
 ]
 
 { #category : #keys }
@@ -52,8 +52,8 @@ IpfsPeer >> deleteKeyNamed: aSymbol [
 	result := self znClientForJsonResult
 		path: 'api/v0/key/rm';
 		queryAt: #arg add: aSymbol;
-		get.
-
+		post.
+	^ result
 ]
 
 { #category : #keys }
@@ -65,7 +65,7 @@ IpfsPeer >> generateKeyNamed: aSymbol [
 					path: 'api/v0/key/gen';
 					queryAt: #arg add: aSymbol;
 					queryAt: #type add: #rsa;
-					get.
+					post.
 				self assert: (result at: #Name) = aSymbol.
 				^ IpfsKey peer: self name: aSymbol id: (result at: #Id) ]
 
@@ -96,7 +96,7 @@ IpfsPeer >> keys [
 	| result |
 	result := self znClientForJsonResult
 		path: 'api/v0/key/list';
-		get.
+		post.
 	^ (result at: #Keys)
 		collect: [ :each |  IpfsKey peer: self name: (each at: #Name) id: (each at: #Id) ]
 
@@ -110,7 +110,7 @@ IpfsPeer >> pin: aCid [
 		queryAt: #arg add: aCid;
 		queryAt: #recursive add: 'false';
 		queryAt: #progress add: 'false';
-		get.
+		post.
 	^ (result at: 'Pins')
 		collect: [ :aString | aString asIpfsCid ]
 
@@ -124,7 +124,7 @@ IpfsPeer >> pinRecursively: aCid [
 		queryAt: #arg add: aCid;
 		queryAt: #recursive add: 'true';
 		queryAt: #progress add: 'false';
-		get.
+		post.
 	^ (result at: 'Pins')
 		collect: [ :aString | aString asIpfsCid ]
 ]
@@ -145,7 +145,7 @@ IpfsPeer >> pinnedCidsOfType: aCidType [
 	result := self znClientForJsonResult
 		path: 'api/v0/pin/ls';
 		queryAt: #type add: aCidType;
-		get.
+		post.
 	^ (result at: 'Keys') keys collect: #asIpfsCid
 ]
 
@@ -193,7 +193,7 @@ IpfsPeer >> renameKeyNamed: aSymbol to: anotherSymbol [
 		path: 'api/v0/key/rename';
 		queryAt: #arg add: aSymbol;
 		queryAt: #arg add: anotherSymbol;
-		get.
+		post.
 	self assert: (result at: #Was) = aSymbol.
 	self assert: (result at: #Now) = anotherSymbol.
 ]
@@ -202,7 +202,7 @@ IpfsPeer >> renameKeyNamed: aSymbol to: anotherSymbol [
 IpfsPeer >> storageStatistics [
 	^ self znClientForJsonResult
 		path: 'api/v0/repo/stat';
-		get
+		post
 ]
 
 { #category : #pinning }
@@ -212,7 +212,7 @@ IpfsPeer >> unpin: aCid [
 		path: 'api/v0/pin/rm';
 		queryAt: #arg add: aCid;
 		queryAt: #recursive add: 'false';
-		get.
+		post.
 	^ (result at: 'Pins')
 		collect: [ :aString | aString asIpfsCid ]
 
@@ -225,7 +225,7 @@ IpfsPeer >> unpinRecursively: aCid [
 		path: 'api/v0/pin/rm';
 		queryAt: #arg add: aCid;
 		queryAt: #recursive add: 'true';
-		get.
+		post.
 	^ (result at: 'Pins')
 		collect: [ :aString | aString asIpfsCid ]
 ]

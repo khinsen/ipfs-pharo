@@ -157,7 +157,7 @@ Ipfs >> blockGet: aCid [
 		accept: 'text/plain';
 		path: 'api/v0/block/get';
 		queryAt: #arg add: aCid asString;
-		get ]
+		post ]
 	on: ConnectionTimedOut
 		do: [ ^ self znFallbackClient
 		beBinary;
@@ -330,7 +330,7 @@ Ipfs >> refs: anIpfsCid recursive: aBoolean [
 		queryAt: #arg add: anIpfsCid asString;
 		queryAt: #recursive add: aBoolean asString;
 		timeout: self dataRequestTimeout asSeconds;
-		get ]
+		post ]
 		on: ConnectionTimedOut
 		do: [ result := self znFallbackClient
 				path: 'api/v0/refs';

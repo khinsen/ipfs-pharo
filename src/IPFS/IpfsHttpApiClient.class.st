@@ -31,7 +31,7 @@ IpfsHttpApiClient >> getRequest: aString parameters: aDictionary [
 	[ result := self znClientForJsonResult
 		path: 'api/v0/', aString;
 		queryAddAll: aDictionary;
-		get. ]
+		post. ]
 	on: ConnectionTimedOut do:
 	[ result := self znFallbackClientForJsonResult
 		path: 'api/v0/', aString;
@@ -47,7 +47,7 @@ IpfsHttpApiClient >> getRequest: aString parameters: aDictionary timeout: aDurat
 		timeout: aDuration asSeconds;
 		path: 'api/v0/', aString;
 		queryAddAll: aDictionary;
-		get ]
+		post ]
 	on: ConnectionTimedOut do:
 	[ result := self znFallbackClientForJsonResult
 		timeout: aDuration asSeconds;
