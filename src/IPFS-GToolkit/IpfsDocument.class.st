@@ -33,6 +33,13 @@ IpfsDocument >> = other [
 ]
 
 { #category : #accessing }
+IpfsDocument >> asGtDocument [
+	^ GtDocument new
+		strategy:(IpfsDocumentStorageProvider new document: self);
+		read
+]
+
+{ #category : #accessing }
 IpfsDocument >> basename [
 	<return: #String>
 	^ self name
