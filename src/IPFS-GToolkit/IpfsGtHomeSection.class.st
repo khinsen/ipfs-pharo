@@ -17,13 +17,13 @@ IpfsGtHomeSection >> create [
 ]
 
 { #category : #accessing }
-IpfsGtHomeSection >> newWikiCardFor: anIPFSWiki description: aString [
+IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki description: aString [
 	^ self
 		newHeaderCardWithTitle: 'Wiki'
 		description: aString
 		size: 150 @ 200
 		content:
-		((((anIPFSWiki createOrRetrievePageNamed: #Main) asGtDocument)
+		((((anIpfsWiki createOrRetrievePageNamed: #Main) asGtDocument)
 				gtTextFor: GtPhlowView empty)
 				asElementDo: [ :e | 
 					e
@@ -32,7 +32,7 @@ IpfsGtHomeSection >> newWikiCardFor: anIPFSWiki description: aString [
 						asScalableElement ])
 		action: [ :card | 
 			self
-				showSpaceWithTitle: aString
-				with: (GtInspector openOn: anIPFSWiki)
-				from: card ]
+				showSpaceWithTitle: 'Wiki'
+				with: (GtInspector createOn: anIpfsWiki)
+				from: card ].
 ]
