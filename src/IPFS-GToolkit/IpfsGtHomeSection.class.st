@@ -6,14 +6,32 @@ Class {
 
 { #category : #accessing }
 IpfsGtHomeSection >> create [
-	| sectionContainer cardsContainer tutorialCard |
+	| sectionContainer cardContainer |
 	sectionContainer := self newSectionContainer.
 	sectionContainer addChild: (self newSectionTitle: 'IPFS').
-	cardsContainer := self newCardsContainer.
-	tutorialCard := self newWikiCardFor: (IpfsGToolkitData at: #Tutorial) description: 'IPFS Tutorial'.
-	cardsContainer addChild: tutorialCard.
-	sectionContainer addChild: cardsContainer.
+	cardContainer := self newCardsContainer.
+	cardContainer addChild: self localPeerCard.
+	cardContainer addChild:
+		(self newWikiCardFor: (IpfsGToolkitData at: #Tutorial)
+			  description: 'IPFS Tutorial').
+	sectionContainer addChild: cardContainer.
 	^ sectionContainer
+]
+
+{ #category : #accessing }
+IpfsGtHomeSection >> localPeerCard [
+	| stencil |
+	stencil := GtToolButtonStencil new 
+		title: 'IPFS Peer';
+		icon: IpfsIcons ipfsLogo;
+		action: [ :card | 
+			self
+				showSpaceWithTitle: 'IPFS Peer'
+				with:
+					(GtInspector createOn: IpfsPeer local)
+				from: card ];
+		description: 'Pinned data and IPNS keys on your device'.
+	^ stencil create
 ]
 
 { #category : #accessing }
@@ -21,7 +39,7 @@ IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki description: aString [
 	^ self
 		newHeaderCardWithTitle: 'Wiki'
 		description: aString
-		size: 150 @ 200
+		size: 120 @ 120
 		content:
 		((((anIpfsWiki createOrRetrievePageNamed: #Main) asGtDocument)
 				gtTextFor: GtPhlowView empty)
