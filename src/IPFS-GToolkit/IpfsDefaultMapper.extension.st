@@ -31,7 +31,7 @@ IpfsDefaultMapper >> mappingForIpfsWiki [
 			| wiki |
 			wiki := IpfsWiki
 						title: (aDictionary at: #title)
-						description: (aDictionary at: #title).
+						description: (aDictionary at: #description).
 			(aDictionary at: #pages) do:
 				[ :pageCid | wiki addPage: (pageCid loadObjectUsing: self) ].
 			wiki ].
