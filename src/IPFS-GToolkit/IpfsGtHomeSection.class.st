@@ -12,8 +12,7 @@ IpfsGtHomeSection >> create [
 	cardContainer := self newCardsContainer.
 	cardContainer addChild: self localPeerCard.
 	cardContainer addChild:
-		(self newWikiCardFor: (IpfsGToolkitData at: #Tutorial)
-			  description: 'IPFS Tutorial').
+		(self newWikiCardFor: (IpfsGToolkitData at: #Tutorial)).
 	sectionContainer addChild: cardContainer.
 	^ sectionContainer
 ]
@@ -35,10 +34,10 @@ IpfsGtHomeSection >> localPeerCard [
 ]
 
 { #category : #accessing }
-IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki description: aString [
+IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki [
 	^ self
 		newHeaderCardWithTitle: 'Wiki'
-		description: aString
+		description: anIpfsWiki description
 		size: 120 @ 120
 		content:
 		((((anIpfsWiki createOrRetrievePageNamed: #Main) asGtDocument)

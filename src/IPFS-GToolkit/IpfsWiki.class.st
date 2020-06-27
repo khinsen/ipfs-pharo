@@ -6,10 +6,20 @@ Class {
 	#name : #IpfsWiki,
 	#superclass : #Object,
 	#instVars : [
-		'pages'
+		'pages',
+		'description',
+		'title'
 	],
 	#category : #'IPFS-GToolkit'
 }
+
+{ #category : #instance }
+IpfsWiki class >> title: aShortString description: aLongerString [
+	^ self new
+		title: aShortString;
+		description: aLongerString;
+		yourself
+]
 
 { #category : #comparing }
 IpfsWiki >> = other [
@@ -32,6 +42,16 @@ IpfsWiki >> createOrRetrievePageNamed: aSymbol [
 						wiki: self;
 						name: aSymbol;
 						text: self initalPageContents ]
+]
+
+{ #category : #accessing }
+IpfsWiki >> description [
+	^ description
+]
+
+{ #category : #accessing }
+IpfsWiki >> description: aString [
+	description := aString
 ]
 
 { #category : #inspecting }
@@ -70,6 +90,8 @@ IpfsWiki >> initalPageContents [
 { #category : #initialization }
 IpfsWiki >> initialize [
 	pages := NeoJSONObject new.
+	title := ''.
+	description := ''
 ]
 
 { #category : #accessing }
@@ -85,4 +107,14 @@ IpfsWiki >> pages [
 { #category : #private }
 IpfsWiki >> removePage: aSymbol [
 	pages removeKey: aSymbol.
+]
+
+{ #category : #accessing }
+IpfsWiki >> title [
+	^ title
+]
+
+{ #category : #accessing }
+IpfsWiki >> title: aString [
+	title := aString
 ]

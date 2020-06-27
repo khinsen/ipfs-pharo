@@ -19,12 +19,20 @@ IpfsDefaultMapper >> mappingForIpfsDocument [
 IpfsDefaultMapper >> mappingForIpfsWiki [
 	self encodeClass: IpfsWiki as:
 		[ :aWiki |
+			| pages |
+			pages := aWiki pages collect: [ :each | each storeInIpfsUsing: self ].
 			NeoJSONObject with: #IpfsWiki ->
-				(aWiki pages collect: [ :each | each storeInIpfsUsing: self ]) ].
+				(NeoJSONObject
+					with: #title -> aWiki title
+					with: #description -> aWiki description
+					with: #pages -> pages) ].
 	self decodeTag: #IpfsWiki as:
 		[ :aDictionary |
 			| wiki |
-			wiki := IpfsWiki new.
-			aDictionary do: [ :pageCid | wiki addPage: (pageCid loadObjectUsing: self) ].
+			wiki := IpfsWiki
+						title: (aDictionary at: #title)
+						description: (aDictionary at: #title).
+			(aDictionary at: #pages) do:
+				[ :pageCid | wiki addPage: (pageCid loadObjectUsing: self) ].
 			wiki ].
 ]
