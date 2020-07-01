@@ -23,6 +23,24 @@ IpfsWikiPage >> isWikiPage [
 ]
 
 { #category : #accessing }
+IpfsWikiPage >> renameWikiLinksFrom: pageName to: newName [
+	| parser doc nameTransformation renamer changedDoc changedText |
+	parser := PRPillarParser new optimize.
+	doc := parser parse: self text.
+	nameTransformation := Dictionary with: pageName -> newName.
+	renamer := IpfsWikiLinkRenamer new
+					nameTransformation: nameTransformation.
+	changedDoc := (renamer executeOn:
+							((PRCompilationContext
+								withDocument: doc
+								withConfiguration: nil)))
+					input.
+	renamer hasModifiedDoc ifTrue: [
+		changedText := PRPillarWriter write: changedDoc.
+		self text: changedText ]
+]
+
+{ #category : #accessing }
 IpfsWikiPage >> wiki [
 	^ wiki
 ]

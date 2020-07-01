@@ -110,6 +110,16 @@ IpfsWiki >> removePage: aSymbol [
 ]
 
 { #category : #accessing }
+IpfsWiki >> renamePage: pageName to: newName [
+	pages at: pageName ifAbsent: [ self error: 'No page named ', pageName ].
+	pages at: newName ifPresent: [ self error: 'There is already a page named ', newName ].
+	pages do: [ :each | each renameWikiLinksFrom: pageName to: newName ].
+	pages at: newName put: (self at: pageName).
+	pages removeKey: pageName.
+	(pages at: newName) name: newName
+]
+
+{ #category : #accessing }
 IpfsWiki >> title [
 	^ title
 ]

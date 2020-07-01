@@ -26,6 +26,11 @@ IpfsWikiLinkAnnotation class >> tag [
 	^ #ipfsWikiPage
 ]
 
+{ #category : #visitor }
+IpfsWikiLinkAnnotation >> accept: aVisitor [
+	^ aVisitor visitIpfsWikiLinkAnnotation: self
+]
+
 { #category : #'private - actions' }
 IpfsWikiLinkAnnotation >> browseReferenceFrom: anEvent [
 	anEvent modifiers isShift ifTrue: [ ^ self ].
