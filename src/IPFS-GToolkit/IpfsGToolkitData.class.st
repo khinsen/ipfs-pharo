@@ -9,5 +9,5 @@ Class {
 
 { #category : #data }
 IpfsGToolkitData >> loadTutorial [
-   data at: #Tutorial put: (IpfsCid fromString: 'bafyreiebazgzsqera2fnsvmwfgv4saklaznrgutnawtxpae63b33o7ww54') loadObject
+   data at: #Tutorial put: (IpfsCid fromString: 'bafyreia3crlpfkb7s6czd3aiwji4letnzp3patfthv6h26vaxkuasogaey') loadObject
 ]

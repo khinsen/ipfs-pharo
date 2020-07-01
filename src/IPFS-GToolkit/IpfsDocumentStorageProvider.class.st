@@ -60,6 +60,6 @@ IpfsDocumentStorageProvider >> rootDirectory [
 ]
 
 { #category : #actions }
-IpfsDocumentStorageProvider >> store: aGtDocument [
+IpfsDocumentStorageProvider >> save: aGtDocument [
 	document text: aGtDocument text asString	
 ]
