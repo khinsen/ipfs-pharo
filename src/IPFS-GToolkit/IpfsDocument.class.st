@@ -6,8 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'text',
-		'gtDocument'
+		'text'
 	],
 	#category : #'IPFS-GToolkit'
 }
@@ -33,13 +32,6 @@ IpfsDocument >> = other [
 ]
 
 { #category : #accessing }
-IpfsDocument >> asGtDocument [
-	^ GtDocument new
-		strategy:(IpfsDocumentStorageProvider new document: self);
-		read
-]
-
-{ #category : #accessing }
 IpfsDocument >> basename [
 	<return: #String>
 	^ self name
@@ -60,13 +52,24 @@ IpfsDocument >> exists [
 { #category : #inspecting }
 IpfsDocument >> gtDocumentFor: aView [
 	<gtView>
-	^ (gtDocument gtTextFor: aView)
-		title: name;
-		priority: -1;
-		action: [ :anAction | 
-			gtDocument gtSaveActionFor: anAction ];
-		action: [ :anAction | 
-			gtDocument gtShowMarkupActionFor: anAction ]
+	^ aView explicit
+		title: 'Document';
+		priority: 1;
+		disableAsync;
+		stencil: [ GtDocumenter forIpfsDocument: self ];
+		actionButtonIcon: BrGlamorousVectorIcons accept 
+			tooltip: 'Save document' 
+			action: [ :aToggle :aTab | aTab viewContentElement save ];
+		actionToggleIcon: BrGlamorousIcons edit 
+			tooltip: 'Show/Hide Markups'
+			activated: [ :aToggle :aTab | aTab viewContentElement showMarkup ] 
+			deactivated: [ :aToggle :aTab | aTab viewContentElement hideMarkup ];
+		actionButtonIcon: BrGlamorousVectorIcons remove
+			tooltip: 'Decrease font size'
+			action: [ :aToggle :aTab | aTab viewContentElement decreaseNormalFontSize ];
+		actionButtonIcon: BrGlamorousVectorIcons add
+			tooltip: 'Increase font size'
+			action: [ :aToggle :aTab | aTab viewContentElement increaseNormalFontSize ]
 ]
 
 { #category : #comparing }
@@ -111,8 +114,8 @@ IpfsDocument >> rootDirectory [
 ]
 
 { #category : #actions }
-IpfsDocument >> store: aGtDocument [
-	self text: aGtDocument text asString	
+IpfsDocument >> store: aGtDocumenter [
+	self text: aGtDocumenter text asString	
 ]
 
 { #category : #accessing }
@@ -122,10 +125,5 @@ IpfsDocument >> text [
 
 { #category : #accessing }
 IpfsDocument >> text: anObject [
-	text := anObject.
-	gtDocument :=
-		GtDocument new
-			 strategy:(IpfsDocumentStorageProvider new document: self);
-			 read
-
+	text := anObject
 ]

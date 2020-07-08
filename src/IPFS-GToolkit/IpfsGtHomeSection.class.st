@@ -40,16 +40,19 @@ IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki [
 		description: anIpfsWiki description
 		size: 120 @ 120
 		content:
-		((((anIpfsWiki createOrRetrievePageNamed: #Main) asGtDocument)
-				gtTextFor: GtPhlowView empty)
-				asElementDo: [ :e | 
-					e
-						exact: 300 @ 400;
-						beInSingleCompositionLayer;
-						asScalableElement ])
+			((GtDocumenter
+				forIpfsDocument:
+					(anIpfsWiki createOrRetrievePageNamed: #Main))
+				exact: 300 @ 400;
+				beInSingleCompositionLayer;
+				asScalableElement)
 		action: [ :card | 
 			self
 				showSpaceWithTitle: 'Wiki'
-				with: (GtInspector createOn: anIpfsWiki)
+				with: (GtPager createWrappedOn:
+						(GtDocumenter
+							forIpfsDocument:
+								(anIpfsWiki createOrRetrievePageNamed: #Main))
+							withDefaultToolbar)
 				from: card ].
 ]

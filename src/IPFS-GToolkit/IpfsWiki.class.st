@@ -74,7 +74,7 @@ IpfsWiki >> gtPagesFor: aView [
 		title: 'Pages' translated;
 		priority: -9;
 		items: [ pageNames collect: [ :name | pages at: name ] ];
-		itemFormat: [ :page | page name ]
+		itemText: [ :page | page name ]
 ]
 
 { #category : #comparing }

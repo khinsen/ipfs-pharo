@@ -1,5 +1,5 @@
 Class {
-	#name : #IpfsDocumentStorageProvider,
+	#name : #IpfsDocumentStorageStrategy,
 	#superclass : #GtStorageStrategy,
 	#instVars : [
 		'document'
@@ -8,58 +8,58 @@ Class {
 }
 
 { #category : #accessing }
-IpfsDocumentStorageProvider >> basename [
+IpfsDocumentStorageStrategy >> basename [
 	<return: #String>
 	^ self name
 ]
 
 { #category : #accessing }
-IpfsDocumentStorageProvider >> document [
+IpfsDocumentStorageStrategy >> document [
 	^ document
 ]
 
 { #category : #initialization }
-IpfsDocumentStorageProvider >> document: anIpfsDocument [
+IpfsDocumentStorageStrategy >> document: anIpfsDocument [
 	document := anIpfsDocument
 ]
 
 { #category : #accessing }
-IpfsDocumentStorageProvider >> evaluationReceiver [
+IpfsDocumentStorageStrategy >> evaluationReceiver [
 	<return: #Object>
 	^ nil
 ]
 
 { #category : #testing }
-IpfsDocumentStorageProvider >> exists [
+IpfsDocumentStorageStrategy >> exists [
 	<return: #Boolean>
 	^ true
 ]
 
 { #category : #testing }
-IpfsDocumentStorageProvider >> isWikiPage [
+IpfsDocumentStorageStrategy >> isWikiPage [
 	^ document isWikiPage
 ]
 
 { #category : #accessing }
-IpfsDocumentStorageProvider >> name [
+IpfsDocumentStorageStrategy >> name [
 	"Return a string representing the stored document"
 	<return: #String>
 	^ document name
 ]
 
 { #category : #actions }
-IpfsDocumentStorageProvider >> read: aGtDocument [ 
-	aGtDocument text: document text
+IpfsDocumentStorageStrategy >> read: aGtDocumenter [
+	aGtDocumenter text: document text
 ]
 
 { #category : #accessing }
-IpfsDocumentStorageProvider >> rootDirectory [
+IpfsDocumentStorageStrategy >> rootDirectory [
 	<return: #FileReference>
 	^ FileSystem workingDirectory
 
 ]
 
 { #category : #actions }
-IpfsDocumentStorageProvider >> save: aGtDocument [
-	document text: aGtDocument text asString	
+IpfsDocumentStorageStrategy >> save: aGtDocumenter [
+	document text: aGtDocumenter text asString	
 ]
