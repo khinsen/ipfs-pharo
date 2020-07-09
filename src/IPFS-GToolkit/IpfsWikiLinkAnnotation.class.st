@@ -36,9 +36,7 @@ IpfsWikiLinkAnnotation >> browseReferenceFrom: anEvent [
 	anEvent modifiers isShift ifTrue: [ ^ self ].
 	self isInWiki ifFalse: [ self inform: 'Wiki link not in a Wiki' ].
 	self isPageDefined ifFalse: [ self createReferencedPage ].
-	anEvent target fireEvent: (GtPhlowObjectToSpawn new 
-		object: self referencedPage;
-		sourceElement: anEvent target)
+	anEvent target phlow spawnTool: (GtDocumenterTool forIpfsDocument: self referencedPage)
 ]
 
 { #category : #'accessing - parameter values' }
@@ -153,7 +151,7 @@ IpfsWikiLinkAnnotation >> styleTextWithMarkup: aBlRope [
 	"Add the button representing the link."
 	(self nodeStyler: aBlRope)
 		name: (self parameters at: self constants nameParameterName);
-		spawnObject: [ self createReferencedPage ];
+		spawnTool: [ GtDocumenterTool forIpfsDocument: self createReferencedPage];
 		linkButton.
 	"Next, add the small triangle that opens the preview."
 	self styleExpandingPreviewInText: aBlRope.
