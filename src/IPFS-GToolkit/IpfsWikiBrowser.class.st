@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'wiki',
 		'documenter',
-		'titleElement',
-		'pageName'
+		'pageName',
+		'titleEditorElement'
 	],
 	#category : #'IPFS-GToolkit'
 }
@@ -36,9 +36,8 @@ IpfsWikiBrowser >> initializeDocumenter [
 ]
 
 { #category : #initialization }
-IpfsWikiBrowser >> initializeTitlebar [
-	| titlebar |
-	titleElement := BrEditableLabel new
+IpfsWikiBrowser >> initializeTitleEditorElement [
+	titleEditorElement := BrEditableLabel new
 		look: (BrGlamorousEditableLabelLook new
 				defaultBackground: Color transparent;
 				glamorousRegularFont;
@@ -48,12 +47,58 @@ IpfsWikiBrowser >> initializeTitlebar [
 			c horizontal fitContent.
 			c vertical fitContent];
 		text: 'Untitled'.
+	titleEditorElement editor
+		when: BrTextEditorModifiedEvent 
+		do: [ :anEvent |
+			self wiki title: anEvent text asString ]
+]
+
+{ #category : #initialization }
+IpfsWikiBrowser >> initializeTitlebar [
+	| header titlebar separator |
+	self initializeTitleEditorElement.
+	header := BrVerticalPane new
+		hMatchParent;
+		alignCenterLeft;
+		vFitContent.
 	titlebar := BrHorizontalPane new
 		hMatchParent;
 		alignCenterLeft;
 		vFitContent.
-	titlebar addChild: titleElement.
-	self addChild: titlebar as: #titlebar
+	titlebar addChild: titleEditorElement.
+	header addChild: titlebar.
+
+	separator := BlElement new labeled: 'Separator'.
+	separator background: BrGlamorousColors lightBorderColor.
+	separator elevation: (BlRelativeElevation elevation: -1).
+	separator constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical exact: 1.
+		c ignoreByLayout.
+		c ignored vertical alignBottom ].
+
+	header addChild: separator.
+	self addChild: header as: #header.
+]
+
+{ #category : #initialization }
+IpfsWikiBrowser >> titleEditorElement [
+	| editorElement |
+	editorElement := BrEditableLabel new
+		look: (BrGlamorousEditableLabelLook new
+				defaultBackground: Color transparent;
+				glamorousRegularFont;
+				bold;
+				fontSize: 18);
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent];
+		text: 'Untitled'.
+	editorElement editor
+		when: BrTextEditorModifiedEvent 
+		do: [ :anEvent |
+			self wiki title: anEvent text asString ].
+	^ editorElement
 ]
 
 { #category : #accessing }
@@ -65,6 +110,6 @@ IpfsWikiBrowser >> wiki [
 IpfsWikiBrowser >> wiki: anIpfsWiki [
 	wiki := anIpfsWiki.
 	pageName := #Main.
-	titleElement text: wiki title.
+	titleEditorElement text: wiki title.
 	documenter ipfsDocument: (wiki pageNamed: pageName); read
 ]
