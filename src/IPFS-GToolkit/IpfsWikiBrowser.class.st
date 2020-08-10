@@ -5,7 +5,8 @@ Class {
 		'wiki',
 		'documenter',
 		'pageName',
-		'titleEditorElement'
+		'titleEditorElement',
+		'pageNameEditorElement'
 	],
 	#category : #'IPFS-GToolkit'
 }
@@ -14,6 +15,13 @@ Class {
 IpfsWikiBrowser class >> forWiki: anIpfsWiki [
 	^ self new
 		wiki: anIpfsWiki;
+		yourself
+]
+
+{ #category : #'instance creation' }
+IpfsWikiBrowser class >> forWiki: anIpfsWiki page: aSymbol [
+	^ self new
+		wiki: anIpfsWiki page: aSymbol;
 		yourself
 ]
 
@@ -33,6 +41,27 @@ IpfsWikiBrowser >> initialize [
 IpfsWikiBrowser >> initializeDocumenter [
 	documenter := GtDocumenter forText: 'Empty page'.
 	self addChild: documenter as: #documenter
+]
+
+{ #category : #initialization }
+IpfsWikiBrowser >> initializePageNameEditorElement [
+	pageNameEditorElement := BrEditableLabel new
+		look: (BrGlamorousEditableLabelLook new
+				defaultBackground: Color transparent;
+				glamorousRegularFont;
+				italic;
+				fontSize: 18);
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent];
+		text: 'Untitled'.
+	pageNameEditorElement editor
+		when: BrTextEditorModifiedEvent 
+		do: [ :anEvent |
+			| newName |
+			newName := anEvent text asString asSymbol.
+			self wiki renamePage: pageName to: newName.
+			pageName := newName ]
 ]
 
 { #category : #initialization }
@@ -57,15 +86,17 @@ IpfsWikiBrowser >> initializeTitleEditorElement [
 IpfsWikiBrowser >> initializeTitlebar [
 	| header titlebar separator |
 	self initializeTitleEditorElement.
+	self initializePageNameEditorElement.
 	header := BrVerticalPane new
 		hMatchParent;
 		alignCenterLeft;
 		vFitContent.
 	titlebar := BrHorizontalPane new
 		hMatchParent;
-		alignCenterLeft;
+		alignBottomCenter;
 		vFitContent.
 	titlebar addChild: titleEditorElement.
+	titlebar addChild: pageNameEditorElement.
 	header addChild: titlebar.
 
 	separator := BlElement new labeled: 'Separator'.
@@ -108,8 +139,14 @@ IpfsWikiBrowser >> wiki [
 
 { #category : #accessing }
 IpfsWikiBrowser >> wiki: anIpfsWiki [
+	self wiki: anIpfsWiki page: #Main
+]
+
+{ #category : #'instance creation' }
+IpfsWikiBrowser >> wiki: anIpfsWiki page: aSymbol [
 	wiki := anIpfsWiki.
-	pageName := #Main.
+	pageName := aSymbol.
 	titleEditorElement text: wiki title.
+	pageNameEditorElement text: pageName asString.
 	documenter ipfsDocument: (wiki pageNamed: pageName); read
 ]
