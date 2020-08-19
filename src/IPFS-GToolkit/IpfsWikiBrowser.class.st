@@ -49,7 +49,6 @@ IpfsWikiBrowser >> initializePageNameEditorElement [
 		look: (BrGlamorousEditableLabelLook new
 				defaultBackground: Color transparent;
 				glamorousRegularFont;
-				italic;
 				fontSize: 18);
 		constraintsDo: [ :c |
 			c horizontal fitContent.
@@ -70,7 +69,6 @@ IpfsWikiBrowser >> initializeTitleEditorElement [
 		look: (BrGlamorousEditableLabelLook new
 				defaultBackground: Color transparent;
 				glamorousRegularFont;
-				bold;
 				fontSize: 18);
 		constraintsDo: [ :c |
 			c horizontal fitContent.
@@ -85,18 +83,28 @@ IpfsWikiBrowser >> initializeTitleEditorElement [
 { #category : #initialization }
 IpfsWikiBrowser >> initializeTitlebar [
 	| header titlebar separator |
-	self initializeTitleEditorElement.
 	self initializePageNameEditorElement.
+	self initializeTitleEditorElement.
 	header := BrVerticalPane new
 		hMatchParent;
 		alignCenterLeft;
 		vFitContent.
-	titlebar := BrHorizontalPane new
+"	titlebar := BrHorizontalPane new
 		hMatchParent;
 		alignBottomCenter;
-		vFitContent.
-	titlebar addChild: titleEditorElement.
+		vFitContent."
+	titlebar := BlElement new
+		labeled: 'Titlebar';
+		layout: BlGridLayout new.
+	titlebar constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical fitContent ].
 	titlebar addChild: pageNameEditorElement.
+	pageNameEditorElement constraintsDo: [ :c |
+		c grid horizontal alignLeft ].
+	titlebar addChild: titleEditorElement.
+	titleEditorElement constraintsDo: [ :c |
+		c grid horizontal alignRight ].
 	header addChild: titlebar.
 
 	separator := BlElement new labeled: 'Separator'.
