@@ -50,9 +50,6 @@ IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki [
 			self
 				showSpaceWithTitle: 'Wiki'
 				with: (GtPager createWrappedOn:
-						(GtDocumenter
-							forIpfsDocument:
-								(anIpfsWiki createOrRetrievePageNamed: #Main))
-							withDefaultToolbar)
+						(IpfsWikiBrowser forWiki: anIpfsWiki))
 				from: card ].
 ]

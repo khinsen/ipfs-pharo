@@ -36,7 +36,7 @@ IpfsWikiLinkAnnotation >> browseReferenceFrom: anEvent [
 	anEvent modifiers isShift ifTrue: [ ^ self ].
 	self isInWiki ifFalse: [ self inform: 'Wiki link not in a Wiki' ].
 	self isPageDefined ifFalse: [ self createReferencedPage ].
-	anEvent target phlow spawnTool: (GtDocumenterTool forIpfsDocument: self referencedPage)
+	anEvent target phlow spawnTool: (IpfsWikiTool new wiki: self wiki page: self referencedPage)
 ]
 
 { #category : #'accessing - parameter values' }
@@ -46,8 +46,10 @@ IpfsWikiLinkAnnotation >> createReferencedPage [
 		in: self parameters
 		value: [ :aValue |
 					self isInWiki
-						ifTrue: [ self gtDocument storage document wiki
-											createOrRetrievePageNamed: aValue asSymbol ]
+						ifTrue: [ | pageName |
+									pageName := aValue asSymbol.
+								 	self wiki createOrRetrievePageNamed: pageName.
+									pageName ]
 						ifFalse: [ nil ] ]
 		emptyValue: [ nil ] 
 		defaultValue: [ nil ] ]
@@ -96,7 +98,7 @@ IpfsWikiLinkAnnotation >> isPreviewDefined [
 { #category : #accessing }
 IpfsWikiLinkAnnotation >> objectToPreview [
 	"Subclasses should define what object to preview"
-	^ self referencedPage
+	^ self wiki pageNamed: self referencedPage
 ]
 
 { #category : #accessing }
@@ -112,7 +114,7 @@ IpfsWikiLinkAnnotation >> referencedPage [
 		in: self parameters 
 		value: [ :aValue |
 					self isInWiki
-						ifTrue: [ self gtDocument storage document wiki pageNamed: aValue asSymbol ]
+						ifTrue: [  aValue asSymbol ]
 						ifFalse: [ nil ] ] 
 		emptyValue: [ nil ] 
 		defaultValue: [ nil ] ]
@@ -151,7 +153,8 @@ IpfsWikiLinkAnnotation >> styleTextWithMarkup: aBlRope [
 	"Add the button representing the link."
 	(self nodeStyler: aBlRope)
 		name: (self parameters at: self constants nameParameterName);
-		spawnTool: [ GtDocumenterTool forIpfsDocument: self createReferencedPage];
+		spawnTool: [ IpfsWikiTool new
+						wiki: self wiki page: self createReferencedPage];
 		linkButton.
 	"Next, add the small triangle that opens the preview."
 	self styleExpandingPreviewInText: aBlRope.
@@ -166,4 +169,13 @@ IpfsWikiLinkAnnotation >> styleTextWithoutMarkup: aBlRope [
 	"Make the whole annotation disappear if the cursor is far away."
 	(self nodeStyler: aBlRope) autoHideNode.
 
+]
+
+{ #category : #accessing }
+IpfsWikiLinkAnnotation >> wiki [
+	| storage |
+	storage := self gtDocument storage.
+	[ storage isWikiPage ifFalse: [ ^ nil ] ]
+	on: MessageNotUnderstood do: [ ^ nil ].
+	^ storage document wiki
 ]
