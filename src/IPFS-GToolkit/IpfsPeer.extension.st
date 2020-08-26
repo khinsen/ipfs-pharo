@@ -7,8 +7,7 @@ IpfsPeer >> gtIndirectlyPinnedCidsFor: aView [
 		title: 'Indirectly pinned CIDs';
 		priority: -8;
 		items: [ self pinnedCidsOfType: #indirect ];
-		itemFormat: [ :aCid | aCid asString ].
-
+		itemText: [ :aCid | aCid asString ]
 ]
 
 { #category : #'*IPFS-GToolkit' }
@@ -29,8 +28,7 @@ IpfsPeer >> gtPinnedCidsFor: aView [
 		title: 'Pinned CIDs';
 		priority: -9;
 		items: [ self pinnedCidsOfType: #direct ];
-		itemFormat: [ :aCid | aCid asString ].
-
+		itemText: [ :aCid | aCid asString ]
 ]
 
 { #category : #'*IPFS-GToolkit' }
@@ -40,8 +38,7 @@ IpfsPeer >> gtRecursivelyPinnedCidsFor: aView [
 		title: 'Recursively pinned CIDs';
 		priority: -10;
 		items: [ self pinnedCidsOfType: #recursive ];
-		itemFormat: [ :aCid | aCid asString ].
-
+		itemText: [ :aCid | aCid asString ]
 ]
 
 { #category : #'*IPFS-GToolkit' }
@@ -51,5 +48,5 @@ IpfsPeer >> gtStoredCidsFor: aView [
 		title: 'Stored CIDs';
 		priority: -5;
 		items: [ self allCids ];
-		itemFormat: [ :aCid | aCid asString ].
+		itemText: [ :aCid | aCid asString ]
 ]
