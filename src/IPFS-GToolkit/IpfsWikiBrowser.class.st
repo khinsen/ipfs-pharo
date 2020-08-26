@@ -117,7 +117,7 @@ IpfsWikiBrowser >> initialize [
 
 { #category : #initialization }
 IpfsWikiBrowser >> initializeDocumenter [
-	documenter := GtDocumenter forText: 'Empty page'.
+	documenter := (GtDocumenter forText: 'Empty page') withDefaultToolbar
 ]
 
 { #category : #initialization }
