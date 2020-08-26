@@ -26,6 +26,87 @@ IpfsWikiBrowser class >> forWiki: anIpfsWiki page: aSymbol [
 ]
 
 { #category : #initialization }
+IpfsWikiBrowser >> buildHeader [
+	| header titlebar separator |
+	header := BrVerticalPane new
+		hMatchParent;
+		alignCenterLeft;
+		vFitContent.
+	titlebar := BlElement new
+		labeled: 'Titlebar';
+		layout: BlGridLayout new.
+		"layout: BlLinearLayout horizontal alignCenterLeft"
+	titlebar constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical fitContent ].
+	titlebar addChild:
+		(self buildPageSelectorButton
+			constraintsDo: [ :c |
+				c grid horizontal alignLeft.
+				c grid vertical alignBottom ]
+			yourself).
+	titlebar addChild: pageNameEditorElement.
+	pageNameEditorElement constraintsDo: [ :c |
+		c grid horizontal alignLeft ].
+	titlebar addChild: titleEditorElement.
+	titleEditorElement constraintsDo: [ :c |
+		c grid horizontal alignRight ].
+	header addChild: titlebar.
+
+	separator := BlElement new labeled: 'Separator'.
+	separator background: BrGlamorousColors lightBorderColor.
+	separator elevation: (BlRelativeElevation elevation: -1).
+	separator constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical exact: 1.
+		c ignoreByLayout.
+		c ignored vertical alignBottom ].
+
+	header addChild: separator.
+	^ header
+]
+
+{ #category : #initialization }
+IpfsWikiBrowser >> buildPageList [
+	^ BrSimpleList new
+		itemStencil: [
+			BrLabel new
+				hMatchParent;
+				look: BrGlamorousLabelLook new;
+				padding: (BlInsets all: 5) ];
+		itemDataBinder: [ :eachElement :eachPageName :eachIndex | eachElement text: eachPageName ];
+		items: (self wiki pageNames);
+		addEventHandler: (GtPhlowListToSelectHandler new
+							transformation: [:each | self wiki pageNamed: each ]);
+		lookDo: [ :aLook | aLook listElement constraintsDo: [ :c | c maxHeight: 200 ] ];
+		layout: BlLinearLayout vertical;
+		padding: (BlInsets all: 5);
+		vFitContent;
+		hExact: 200
+]
+
+{ #category : #initialization }
+IpfsWikiBrowser >> buildPageSelectorButton [
+	| button |
+	button := BrButton new
+		label: 'Show Pages';
+		look: BrGlamorousButtonWithIconLook + (BrGlamorousWithDropdownLook
+			handle: [
+				BrButton new
+					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
+					icon: BrGlamorousIcons hamburger;
+					yourself ]
+			content: [
+				self buildPageList
+					when: GtPhlowObjectToSelect do:
+						[:e | button phlow spawnObject: e tool object ];
+				yourself ]);
+		icon: BrGlamorousIcons hamburger asElement;
+		beLarge.
+	^ button
+]
+
+{ #category : #initialization }
 IpfsWikiBrowser >> initialize [
 	super initialize.
 	self
@@ -33,14 +114,16 @@ IpfsWikiBrowser >> initialize [
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
-	self initializeTitlebar.
+	self initializePageNameEditorElement.
+	self initializeTitleEditorElement.
 	self initializeDocumenter.
+	self addChild: (self buildHeader) as: #header.
+	self addChild: documenter as: #documenter.
 ]
 
 { #category : #initialization }
 IpfsWikiBrowser >> initializeDocumenter [
 	documenter := GtDocumenter forText: 'Empty page'.
-	self addChild: documenter as: #documenter
 ]
 
 { #category : #initialization }
@@ -78,66 +161,6 @@ IpfsWikiBrowser >> initializeTitleEditorElement [
 		when: BrTextEditorModifiedEvent 
 		do: [ :anEvent |
 			self wiki title: anEvent text asString ]
-]
-
-{ #category : #initialization }
-IpfsWikiBrowser >> initializeTitlebar [
-	| header titlebar separator |
-	self initializePageNameEditorElement.
-	self initializeTitleEditorElement.
-	header := BrVerticalPane new
-		hMatchParent;
-		alignCenterLeft;
-		vFitContent.
-"	titlebar := BrHorizontalPane new
-		hMatchParent;
-		alignBottomCenter;
-		vFitContent."
-	titlebar := BlElement new
-		labeled: 'Titlebar';
-		layout: BlGridLayout new.
-	titlebar constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical fitContent ].
-	titlebar addChild: pageNameEditorElement.
-	pageNameEditorElement constraintsDo: [ :c |
-		c grid horizontal alignLeft ].
-	titlebar addChild: titleEditorElement.
-	titleEditorElement constraintsDo: [ :c |
-		c grid horizontal alignRight ].
-	header addChild: titlebar.
-
-	separator := BlElement new labeled: 'Separator'.
-	separator background: BrGlamorousColors lightBorderColor.
-	separator elevation: (BlRelativeElevation elevation: -1).
-	separator constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical exact: 1.
-		c ignoreByLayout.
-		c ignored vertical alignBottom ].
-
-	header addChild: separator.
-	self addChild: header as: #header.
-]
-
-{ #category : #initialization }
-IpfsWikiBrowser >> titleEditorElement [
-	| editorElement |
-	editorElement := BrEditableLabel new
-		look: (BrGlamorousEditableLabelLook new
-				defaultBackground: Color transparent;
-				glamorousRegularFont;
-				bold;
-				fontSize: 18);
-		constraintsDo: [ :c |
-			c horizontal fitContent.
-			c vertical fitContent];
-		text: 'Untitled'.
-	editorElement editor
-		when: BrTextEditorModifiedEvent 
-		do: [ :anEvent |
-			self wiki title: anEvent text asString ].
-	^ editorElement
 ]
 
 { #category : #accessing }

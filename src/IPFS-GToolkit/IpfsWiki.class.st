@@ -67,13 +67,10 @@ IpfsWiki >> gtMainPageFor: aView [
 { #category : #inspecting }
 IpfsWiki >> gtPagesFor: aView [
 	<gtView>
-	| pageNames |
-	pageNames := pages keys.
-	pageNames sort.
 	^ aView list
 		title: 'Pages' translated;
 		priority: -9;
-		items: [ pageNames collect: [ :name | pages at: name ] ];
+		items: [ self pageNames collect: [ :name | pages at: name ] ];
 		itemText: [ :page | page name ]
 ]
 
@@ -97,6 +94,11 @@ IpfsWiki >> initialize [
 { #category : #accessing }
 IpfsWiki >> pageNamed: aSymbol [
 	^ pages at: aSymbol ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+IpfsWiki >> pageNames [
+	^ pages keys sorted
 ]
 
 { #category : #accessing }
