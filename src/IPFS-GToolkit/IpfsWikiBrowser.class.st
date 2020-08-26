@@ -73,11 +73,10 @@ IpfsWikiBrowser >> buildPageList [
 			BrLabel new
 				hMatchParent;
 				look: BrGlamorousLabelLook new;
-				padding: (BlInsets all: 5) ];
+				padding: (BlInsets all: 5);
+				addEventHandler: (BlEventHandler on: BlClickEvent do: [ :anEvent | self page: anEvent target text asString ]) ];
 		itemDataBinder: [ :eachElement :eachPageName :eachIndex | eachElement text: eachPageName ];
 		items: (self wiki pageNames);
-		addEventHandler: (GtPhlowListToSelectHandler new
-							transformation: [:each | self wiki pageNamed: each ]);
 		lookDo: [ :aLook | aLook listElement constraintsDo: [ :c | c maxHeight: 200 ] ];
 		layout: BlLinearLayout vertical;
 		padding: (BlInsets all: 5);
@@ -87,23 +86,18 @@ IpfsWikiBrowser >> buildPageList [
 
 { #category : #initialization }
 IpfsWikiBrowser >> buildPageSelectorButton [
-	| button |
-	button := BrButton new
-		label: 'Show Pages';
+	^ BrButton new
+		label: 'Wiki Pages';
 		look: BrGlamorousButtonWithIconLook + (BrGlamorousWithDropdownLook
 			handle: [
 				BrButton new
 					look: BrGlamorousButtonWithIconLook - BrGlamorousButtonWithLabelTooltipLook - BrGlamorousButtonExteriorLook;
 					icon: BrGlamorousIcons hamburger;
 					yourself ]
-			content: [
-				self buildPageList
-					when: GtPhlowObjectToSelect do:
-						[:e | button phlow spawnObject: e tool object ];
-				yourself ]);
+			content: [ self buildPageList ]);
 		icon: BrGlamorousIcons hamburger asElement;
-		beLarge.
-	^ button
+		beLarge;
+		yourself
 ]
 
 { #category : #initialization }
@@ -164,6 +158,13 @@ IpfsWikiBrowser >> initializeTitleEditorElement [
 ]
 
 { #category : #accessing }
+IpfsWikiBrowser >> page: aSymbol [
+	pageName := aSymbol.
+	pageNameEditorElement text: pageName asString.
+	documenter ipfsDocument: (wiki pageNamed: pageName); read
+]
+
+{ #category : #accessing }
 IpfsWikiBrowser >> wiki [
 	^ wiki
 ]
@@ -173,7 +174,7 @@ IpfsWikiBrowser >> wiki: anIpfsWiki [
 	self wiki: anIpfsWiki page: #Main
 ]
 
-{ #category : #'instance creation' }
+{ #category : #accessing }
 IpfsWikiBrowser >> wiki: anIpfsWiki page: aSymbol [
 	wiki := anIpfsWiki.
 	pageName := aSymbol.
