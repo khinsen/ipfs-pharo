@@ -41,7 +41,7 @@ IpfsWikiLinkAnnotation >> browseReferenceFrom: anEvent [
 
 { #category : #'accessing - parameter values' }
 IpfsWikiLinkAnnotation >> createReferencedPage [
-	^ referencedPage ifNil: [ referencedPage := self utility 
+	^ self referencedPage ifNil: [ referencedPage := self utility 
 		valueOf: self constants nameParameterName
 		in: self parameters
 		value: [ :aValue |
@@ -114,7 +114,8 @@ IpfsWikiLinkAnnotation >> referencedPage [
 		in: self parameters 
 		value: [ :aValue |
 					self isInWiki
-						ifTrue: [  aValue asSymbol ]
+						ifTrue: [ (self wiki pageNamed: aValue asSymbol)
+									ifNotNil: [ :page | page name ] ]
 						ifFalse: [ nil ] ] 
 		emptyValue: [ nil ] 
 		defaultValue: [ nil ] ]
