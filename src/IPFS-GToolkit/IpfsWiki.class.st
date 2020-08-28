@@ -74,6 +74,18 @@ IpfsWiki >> gtPagesFor: aView [
 		itemText: [ :page | page name ]
 ]
 
+{ #category : #searching }
+IpfsWiki >> gtSpotterForWikiPagesFor: aStep [
+	<gtSearch>
+	^ aStep listProcessor
+		priority: 30;
+		allCandidates: [ self pages values sorted: [ :a :b | a name <= b name ]];
+		itemName: [ :each | each name asString ];
+		title: 'Wiki Pages';
+		itemIcon: [ GLMUIThemeExtraIcons glamorousBookmark ];
+		filter: GtFilterSubstring
+]
+
 { #category : #comparing }
 IpfsWiki >> hash [
 	^ pages inject: 0 into: [ :hash :page | hash xor: page hash ]
