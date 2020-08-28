@@ -79,6 +79,5 @@ IpfsCid >> gtReferencesFor: aView [
 		title: 'References';
 		priority: -4;
 		items: [ self references ];
-		itemFormat: [ :aCid | aCid asString ]
-
+		itemText: [ :aCid | aCid asString ]
 ]
