@@ -7,9 +7,15 @@ A content identifier is a reference to a block stored in IPFS. A block is simply
 3. The length of the hash (number of bytes).
 4. A code specifying the codec that defines how the block is interpreted.
 
-The layout of a CID is defined as a bit sequence, which is then encoded as a text string for practical use. The current default encoding is base32, but most documentation and examples still use the earlier default, which was base58btc. IPFS software is expected to handle all encodings, which this class does via ${class:name=MultibaseEncoder}$.
+The layout of a CID is defined as a bit sequence, which is then encoded as a text string for practical use. The current default encoding is base32, but most documentation and examples still use the earlier default, which was base58btc. IPFS software is expected to handle many encodings. This Pharo library provides the following ones:
+[[[
+MultibaseCodec allBases
+]]]
+To encode a CID, use ${method:name=IpfsCid>>#encodeInBase:}$. To decode a text string representing a CID, use ${method:name=IpfsCid class>>#fromString:}$.
 
 Another transition that is currently going on is from first-generation (""v0"") CIDs to second-generation (""v1"") CIDs, which can refer not only to IPFS objects but also to git commits, ethereum ledger entries, and more. First-generation CIDs will remain valid forever, but at some point all newly created CIDs will be second-generation. This class converts all incoming CIDs to second-generation format, so users should never see first-generation CIDs.
+
+To see how the byte array representing a CID is parsed to obtain the various bits of information, see ${method:name=IpfsCid>>#parse}$.
 "
 Class {
 	#name : #IpfsCid,
