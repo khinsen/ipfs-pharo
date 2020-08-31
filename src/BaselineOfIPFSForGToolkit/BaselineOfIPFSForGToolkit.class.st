@@ -16,6 +16,9 @@ BaselineOfIPFSForGToolkit >> baseline: spec [
 		spec
 			baseline: 'SingletonTrait'
 			with: [ spec repository: 'github://khinsen/SingletonTrait' ].
+		spec
+			baseline: 'WikiForGToolkit'
+			with: [ spec repository: 'github://khinsen/WikiForGToolkit' ].
 
 		spec
 			package: 'Multiformats';
@@ -23,7 +26,7 @@ BaselineOfIPFSForGToolkit >> baseline: spec [
 			package: 'IPFS'
 				with: [ spec requires: #('SingletonTrait' 'NeoJSON' 'Multibase' 'Multiformats') ];
 			package: 'IPFS-GToolkit'
-				with: [ spec requires: #('IPFS') ];
+				with: [ spec requires: #('IPFS' 'WikiForGToolkit') ];
 			package: 'BaselineOfIPFSForGToolkit'.
 
 		spec
