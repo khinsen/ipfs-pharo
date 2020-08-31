@@ -12,7 +12,7 @@ IpfsGtHomeSection >> create [
 	cardContainer := self newCardsContainer.
 	cardContainer addChild: self localPeerCard.
 	cardContainer addChild:
-		(self newWikiCardFor: (IpfsGToolkitData at: #Tutorial)).
+		(self newWikiCardFor: (IpfsGToolkitData at: #Documentation)).
 	sectionContainer addChild: cardContainer.
 	^ sectionContainer
 ]

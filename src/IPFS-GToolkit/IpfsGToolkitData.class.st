@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #data }
-IpfsGToolkitData >> loadTutorial [
-   data at: #Tutorial put: (IpfsCid fromString: 'bafyreia3crlpfkb7s6czd3aiwji4letnzp3patfthv6h26vaxkuasogaey') loadObject
+IpfsGToolkitData >> loadDocumentation [
+   data at: #Documentation put: (IpfsCid fromString: 'bafyreicmlmxbjjbd2oj2hdnl4wfbu6tz7eghithszvpquxjfmgkubrw2ke') loadObject
 ]
