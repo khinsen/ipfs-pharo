@@ -101,19 +101,13 @@ IpfsWikiLinkAnnotation >> objectToPreview [
 	^ self wiki pageNamed: self referencedPage
 ]
 
-{ #category : #accessing }
-IpfsWikiLinkAnnotation >> referenceParameterName [
-	"Return an annotation parameter name that holds a referenced object"
-	^ self constants nameParameterName
-]
-
 { #category : #'accessing - parameter values' }
 IpfsWikiLinkAnnotation >> referencedPage [
 	^ referencedPage ifNil: [ referencedPage := self utility 
-		valueOf: self constants nameParameterName
+		valueOf: self referenceParameterName
 		in: self parameters 
 		value: [ :aValue |
-					self isInWiki
+					aValue isString & self isInWiki
 						ifTrue: [ (self wiki pageNamed: aValue asSymbol)
 									ifNotNil: [ :page | page name ] ]
 						ifFalse: [ nil ] ] 
