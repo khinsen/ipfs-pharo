@@ -40,9 +40,8 @@ IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki [
 		description: anIpfsWiki description
 		size: 120 @ 120
 		content:
-			((GtDocumenter
-				forIpfsDocument:
-					(anIpfsWiki createOrRetrievePageNamed: #Main))
+			((GtDocumenter new
+				text: (anIpfsWiki createOrRetrievePage: #Main))
 				exact: 300 @ 400;
 				beInSingleCompositionLayer;
 				asScalableElement)
