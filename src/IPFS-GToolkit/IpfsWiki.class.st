@@ -1,10 +1,6 @@
-"
-!A Wiki stored in IPFS
-
-"
 Class {
 	#name : #IpfsWiki,
-	#superclass : #Object,
+	#superclass : #WkAbstractWiki,
 	#instVars : [
 		'pages',
 		'description',
@@ -13,7 +9,7 @@ Class {
 	#category : #'IPFS-GToolkit'
 }
 
-{ #category : #instance }
+{ #category : #'instance creation' }
 IpfsWiki class >> title: aShortString description: aLongerString [
 	^ self new
 		title: aShortString;
@@ -23,25 +19,14 @@ IpfsWiki class >> title: aShortString description: aLongerString [
 
 { #category : #comparing }
 IpfsWiki >> = other [
-	^ self class = other class
-		and: [ pages = other pages ]
-]
-
-{ #category : #private }
-IpfsWiki >> addPage: anIpfsWikiPage [
-	"For use by IpfsObjectDecoder>>#decodeIpfsWiki:"
-	anIpfsWikiPage wiki: self.
-	pages at: anIpfsWikiPage name put: anIpfsWikiPage
-]
-
-{ #category : #accessing }
-IpfsWiki >> createOrRetrievePageNamed: aSymbol [
-	^ pages at: aSymbol
-			  ifAbsentPut:
-					[ IpfsWikiPage new
-						wiki: self;
-						name: aSymbol;
-						text: self initalPageContents ]
+	| pages1 pages2 |
+	self class = other class ifTrue: [ ^ true ].
+	pages1 := self pageNames.
+	pages2 := other pageNames.
+	pages1 = pages2 ifFalse: [ ^ false ].
+	pages1 do: [ :each |
+		(self page: each) = (other page: each) ifFalse: [ ^ false ] ].
+	^ true
 ]
 
 { #category : #accessing }
@@ -54,91 +39,53 @@ IpfsWiki >> description: aString [
 	description := aString
 ]
 
-{ #category : #inspecting }
-IpfsWiki >> gtMainPageFor: aView [
-	<gtView>
-	^ ((self createOrRetrievePageNamed: #Main)
-		gtDocumentFor: aView)
-			title: 'Main Page' translated;
-			priority: -10;
-			yourself
-]
-
-{ #category : #inspecting }
-IpfsWiki >> gtPagesFor: aView [
-	<gtView>
-	^ aView list
-		title: 'Pages' translated;
-		priority: -9;
-		items: [ self pageNames collect: [ :name | pages at: name ] ];
-		itemText: [ :page | page name ]
-]
-
-{ #category : #searching }
-IpfsWiki >> gtSpotterForWikiPagesFor: aStep [
-	<gtSearch>
-	^ aStep listProcessor
-		priority: 30;
-		allCandidates: [ self pages values sorted: [ :a :b | a name <= b name ]];
-		itemName: [ :each | each name asString ];
-		title: 'Wiki Pages';
-		itemIcon: [ GLMUIThemeExtraIcons glamorousBookmark ];
-		filter: GtFilterSubstring
-]
-
-{ #category : #comparing }
-IpfsWiki >> hash [
-	^ pages inject: 0 into: [ :hash :page | hash xor: page hash ]
-]
-
-{ #category : #initialization }
-IpfsWiki >> initalPageContents [
-	^ '!New page'
-]
-
 { #category : #initialization }
 IpfsWiki >> initialize [
-	pages := NeoJSONObject new.
+	super initialize.
 	title := ''.
-	description := ''
+	description := ''.
+	pages := NeoJSONObject new.
+	self createOrRetrievePage: #Main
 ]
 
-{ #category : #accessing }
-IpfsWiki >> pageNamed: aSymbol [
-	^ pages at: aSymbol ifAbsent: [ nil ]
+{ #category : #'api - accessing' }
+IpfsWiki >> page: aSymbol [
+	^ pages at: aSymbol
+		ifPresent: [ :page | page text ]
+		ifAbsent: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 IpfsWiki >> pageNames [
-	^ pages keys sorted
+	| pageNames |
+	pageNames := pages keys sorted asOrderedCollection.
+	pageNames remove: #Main.
+	pageNames addFirst: #Main.
+	^ pageNames
 ]
 
-{ #category : #accessing }
-IpfsWiki >> pages [
-	^ pages
-]
-
-{ #category : #private }
+{ #category : #'api - accessing' }
 IpfsWiki >> removePage: aSymbol [
-	pages removeKey: aSymbol.
+	pages removeKey: aSymbol
 ]
 
-{ #category : #accessing }
-IpfsWiki >> renamePage: pageName to: newName [
-	pages at: pageName ifAbsent: [ self error: 'No page named ', pageName ].
-	pages at: newName ifPresent: [ self error: 'There is already a page named ', newName ].
-	pages do: [ :each | each renameWikiLinksFrom: pageName to: newName ].
-	pages at: newName put: (pages at: pageName).
-	pages removeKey: pageName.
-	(pages at: newName) name: newName
-]
-
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 IpfsWiki >> title [
 	^ title
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 IpfsWiki >> title: aString [
 	title := aString
+]
+
+{ #category : #accessing }
+IpfsWiki >> updatePage: aSymbol to: aString [
+	pages at: aSymbol
+		ifPresent: [ :page | page text: aString ]
+		ifAbsent: [ pages at: aSymbol
+						  put: (IpfsWikiPage new
+						  		name: aSymbol;
+						  		wiki: self;
+						  		text: aString)]
 ]

@@ -11,9 +11,9 @@ IpfsPharoObjectTest >> testStoreAndLoadIpfsDocument [
 IpfsPharoObjectTest >> testStoreAndLoadIpfsWiki [
 	| wiki |
 	wiki := IpfsWiki new.
-	(wiki createOrRetrievePageNamed: #Page1)
-		text: 'Text of page 1'. 
-	(wiki createOrRetrievePageNamed: #Page2)
-		text: 'Text of page 2'. 
+	wiki createOrRetrievePage: #Page1.
+	wiki updatePage: #Page1 to: 'Text of page 1'.
+	wiki createOrRetrievePage: #Page2.
+	wiki updatePage: #Page2 to: 'Text of page 2'.
 	self storeLoadCheck: wiki.
 ]

@@ -20,7 +20,12 @@ IpfsDefaultMapper >> mappingForIpfsWiki [
 	self encodeClass: IpfsWiki as:
 		[ :aWiki |
 			| pages |
-			pages := aWiki pages collect: [ :each | each storeInIpfsUsing: self ].
+			pages := NeoJSONObject
+				newFromKeys: aWiki pageNames
+				andValues: (aWiki pageNames collect: [ :each |
+								(IpfsDocument new
+									name: each;
+									text: (aWiki page: each)) storeInIpfsUsing: self ]).
 			NeoJSONObject with: #IpfsWiki ->
 				(NeoJSONObject
 					with: #title -> aWiki title
@@ -33,6 +38,9 @@ IpfsDefaultMapper >> mappingForIpfsWiki [
 						title: (aDictionary at: #title)
 						description: (aDictionary at: #description).
 			(aDictionary at: #pages) do:
-				[ :pageCid | wiki addPage: (pageCid loadObjectUsing: self) ].
+				[ :pageCid |
+					| page |
+					page := pageCid loadObjectUsing: self.
+					wiki updatePage: page name asSymbol to: page text ].
 			wiki ].
 ]
