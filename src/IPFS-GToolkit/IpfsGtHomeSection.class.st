@@ -12,7 +12,9 @@ IpfsGtHomeSection >> create [
 	cardContainer := self newCardsContainer.
 	cardContainer addChild: self localPeerCard.
 	cardContainer addChild:
-		(self newWikiCardFor: (IpfsGToolkitData at: #Documentation)).
+		((self newWikiCardFor: (IpfsGToolkitData at: #Documentation))
+			size: 120 @ 120 ;
+			yourself).
 	sectionContainer addChild: cardContainer.
 	^ sectionContainer
 ]
@@ -31,24 +33,4 @@ IpfsGtHomeSection >> localPeerCard [
 				from: card ];
 		description: 'Pinned data and IPNS keys on your device'.
 	^ stencil create
-]
-
-{ #category : #accessing }
-IpfsGtHomeSection >> newWikiCardFor: anIpfsWiki [
-	^ self
-		newHeaderCardWithTitle: 'Wiki'
-		description: anIpfsWiki description
-		size: 120 @ 120
-		content:
-			((GtDocumenter new
-				text: (anIpfsWiki createOrRetrievePage: #Main))
-				exact: 300 @ 400;
-				beInSingleCompositionLayer;
-				asScalableElement)
-		action: [ :card | 
-			self
-				showSpaceWithTitle: 'Wiki'
-				with: (GtPager createWrappedOn:
-						(WkWikiBrowser forWiki: anIpfsWiki))
-				from: card ].
 ]
