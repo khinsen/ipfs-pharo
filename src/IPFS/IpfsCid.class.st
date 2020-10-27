@@ -90,6 +90,26 @@ IpfsCid >> encodeInBase: aSymbol [
 	^ MultibaseEncoder new encode: self base: aSymbol
 ]
 
+{ #category : #accessing }
+IpfsCid >> gtFilesFor: aView [
+	<gtView>
+	| cidData data |
+	cidData := self parse.
+	(cidData at: #codec) = #'dag-pb' ifFalse: [ ^ aView empty ].
+	self references ifEmpty: [ ^ aView empty ].
+	data := self loadJson.
+	(data at: #data) = 'CAE=' ifFalse: [ ^ aView empty ].
+	^ aView columnedList
+		title: 'Files';
+		priority: -9;
+		items: [ data at: #links ];
+		send: [ :each | each at: #Cid ];
+		column: 'Name' text: [ :each | each at: #Name ];
+		column: 'Size' text: [ :each | each at: #Size ];
+		column: 'Cid' text: [ :each | each at: #Cid ];
+		yourself
+]
+
 { #category : #testing }
 IpfsCid >> isRaw [
 	^ (self parse at: #codec) = 'raw'
