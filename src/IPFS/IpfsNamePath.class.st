@@ -26,6 +26,11 @@ IpfsNamePath >> cid [
 	^ nil
 ]
 
+{ #category : #testing }
+IpfsNamePath >> isUnixfsPath [
+	self notYetImplemented
+]
+
 { #category : #'data access' }
 IpfsNamePath >> loadObjectInBackground [
 	^ IpfsCache resolveAndloadObjectFromPath: self

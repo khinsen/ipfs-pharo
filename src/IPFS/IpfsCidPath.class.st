@@ -38,6 +38,11 @@ IpfsCidPath >> isRaw [
 	^ linkSequence isEmpty and: [ cid isRaw ]
 ]
 
+{ #category : #testing }
+IpfsCidPath >> isUnixfsPath [
+	^ self cid isDagPbCid
+]
+
 { #category : #'data access' }
 IpfsCidPath >> loadObjectInBackground [
 	^ IpfsCache loadObjectFromPath: self

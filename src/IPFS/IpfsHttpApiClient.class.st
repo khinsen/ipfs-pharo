@@ -63,13 +63,14 @@ IpfsHttpApiClient >> handleFailure: anException [
 	"IPFS errors are ZnHttpUnsuccessful with a message in the response"
 	(anException isKindOf: ZnHttpUnsuccessful)
 		ifFalse: [ anException pass ].
-	message := (NeoJSONReader
-						on: anException response contents readStream)
-						next.
+	message := anException response contents.
+	message := [ (NeoJSONReader
+					on: message readStream)
+					next at: #Message]
+				on: Error do: [ message asString ].
 	ipfsError := IpfsError new.
-	ipfsError messageText: (message at: #Message).
+	ipfsError messageText: message.
 	ipfsError signal.
-
 ]
 
 { #category : #initialization }

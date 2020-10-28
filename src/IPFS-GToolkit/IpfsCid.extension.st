@@ -65,6 +65,25 @@ IpfsCid >> gtDisplayOn: stream [
 ]
 
 { #category : #'*IPFS-GToolkit' }
+IpfsCid >> gtFilesFor: aView [
+	<gtView>
+	| data |
+	self isDagPbCid ifFalse: [ ^ aView empty ].
+	self references ifEmpty: [ ^ aView empty ].
+	data := self loadJson.
+	(data at: #data) = 'CAE=' ifFalse: [ ^ aView empty ].
+	^ aView columnedList
+		title: 'Files';
+		priority: -9;
+		items: [ data at: #links ];
+		send: [ :each | each at: #Cid ];
+		column: 'Name' text: [ :each | each at: #Name ];
+		column: 'Size' text: [ :each | each at: #Size ];
+		column: 'Cid' text: [ :each | each at: #Cid ];
+		yourself
+]
+
+{ #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtRawBlockFor: aView [
 	<gtView>
 	^ (self embeddedViewShowing: [ self loadRaw ] For: aView)

@@ -42,6 +42,11 @@ IpfsPath >> addLinks: aLinkSequence [
 	linkSequence := linkSequence, aLinkSequence
 ]
 
+{ #category : #converting }
+IpfsPath >> asFileReference [
+	^ IpfsFileReference fromPath: self
+]
+
 { #category : #accessing }
 IpfsPath >> asIpfsPath [
 	^ self
@@ -60,6 +65,11 @@ IpfsPath >> initialize [
 { #category : #testing }
 IpfsPath >> isRaw [
 	^ false
+]
+
+{ #category : #testing }
+IpfsPath >> isUnixfsPath [
+	self subclassResponsibility
 ]
 
 { #category : #'data access' }
@@ -114,4 +124,10 @@ IpfsPath >> storeOn: aStream [
 	self asString storeOn: aStream.
 	aStream nextPut: $).
 
+]
+
+{ #category : #'data access' }
+IpfsPath >> unixfsBinaryReadStream [
+	self assert: self isUnixfsPath description: 'Not a Unixfs path'.
+	^ Ipfs cat: self
 ]

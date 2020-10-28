@@ -60,6 +60,11 @@ IpfsCid class >> fromString: aString [
 	^ (self new: bytes size) replaceFrom: 1 to: bytes size with: bytes
 ]
 
+{ #category : #accessing }
+IpfsCid >> asFileReference [
+	^ self asIpfsPath asFileReference
+]
+
 { #category : #converting }
 IpfsCid >> asIpfsCid [
 	^ self
@@ -90,24 +95,11 @@ IpfsCid >> encodeInBase: aSymbol [
 	^ MultibaseEncoder new encode: self base: aSymbol
 ]
 
-{ #category : #accessing }
-IpfsCid >> gtFilesFor: aView [
-	<gtView>
-	| cidData data |
+{ #category : #testing }
+IpfsCid >> isDagPbCid [
+	| cidData |
 	cidData := self parse.
-	(cidData at: #codec) = #'dag-pb' ifFalse: [ ^ aView empty ].
-	self references ifEmpty: [ ^ aView empty ].
-	data := self loadJson.
-	(data at: #data) = 'CAE=' ifFalse: [ ^ aView empty ].
-	^ aView columnedList
-		title: 'Files';
-		priority: -9;
-		items: [ data at: #links ];
-		send: [ :each | each at: #Cid ];
-		column: 'Name' text: [ :each | each at: #Name ];
-		column: 'Size' text: [ :each | each at: #Size ];
-		column: 'Cid' text: [ :each | each at: #Cid ];
-		yourself
+	^ (cidData at: #codec) = #'dag-pb'
 ]
 
 { #category : #testing }
@@ -149,6 +141,11 @@ IpfsCid >> loadRaw [
 { #category : #converting }
 IpfsCid >> neoJsonOn: neoJSONWriter [
 	neoJSONWriter writeMap: { '/' -> self asString } asDictionary
+]
+
+{ #category : #'data access' }
+IpfsCid >> objectStat [
+	^ Ipfs objectStat: self
 ]
 
 { #category : #parsing }
@@ -231,4 +228,9 @@ IpfsCid >> storeOn: aStream [
 	self asString storeOn: aStream.
 	aStream nextPut: $).
 
+]
+
+{ #category : #'data access' }
+IpfsCid >> unixfsBinaryReadStream [
+	^ self asIpfsPath unixfsBinaryReadStream
 ]

@@ -24,6 +24,16 @@ Ipfs class >> blockSize: aCid [
 
 ]
 
+{ #category : #UnixfsV1 }
+Ipfs class >> c: aCid [
+	^ self uniqueInstance blockGet: aCid
+]
+
+{ #category : #UnixfsV1 }
+Ipfs class >> cat: aCid [
+	^ self uniqueInstance cat: aCid
+]
+
 { #category : #IPLD }
 Ipfs class >> dagGet: aCID [
 	^ self uniqueInstance dagGet: aCID
@@ -130,6 +140,11 @@ Ipfs class >> objectGet: aCID [
 	^ self uniqueInstance objectGet: aCID
 ]
 
+{ #category : #IPFS }
+Ipfs class >> objectStat: aCID [
+	^ self uniqueInstance objectStat: aCID
+]
+
 { #category : #IPNS }
 Ipfs class >> publish: ipfsPath key: ipnsKey [
 	^ self uniqueInstance publish: ipfsPath key: ipnsKey
@@ -175,6 +190,33 @@ Ipfs >> blockSize: aCid [
 						parameters: (Dictionary with: #arg -> aCid asString)
 						timeout: self dataRequestTimeout.
 	^ result at: 'Size'.
+]
+
+{ #category : #UnixfsV1 }
+Ipfs >> cat: aCid [
+	"This method cannot use getRequest:parameters: because it has to switch the ZnClient
+	 to binary mode."
+	((Ipfs objectStat: aCid) at: #NumLinks) = 0
+		ifFalse: [ IpfsError new
+					messageText: aCid asString, ' is a directory node';
+					signal ].
+	[ ^ self znClient
+		beBinary;
+		timeout: self dataRequestTimeout asSeconds;
+		accept: 'text/plain';
+		path: 'api/v0/cat';
+		queryAt: #arg add: aCid asString;
+		contentReader: [ :entity | entity readStream binary ];
+		post ]
+	on: ConnectionTimedOut
+		do: [ ^ self znFallbackClient
+		beBinary;
+		timeout: self dataRequestTimeout asSeconds;
+		accept: 'text/plain';
+		path: 'api/v0/cat';
+		queryAt: #arg add: aCid asString;
+		contentReader: [ :entity | entity readStream binary ];
+		get ]
 ]
 
 { #category : #IPLD }
@@ -309,6 +351,16 @@ Ipfs >> objectGet: aCid [
 						cid: (IpfsCid fromString: (link at: 'Hash'))
 						size: (link at: 'Size') asNumber) ].
 	^ IpfsObject data: data links: links
+]
+
+{ #category : #IPFS }
+Ipfs >> objectStat: aCid [
+	| result data links |
+	result := self
+		getRequest: 'object/stat'
+		parameters: (Dictionary with: #arg -> aCid asString)
+		timeout: self dataRequestTimeout.
+	^ result
 ]
 
 { #category : #accessing }
