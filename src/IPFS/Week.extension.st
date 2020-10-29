@@ -7,5 +7,5 @@ Week class >> year: aYear isoWeek: weekNumber [
 	specifies that weeks start on a Monday."
 	"Note: we have to call starting:duration: from the superclass Timespan to make this work.
 	 The Week class tries hard to enforce weeks starting on Sunday."
-	^ super starting: aYear asYear correctFirstThursday + (weekNumber * 7 - 10) days duration: 1 week
+	^ super starting: aYear asYear firstThursday + (weekNumber * 7 - 10) days duration: 1 week
 ]

@@ -85,7 +85,7 @@ IpfsDefaultMapper >> mappingForWeek [
 			"The year is the Gregorian year of the Thursday."
 			thursday := aWeek start + 3 days.
 			year := thursday year.
-			weekNumber := (thursday - (Year year: year) correctFirstThursday) asDays // 7 + 1.
+			weekNumber := (thursday - (Year year: year) firstThursday) asDays // 7 + 1.
 			NeoJSONObject with:
 				#Week -> ((year printPaddedWith: $0 to: 4),
 							'-W', (weekNumber printPaddedWith: $0 to: 2)) ].
@@ -95,7 +95,7 @@ IpfsDefaultMapper >> mappingForWeek [
 			parts := $- split: aString.
 			year := parts first asNumber.
 			weekNumber := parts second allButFirst asNumber.
-			Week year: year isoWeek: weekNumber ].
+			Week year: year week: weekNumber ].
 ]
 
 { #category : #mapping }

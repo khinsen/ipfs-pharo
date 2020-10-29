@@ -22,8 +22,8 @@ IpfsPharoObjectTest >> testStoreAndLoadDatesAndTimes [
 	testValues := {DateAndTime now.
 	Date today.
 	Time now.
-	Week year: 2007 isoWeek: 5.
-	Week year: 2007 isoWeek: 10.
+	Week year: 2007 week: 5.
+	Week year: 2007 week: 10.
 	Year year: 1955.
 	Year year: 2015}.
 	testValues do: [ :object | self storeLoadCheck: object ]
