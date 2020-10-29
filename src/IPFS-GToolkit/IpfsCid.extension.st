@@ -20,8 +20,10 @@ IpfsCid >> embeddedViewShowing: aBlock For: aView [
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtActionInspectObjectFor: anAction [
 	<gtAction>
+	self isInLocalStorage ifFalse: [ ^ anAction noAction ].
 	^ anAction button
-		icon: BrGlamorousIcons fromhere;
+		icon: BrGlamorousIcons spawn;
+		tooltip: 'Inspect data object';
 		priority: 30;
 		action: [ :aButton | 
 			aButton
@@ -29,6 +31,22 @@ IpfsCid >> gtActionInspectObjectFor: anAction [
 					(GtPhlowObjectToSpawn new
 						object: self loadObject;
 						sourceElement: aButton) ]
+]
+
+{ #category : #'*IPFS-GToolkit' }
+IpfsCid >> gtActionLoadObjectFor: anAction [
+	<gtAction>
+	self isInLocalStorage ifTrue: [ ^ anAction noAction ].
+	^ anAction button
+		icon: BrGlamorousIcons fromcloud;
+		tooltip: 'Load data';
+		priority: 30;
+		action: [ :aButton |
+			self loadRaw.
+			"Update all inspector views."
+			aButton withAllParentsDo: [ :aParent | 
+      		aParent class = GtInspector
+      			ifTrue: [ aParent object: aParent object ] ] ]
 ]
 
 { #category : #'*IPFS-GToolkit' }
@@ -68,16 +86,12 @@ IpfsCid >> gtDisplayOn: stream [
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtFilesFor: aView [
 	<gtView>
-	| data |
 	self isInLocalStorage ifFalse: [ ^ aView empty ].
-	self isDagPbCid ifFalse: [ ^ aView empty ].
-	self references ifEmpty: [ ^ aView empty ].
-	data := self loadJson.
-	(data at: #data) = 'CAE=' ifFalse: [ ^ aView empty ].
+	self isUnixfsDirectory ifFalse: [ ^ aView empty ].
 	^ aView columnedList
 		title: 'Files';
 		priority: -9;
-		items: [ data at: #links ];
+		items: [ self unixfsDirectoryEntries ];
 		send: [ :each | each at: #Cid ];
 		column: 'Name' text: [ :each | each at: #Name ];
 		column: 'Size' text: [ :each | each at: #Size ];
