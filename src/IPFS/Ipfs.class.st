@@ -25,11 +25,6 @@ Ipfs class >> blockSize: aCid [
 ]
 
 { #category : #UnixfsV1 }
-Ipfs class >> c: aCid [
-	^ self uniqueInstance blockGet: aCid
-]
-
-{ #category : #UnixfsV1 }
 Ipfs class >> cat: aCid [
 	^ self uniqueInstance cat: aCid
 ]
@@ -52,6 +47,11 @@ Ipfs class >> dagPutRaw: anObject [
 { #category : #IPLD }
 Ipfs class >> dagResolve: aString [
 	^ self uniqueInstance dagResolve: aString
+]
+
+{ #category : #IPFS }
+Ipfs class >> filesStat: aCidOrPath [
+	^ self uniqueInstance filesStat: aCidOrPath
 ]
 
 { #category : #settings }
@@ -291,6 +291,14 @@ Ipfs >> fallbackPort: anObject [
 	fallbackPort := anObject
 ]
 
+{ #category : #IPFS }
+Ipfs >> filesStat: aCidOrPath [
+	^ self
+		getRequest: 'files/stat'
+		parameters: (Dictionary with: #arg -> aCidOrPath asIpfsPath asString)
+		timeout: self dataRequestTimeout
+]
+
 { #category : #accessing }
 Ipfs >> host [
 	^ host
@@ -355,12 +363,10 @@ Ipfs >> objectGet: aCid [
 
 { #category : #IPFS }
 Ipfs >> objectStat: aCid [
-	| result data links |
-	result := self
+	^ self
 		getRequest: 'object/stat'
 		parameters: (Dictionary with: #arg -> aCid asString)
-		timeout: self dataRequestTimeout.
-	^ result
+		timeout: self dataRequestTimeout
 ]
 
 { #category : #accessing }

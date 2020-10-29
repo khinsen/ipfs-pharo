@@ -114,6 +114,16 @@ IpfsCid >> isRaw [
 	^ (self parse at: #codec) = 'raw'
 ]
 
+{ #category : #testing }
+IpfsCid >> isUnixfsDirectory [
+	^ self asIpfsPath isUnixfsDirectory
+]
+
+{ #category : #testing }
+IpfsCid >> isUnixfsFile [
+	^ self asIpfsPath isUnixfsFile
+]
+
 { #category : #'data access' }
 IpfsCid >> loadJson [
 	^ Ipfs dagGet: self
@@ -240,4 +250,15 @@ IpfsCid >> storeOn: aStream [
 { #category : #'data access' }
 IpfsCid >> unixfsBinaryReadStream [
 	^ self asIpfsPath unixfsBinaryReadStream
+]
+
+{ #category : #'data access' }
+IpfsCid >> unixfsDirectoryEntries [
+	^ self asIpfsPath unixfsDirectoryEntries
+]
+
+{ #category : #'data access' }
+IpfsCid >> unixfsNodeInfo [
+	self isDagPbCid ifFalse: [ ^ nil ].
+	^ Ipfs filesStat: self
 ]

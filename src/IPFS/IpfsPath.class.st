@@ -44,12 +44,18 @@ IpfsPath >> addLinks: aLinkSequence [
 
 { #category : #converting }
 IpfsPath >> asFileReference [
-	^ IpfsFileReference fromPath: self
+	^ IpfsFileReference fromIpfsPath: self
 ]
 
 { #category : #accessing }
 IpfsPath >> asIpfsPath [
 	^ self
+]
+
+{ #category : #accessing }
+IpfsPath >> extension [
+	linkSequence ifEmpty: [ ^ '' ].
+	^ linkSequence last copyAfterLast: $.
 ]
 
 { #category : #comparing }
@@ -65,6 +71,16 @@ IpfsPath >> initialize [
 { #category : #testing }
 IpfsPath >> isRaw [
 	^ false
+]
+
+{ #category : #testing }
+IpfsPath >> isUnixfsDirectory [
+	^ self isUnixfsPath and: [ (self unixfsNodeInfo at: #Type) = 'directory' ]
+]
+
+{ #category : #testing }
+IpfsPath >> isUnixfsFile [
+	^ self isUnixfsPath and: [ (self unixfsNodeInfo at: #Type) = 'file' ]
 ]
 
 { #category : #testing }
@@ -101,6 +117,11 @@ IpfsPath >> printOn: aStream [
 
 ]
 
+{ #category : #'data access' }
+IpfsPath >> references [
+	^ Ipfs refs: self recursive: false
+]
+
 { #category : #accessing }
 IpfsPath >> relativePath [
 	^ $/ join: linkSequence
@@ -130,4 +151,19 @@ IpfsPath >> storeOn: aStream [
 IpfsPath >> unixfsBinaryReadStream [
 	self assert: self isUnixfsPath description: 'Not a Unixfs path'.
 	^ Ipfs cat: self
+]
+
+{ #category : #accessing }
+IpfsPath >> unixfsDirectoryEntries [
+	| data |
+	self isUnixfsDirectory ifFalse: [ ^ Array new ].
+	data := self loadJson.
+	(data at: #data) = 'CAE=' ifFalse: [ ^ Array new ].
+	^ data at: #links
+]
+
+{ #category : #'data access' }
+IpfsPath >> unixfsNodeInfo [
+	self isUnixfsPath ifFalse: [ ^ nil ].
+	^ Ipfs filesStat: self
 ]

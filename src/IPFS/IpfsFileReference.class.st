@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-IpfsFileReference class >> fromPath: anIpfsPath [
+IpfsFileReference class >> fromIpfsPath: anIpfsPath [
 	^ self new
 		path: anIpfsPath;
 		yourself
@@ -16,7 +16,7 @@ IpfsFileReference class >> fromPath: anIpfsPath [
 
 { #category : #accessing }
 IpfsFileReference >> absolutePath [
-	^ path asString
+	^ path
 ]
 
 { #category : #converting }
@@ -41,12 +41,69 @@ IpfsFileReference >> binaryReadStream [
 
 { #category : #streams }
 IpfsFileReference >> binaryWriteStream [
-	self error: 'Write-only filesystem'
+	self errorImmutableFilesystem
+]
+
+{ #category : #accessing }
+IpfsFileReference >> changeTime [ 
+	"IPFS files have no timestamps, so use a fictitious one."
+	^ (Year year: 2000) start
+]
+
+{ #category : #copying }
+IpfsFileReference >> copyTo: aFileReference [
+	"Copying to other filesystems should be supported!"
+	self flag: #todo.
+	self errorImmutableFilesystem
 ]
 
 { #category : #copying }
 IpfsFileReference >> copyWithPath: newPath [
-	self error: 'Write-only filesystem'
+	"No idea what this does."
+	self errorImmutableFilesystem
+]
+
+{ #category : #accessing }
+IpfsFileReference >> creationTime [
+	"IPFS files have no timestamps, so use a fictitious one."
+	^ (Year year: 2000) start
+]
+
+{ #category : #operations }
+IpfsFileReference >> delete [
+	self errorImmutableFilesystem
+]
+
+{ #category : #operations }
+IpfsFileReference >> deleteIfAbsent: aBlock [
+	self errorImmutableFilesystem
+]
+
+{ #category : #operations }
+IpfsFileReference >> ensureCreateDirectory [
+	"Do nothing: the directory already exists"
+]
+
+{ #category : #navigating }
+IpfsFileReference >> entries [
+	self assert: self isDirectory description: 'Not a directory'.
+	^ path unixfsDirectoryEntries collect: [ :each |
+		(IpfsFileReference fromIpfsPath: (each path / (each at: #Name))) entry ]
+]
+
+{ #category : #accessing }
+IpfsFileReference >> entry [
+	^ FileSystemDirectoryEntry reference: self
+]
+
+{ #category : #private }
+IpfsFileReference >> errorImmutableFilesystem [
+	self error: 'Immutable IPFS filesystem'
+]
+
+{ #category : #testing }
+IpfsFileReference >> exists [
+	^ true
 ]
 
 { #category : #accessing }
@@ -57,6 +114,11 @@ IpfsFileReference >> fullPath [
 { #category : #testing }
 IpfsFileReference >> isAbsolute [
 	^ true
+]
+
+{ #category : #testing }
+IpfsFileReference >> isDirectory [
+	^ path isUnixfsDirectory
 ]
 
 { #category : #testing }
@@ -77,7 +139,7 @@ IpfsFileReference >> readStream [
 
 { #category : #operations }
 IpfsFileReference >> renameTo: newBasename [
-	self error: 'Write-only filesystem'
+	self errorImmutableFilesystem
 ]
 
 { #category : #navigating }
