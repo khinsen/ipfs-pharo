@@ -53,6 +53,7 @@ IpfsCid >> gtCidDataFor: aView [
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtDataFor: aView [
 	<gtView>
+	self isInLocalStorage ifFalse: [ ^ aView empty ].
 	^ (self embeddedViewShowing: [ self loadJson ] For: aView)
 		title: 'Data';
 		priority: -6
@@ -68,6 +69,7 @@ IpfsCid >> gtDisplayOn: stream [
 IpfsCid >> gtFilesFor: aView [
 	<gtView>
 	| data |
+	self isInLocalStorage ifFalse: [ ^ aView empty ].
 	self isDagPbCid ifFalse: [ ^ aView empty ].
 	self references ifEmpty: [ ^ aView empty ].
 	data := self loadJson.
@@ -86,6 +88,7 @@ IpfsCid >> gtFilesFor: aView [
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtRawBlockFor: aView [
 	<gtView>
+	self isInLocalStorage ifFalse: [ ^ aView empty ].
 	^ (self embeddedViewShowing: [ self loadRaw ] For: aView)
 		title: 'Raw block';
 		priority: -5
@@ -94,6 +97,7 @@ IpfsCid >> gtRawBlockFor: aView [
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtReferencesFor: aView [
 	<gtView>
+	self isInLocalStorage ifFalse: [ ^ aView empty ].
 	^ aView list
 		title: 'References';
 		priority: -4;

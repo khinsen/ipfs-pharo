@@ -103,6 +103,13 @@ IpfsCid >> isDagPbCid [
 ]
 
 { #category : #testing }
+IpfsCid >> isInLocalStorage [
+	^ (IpfsPeer local allCids
+		detect: [ :each | each = self ] ifNone: [ nil ])
+		isNotNil
+]
+
+{ #category : #testing }
 IpfsCid >> isRaw [
 	^ (self parse at: #codec) = 'raw'
 ]
