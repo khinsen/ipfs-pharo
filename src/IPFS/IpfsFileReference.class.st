@@ -79,6 +79,14 @@ IpfsFileReference >> deleteIfAbsent: aBlock [
 	self errorImmutableFilesystem
 ]
 
+{ #category : #accessing }
+IpfsFileReference >> directories [
+	self assert: self isDirectory description: 'Not a directory'.
+	^ (path unixfsDirectoryEntries collect: [ :each |
+		(IpfsFileReference fromIpfsPath: (path / (each at: #Name))) ])
+		select: [ :each | each isDirectory ]
+]
+
 { #category : #operations }
 IpfsFileReference >> ensureCreateDirectory [
 	"Do nothing: the directory already exists"
@@ -88,7 +96,7 @@ IpfsFileReference >> ensureCreateDirectory [
 IpfsFileReference >> entries [
 	self assert: self isDirectory description: 'Not a directory'.
 	^ path unixfsDirectoryEntries collect: [ :each |
-		(IpfsFileReference fromIpfsPath: (each path / (each at: #Name))) entry ]
+		(IpfsFileReference fromIpfsPath: (path / (each at: #Name))) entry ]
 ]
 
 { #category : #accessing }
@@ -107,6 +115,19 @@ IpfsFileReference >> exists [
 ]
 
 { #category : #accessing }
+IpfsFileReference >> files [
+	self assert: self isDirectory description: 'Not a directory'.
+	^ (path unixfsDirectoryEntries collect: [ :each |
+		(IpfsFileReference fromIpfsPath: (path / (each at: #Name))) ])
+		select: [ :each | each isFile ]
+]
+
+{ #category : #accessing }
+IpfsFileReference >> fullName [
+	^ path asString
+]
+
+{ #category : #accessing }
 IpfsFileReference >> fullPath [
 	^ self absolutePath
 ]
@@ -122,8 +143,18 @@ IpfsFileReference >> isDirectory [
 ]
 
 { #category : #testing }
+IpfsFileReference >> isFile [
+	^ path isUnixfsFile
+]
+
+{ #category : #testing }
 IpfsFileReference >> isRelative [
 	^ false
+]
+
+{ #category : #testing }
+IpfsFileReference >> isRoot [
+	^ path isUnixfsRoot
 ]
 
 { #category : #accessing }
@@ -144,6 +175,7 @@ IpfsFileReference >> renameTo: newBasename [
 
 { #category : #navigating }
 IpfsFileReference >> resolve [
+	self halt.
 	^ self
 ]
 

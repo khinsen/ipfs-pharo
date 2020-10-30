@@ -53,6 +53,12 @@ IpfsPath >> asIpfsPath [
 ]
 
 { #category : #accessing }
+IpfsPath >> basename [
+	linkSequence ifEmpty: [ ^ '' ].
+	^ linkSequence last copyUpToLast: $.
+]
+
+{ #category : #accessing }
 IpfsPath >> extension [
 	linkSequence ifEmpty: [ ^ '' ].
 	^ linkSequence last copyAfterLast: $.
@@ -86,6 +92,11 @@ IpfsPath >> isUnixfsFile [
 { #category : #testing }
 IpfsPath >> isUnixfsPath [
 	self subclassResponsibility
+]
+
+{ #category : #testing }
+IpfsPath >> isUnixfsRoot [
+	^ self isUnixfsPath and: [ linkSequence isEmpty ]
 ]
 
 { #category : #'data access' }
