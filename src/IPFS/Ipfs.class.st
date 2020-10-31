@@ -203,20 +203,20 @@ Ipfs >> cat: aCid [
 	[ ^ self znClient
 		beBinary;
 		timeout: self dataRequestTimeout asSeconds;
+		streaming: true;
 		accept: 'text/plain';
 		path: 'api/v0/cat';
 		queryAt: #arg add: aCid asString;
-		contentReader: [ :entity | entity readStream binary ];
 		post ]
 	on: ConnectionTimedOut
 		do: [ ^ self znFallbackClient
 		beBinary;
 		timeout: self dataRequestTimeout asSeconds;
+		streaming: true;
 		accept: 'text/plain';
 		path: 'api/v0/cat';
 		queryAt: #arg add: aCid asString;
-		contentReader: [ :entity | entity readStream binary ];
-		get ]
+		post ]
 ]
 
 { #category : #IPLD }

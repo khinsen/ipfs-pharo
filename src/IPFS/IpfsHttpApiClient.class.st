@@ -108,13 +108,11 @@ IpfsHttpApiClient >> postRequest: aString contents: data parameters: aDictionary
 IpfsHttpApiClient >> znClient [
 	^ ZnClient new
 		systemPolicy;
-		beOneShot;
 		http;
 		host: host;
 		port: port;
 		ifFail: [ :exception | self handleFailure: exception ];
 		yourself.
-
 ]
 
 { #category : #'http requests' }
@@ -134,13 +132,11 @@ IpfsHttpApiClient >> znClientForJsonResult [
 IpfsHttpApiClient >> znFallbackClient [
 	^ ZnClient new
 		systemPolicy;
-		beOneShot;
 		https;
 		host: fallbackHost;
 		port: fallbackPort;
 		ifFail: [ :exception | self handleFailure: exception ];
 		yourself.
-
 ]
 
 { #category : #'http requests' }
