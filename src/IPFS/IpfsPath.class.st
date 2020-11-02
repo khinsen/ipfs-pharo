@@ -54,7 +54,7 @@ IpfsPath >> asIpfsPath [
 
 { #category : #accessing }
 IpfsPath >> basename [
-	linkSequence ifEmpty: [ ^ '' ].
+	linkSequence ifEmpty: [ ^ nil ].
 	^ linkSequence last copyUpToLast: $.
 ]
 
