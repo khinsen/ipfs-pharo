@@ -271,8 +271,8 @@ IpfsExamples >> resolveIpnsKey [
 	<gtExample>
 	| pathAndKey path key resolvedPath |
 	pathAndKey := self publishPath.
-	path := pathAndKey first.
-	key := pathAndKey second.
+	path := pathAndKey second.
+	key := pathAndKey first.
 	resolvedPath := key resolve.
 	self assert: resolvedPath equals: path.
 	^ path
