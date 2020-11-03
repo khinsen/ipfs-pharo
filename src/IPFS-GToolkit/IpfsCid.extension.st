@@ -88,14 +88,11 @@ IpfsCid >> gtFilesFor: aView [
 	<gtView>
 	self isInLocalStorage ifFalse: [ ^ aView empty ].
 	self isUnixfsDirectory ifFalse: [ ^ aView empty ].
-	^ aView columnedList
+	^ aView forward
 		title: 'Files';
 		priority: -9;
-		items: [ self unixfsDirectoryEntries ];
-		send: [ :each | each at: #Cid ];
-		column: 'Name' text: [ :each | each at: #Name ];
-		column: 'Size' text: [ :each | each at: #Size ];
-		column: 'Cid' text: [ :each | each at: #Cid ];
+		object: [ self asIpfsPath asFileReference ];
+		view: #gtItemsFor:;
 		yourself
 ]
 
