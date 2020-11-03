@@ -8,92 +8,90 @@ Class {
 	#category : #'IPFS-Examples'
 }
 
-{ #category : #examples }
+{ #category : #'examples - peer' }
 IpfsExamples >> allCidsOnlocalIpfsPeer [
 	<gtExample>
 	^ self localIpfsPeer allCids
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForArray [
 	<gtExample>
 	^ #(1 2 3) storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForArrayWithReferences [
 	<gtExample>
 	^ { self cborCidForInteger. self cborCidForString } storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForDictionary [
 	<gtExample>
 	^ (Dictionary with: 1 -> 2 with: 2 -> 3) storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForFloat [
 	<gtExample>
 	^ 0.5 storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForInteger [
 	<gtExample>
 	^ 42 storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForJSONMap [
 	<gtExample>
 	^ (NeoJSONObject with: #a -> 1 with: #b -> 2) storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForJSONMapWithReference [
 	<gtExample>
 	^ (NeoJSONObject with: #data -> self cborCidForJSONMap) storeInIpfs
-
 ]
 
-{ #category : #examples }
+{ #category : #'examples - cbor' }
 IpfsExamples >> cborCidForString [
 	<gtExample>
 	^ 'foo' storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> deleteIpnsKey [
 	self ipnsKey delete
-
 ]
 
-{ #category : #example }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> fileReference [
 	<gtExample>
 	^ self ipfsPathToFile asFileReference
 ]
 
-{ #category : #example }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> fileReferenceToDirectory [
 	<gtExample>
 	^ self ipfsPathToDirectory asFileReference
 ]
 
-{ #category : #example }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> fileReferenceToFile [
 	<gtExample>
 	^ self ipfsPathToFile asFileReference
 ]
 
-{ #category : #examples }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> fileSystem [
 	<gtExample>
 	^ FileSystem ipfs: ('/ipfs/bafybeibxm2nsadl3fnxv2sxcxmxaco2jl53wpeorjdzidjwf5aqdg7wa6u' asIpfsPath )
 ]
 
-{ #category : #example }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> fileSystemEntryAtPath [
 	<gtExample>
 	| entry |
@@ -105,13 +103,13 @@ IpfsExamples >> fileSystemEntryAtPath [
 	^ entry
 ]
 
-{ #category : #example }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> fileSystemRoot [
 	<gtExample>
 	^ self fileSystem root
 ]
 
-{ #category : #examples }
+{ #category : #'examples - unsupported CID' }
 IpfsExamples >> genericCid [
 	<gtExample>
 	"This is a CID pointing to an Ethereum block, for which there is no support
@@ -119,7 +117,7 @@ IpfsExamples >> genericCid [
 	^ 'z43AaGEvwdfzjrCZ3Sq7DKxdDHrwoaPQDtqF4jfdkNEVTiqGVFW' asIpfsCid
 ]
 
-{ #category : #examples }
+{ #category : #'examples - unsupported ID' }
 IpfsExamples >> gitObjectCid [
 	<gtExample>
 	"There is no support for creating git-raw objects from Pharo for now.
@@ -127,7 +125,7 @@ IpfsExamples >> gitObjectCid [
 	^ 'z8mWaJHXieAVxxLagBpdaNWFEBKVWmMiE' asIpfsCid
 ]
 
-{ #category : #example }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> ipfsPathToDirectory [
 	<gtExample>
 	| path |
@@ -137,7 +135,7 @@ IpfsExamples >> ipfsPathToDirectory [
 	^ path
 ]
 
-{ #category : #example }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> ipfsPathToFile [
 	<gtExample>
 	| path |
@@ -146,38 +144,39 @@ IpfsExamples >> ipfsPathToFile [
 	^ path
 ]
 
-{ #category : #examples }
+{ #category : #'examples - tools' }
 IpfsExamples >> ipfsPathToWebExplorer [
 	<gtExample>
 	^ '/ipfs/QmfQkD8pBSBCBxWEwFSu4XaDVSWK6bjnNuaWZjMyQbyDub/#/explore/'
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> ipnsKey [
 	<gtExample>
 	<after: #deleteIpnsKey>
 	^ self localIpfsPeer generateKeyNamed: #PharoIPFSTest
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> ipnsPath [
 	<gtExample>
 	^ self ipnsKey asIpfsPath / #a
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> loadIpnsPath [
 	<gtExample>
-	^ self ipnsPath loadObject
+	self publishCid.
+	^ self ipnsPath loadJson
 ]
 
-{ #category : #examples }
+{ #category : #'examples - paths' }
 IpfsExamples >> loadNonResolvablePath [
 	<gtExample>
 	^ self nonResolvablePathIntoNestedDataStructure loadJson
 ]
 
-{ #category : #examples }
+{ #category : #'examples - raw-block' }
 IpfsExamples >> loadRawBlock [
 	<gtExample>
 	| block |
@@ -186,19 +185,19 @@ IpfsExamples >> loadRawBlock [
 	^ block
 ]
 
-{ #category : #examples }
+{ #category : #'examples - paths' }
 IpfsExamples >> loadResolvedPath [
 	<gtExample>
 	^ self resolvedPathIntoNestedDataStructure loadJson
 ]
 
-{ #category : #examples }
+{ #category : #'examples - tools' }
 IpfsExamples >> localIpfsPeer [
 	<gtExample>
 	^ IpfsPeer local
 ]
 
-{ #category : #examples }
+{ #category : #'examples - paths' }
 IpfsExamples >> nonResolvablePathIntoNestedDataStructure [
 	<gtExample>
 	| path |
@@ -206,34 +205,30 @@ IpfsExamples >> nonResolvablePathIntoNestedDataStructure [
 	path := path resolve.
 	self assert: path relativePath equals: #a.
 	^ path
-
 ]
 
-{ #category : #examples }
+{ #category : #'examples - tools' }
 IpfsExamples >> openRawBlockInLocalWebExplorer [
 	<gtExample>
 	WebBrowser openOn:
 		'http://127.0.0.1:5001',
 		self ipfsPathToWebExplorer,
 		self rawBlockCid asString.
-
 ]
 
-{ #category : #examples }
+{ #category : #'examples - paths' }
 IpfsExamples >> pathIntoNestedDataStructure [
 	<gtExample>
 	^ self pathToNestedDataStructure / #data
-
 ]
 
-{ #category : #examples }
+{ #category : #'examples - paths' }
 IpfsExamples >> pathToNestedDataStructure [
 	<gtExample>
 	^ self cborCidForJSONMapWithReference asIpfsPath
-
 ]
 
-{ #category : #examples }
+{ #category : #'examples - unixfs' }
 IpfsExamples >> protobufCid [
 	<gtExample>
 	"There is no support for creating Protobuf objects from Pharo for now.
@@ -241,16 +236,16 @@ IpfsExamples >> protobufCid [
 	^ 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG' asIpfsCid
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> publishCid [
 	<gtExample>
 	| cid key |
 	cid := self cborCidForJSONMap.
 	key := self ipnsKey.
-	key publish: cid.
+	key publish: cid
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> publishPath [
 	<gtExample>
 	| path key |
@@ -260,13 +255,13 @@ IpfsExamples >> publishPath [
 	^ { key. path }
 ]
 
-{ #category : #examples }
+{ #category : #'examples - raw-block' }
 IpfsExamples >> rawBlockCid [
 	<gtExample>
 	^ #[1 2 3 2 1] storeInIpfs
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> resolveIpnsKey [
 	<gtExample>
 	| pathAndKey path key resolvedPath |
@@ -278,13 +273,13 @@ IpfsExamples >> resolveIpnsKey [
 	^ path
 ]
 
-{ #category : #examples }
+{ #category : #'examples - ipns' }
 IpfsExamples >> resolveIpnsPath [
 	<gtExample>
 	^ self ipnsPath resolve
 ]
 
-{ #category : #examples }
+{ #category : #'examples - paths' }
 IpfsExamples >> resolvedPathIntoNestedDataStructure [
 	<gtExample>
 	| resolvedPath |
@@ -294,7 +289,7 @@ IpfsExamples >> resolvedPathIntoNestedDataStructure [
 	^ resolvedPath
 ]
 
-{ #category : #examples }
+{ #category : #'examples - pinning' }
 IpfsExamples >> storeDataAndCheckItsAbsenceAfterGarbageCollection [
 	<gtExample>
 	| cid |
@@ -304,7 +299,7 @@ IpfsExamples >> storeDataAndCheckItsAbsenceAfterGarbageCollection [
 	^ cid
 ]
 
-{ #category : #examples }
+{ #category : #'examples - pinning' }
 IpfsExamples >> storeDataAndCheckItsPresenceOnLocalPeer [
 	<gtExample>
 	| cid |
@@ -313,7 +308,7 @@ IpfsExamples >> storeDataAndCheckItsPresenceOnLocalPeer [
 	^ cid
 ]
 
-{ #category : #examples }
+{ #category : #'examples - pinning' }
 IpfsExamples >> storeDataPinAndCheckItsPresenceAfterGarbageCollection [
 	<gtExample>
 	| cid |
@@ -324,7 +319,7 @@ IpfsExamples >> storeDataPinAndCheckItsPresenceAfterGarbageCollection [
 	^ cid
 ]
 
-{ #category : #examples }
+{ #category : #'examples - pinning' }
 IpfsExamples >> storeDataPinUnpinAndCheckItsAbsenceAfterGarbageCollection [
 	<gtExample>
 	| cid |
@@ -335,7 +330,7 @@ IpfsExamples >> storeDataPinUnpinAndCheckItsAbsenceAfterGarbageCollection [
 	^ cid
 ]
 
-{ #category : #examples }
+{ #category : #'examples - tools' }
 IpfsExamples >> urlForExploringRawBlockInRemoteWebExplorer [
 	<gtExample>
 	^ 'https://explore.ipld.io/#/explore/',
