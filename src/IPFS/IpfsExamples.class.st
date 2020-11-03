@@ -69,6 +69,48 @@ IpfsExamples >> deleteIpnsKey [
 
 ]
 
+{ #category : #example }
+IpfsExamples >> fileReference [
+	<gtExample>
+	^ self ipfsPathToFile asFileReference
+]
+
+{ #category : #example }
+IpfsExamples >> fileReferenceToDirectory [
+	<gtExample>
+	^ self ipfsPathToDirectory asFileReference
+]
+
+{ #category : #example }
+IpfsExamples >> fileReferenceToFile [
+	<gtExample>
+	^ self ipfsPathToFile asFileReference
+]
+
+{ #category : #examples }
+IpfsExamples >> fileSystem [
+	<gtExample>
+	^ FileSystem ipfs: ('/ipfs/bafybeibxm2nsadl3fnxv2sxcxmxaco2jl53wpeorjdzidjwf5aqdg7wa6u' asIpfsPath )
+]
+
+{ #category : #example }
+IpfsExamples >> fileSystemEntryAtPath [
+	<gtExample>
+	| entry |
+	entry := self fileSystem entryAt: (Path / 'about').
+	"Note: this is a bug. The result should be an
+	IpfsFileSystemFile."
+	self flag: #todo.
+	self assert: (entry isKindOf: MemoryDirectoryEntry).
+	^ entry
+]
+
+{ #category : #example }
+IpfsExamples >> fileSystemRoot [
+	<gtExample>
+	^ self fileSystem root
+]
+
 { #category : #examples }
 IpfsExamples >> genericCid [
 	<gtExample>
@@ -83,6 +125,25 @@ IpfsExamples >> gitObjectCid [
 	"There is no support for creating git-raw objects from Pharo for now.
 	Use a commit from an IPFS repository that is already stored in IPFS."
 	^ 'z8mWaJHXieAVxxLagBpdaNWFEBKVWmMiE' asIpfsCid
+]
+
+{ #category : #example }
+IpfsExamples >> ipfsPathToDirectory [
+	<gtExample>
+	| path |
+	path := '/ipfs/bafybeibxm2nsadl3fnxv2sxcxmxaco2jl53wpeorjdzidjwf5aqdg7wa6u'
+		asIpfsPath.
+	self assert: path root equals: path.
+	^ path
+]
+
+{ #category : #example }
+IpfsExamples >> ipfsPathToFile [
+	<gtExample>
+	| path |
+	path := self ipfsPathToDirectory / 'about'.
+	self assert: (path root = path) not.
+	^ path
 ]
 
 { #category : #examples }

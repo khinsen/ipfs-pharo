@@ -62,3 +62,8 @@ IpfsCidPath >> resolve [
 IpfsCidPath >> resolveNames [
 	^ self
 ]
+
+{ #category : #accessing }
+IpfsCidPath >> root [
+	^ cid asIpfsPath
+]

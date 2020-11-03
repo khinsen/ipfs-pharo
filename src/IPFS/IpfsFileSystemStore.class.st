@@ -1,5 +1,5 @@
 Class {
-	#name : #IpfsStore,
+	#name : #IpfsFileSystemStore,
 	#superclass : #FileSystemStore,
 	#instVars : [
 		'root',
@@ -9,57 +9,57 @@ Class {
 }
 
 { #category : #public }
-IpfsStore class >> delimiter [
+IpfsFileSystemStore class >> delimiter [
 	^ $/
 ]
 
 { #category : #public }
-IpfsStore class >> isCaseSensitive [
+IpfsFileSystemStore class >> isCaseSensitive [
 	^ true
 ]
 
 { #category : #'instance creation' }
-IpfsStore class >> rootPath: anIpfsPath [
+IpfsFileSystemStore class >> rootPath: anIpfsPath [
 	^ self new rootPath: anIpfsPath
 ]
 
 { #category : #acccessing }
-IpfsStore >> basenameFromEntry: anEntry [
+IpfsFileSystemStore >> basenameFromEntry: anEntry [
 	^ anEntry basename
 ]
 
 { #category : #private }
-IpfsStore >> basicCreationTimeOf: aNode [
+IpfsFileSystemStore >> basicCreationTimeOf: aNode [
 	FileAttributeNotSupported signal
 ]
 
 { #category : #private }
-IpfsStore >> basicEntry: directoryEntry path: aPath nodesDo: aBlock [
+IpfsFileSystemStore >> basicEntry: directoryEntry path: aPath nodesDo: aBlock [
 	directoryEntry fileEntriesDo: aBlock
 ]
 
 { #category : #private }
-IpfsStore >> basicIsDirectory: aNode [
+IpfsFileSystemStore >> basicIsDirectory: aNode [
 	^ aNode isDirectory
 ]
 
 { #category : #private }
-IpfsStore >> basicIsFile: aNode [
+IpfsFileSystemStore >> basicIsFile: aNode [
 	^ aNode isFile
 ]
 
 { #category : #private }
-IpfsStore >> basicIsSymlink: aNode [
+IpfsFileSystemStore >> basicIsSymlink: aNode [
 	^ false
 ]
 
 { #category : #private }
-IpfsStore >> basicIsWritable: aNode [
+IpfsFileSystemStore >> basicIsWritable: aNode [
 	^ false
 ]
 
 { #category : #private }
-IpfsStore >> basicOpen: aPath writable: aBoolean [
+IpfsFileSystemStore >> basicOpen: aPath writable: aBoolean [
 	aBoolean ifTrue: [ ReadOnlyFileException signal ].
 	self nodeAt: aPath
 		ifPresent: [ :anEntry | ^ anEntry ipfsPath unixfsBinaryReadStream ]
@@ -67,22 +67,22 @@ IpfsStore >> basicOpen: aPath writable: aBoolean [
 ]
 
 { #category : #private }
-IpfsStore >> basicPosixPermissions: aNode [
+IpfsFileSystemStore >> basicPosixPermissions: aNode [
 	FileAttributeNotSupported signal
 ]
 
 { #category : #private }
-IpfsStore >> basicSizeOf: anIpfsFileSystemEntry [
+IpfsFileSystemStore >> basicSizeOf: anIpfsFileSystemEntry [
 	^ anIpfsFileSystemEntry fileSize
 ]
 
 { #category : #accessing }
-IpfsStore >> handleClass [
+IpfsFileSystemStore >> handleClass [
 	^ IpfsFileHandle
 ]
 
 { #category : #private }
-IpfsStore >> nodeAt: aPath ifPresent: presentBlock ifAbsent: absentBlock [
+IpfsFileSystemStore >> nodeAt: aPath ifPresent: presentBlock ifAbsent: absentBlock [
 	| current |
 	aPath isRoot
 		ifTrue: [ ^ presentBlock value: self root ].
@@ -96,12 +96,12 @@ IpfsStore >> nodeAt: aPath ifPresent: presentBlock ifAbsent: absentBlock [
 ]
 
 { #category : #accessing }
-IpfsStore >> root [
+IpfsFileSystemStore >> root [
 	^ root
 ]
 
 { #category : #accessing }
-IpfsStore >> rootPath: anIpfsPath [
+IpfsFileSystemStore >> rootPath: anIpfsPath [
 	self assert: anIpfsPath isUnixfsDirectory.
 	rootPath := anIpfsPath.
 	root := IpfsFileSystemEntry forIpfsPath: anIpfsPath.

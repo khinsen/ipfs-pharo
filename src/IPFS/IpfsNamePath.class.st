@@ -82,6 +82,11 @@ IpfsNamePath >> resolveNamesWithTimeout: aDuration default: anObject [
 	
 ]
 
+{ #category : #accessing }
+IpfsNamePath >> root [
+	^ self class new name: name
+]
+
 { #category : #resolving }
 IpfsNamePath >> substituteNameBy: anIpfsPath [
 	^ anIpfsPath / self relativePath

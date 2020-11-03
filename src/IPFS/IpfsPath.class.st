@@ -44,7 +44,10 @@ IpfsPath >> addLinks: aLinkSequence [
 
 { #category : #converting }
 IpfsPath >> asFileReference [
-	^ IpfsFileReference fromIpfsPath: self
+	| reference |
+	reference := (FileSystem ipfs:self root) root.
+	linkSequence do: [ :segment | reference := reference / segment ].
+	^ reference
 ]
 
 { #category : #accessing }
@@ -147,6 +150,11 @@ IpfsPath >> resolve [
 { #category : #resolving }
 IpfsPath >> resolveNames [
 	"Resolve /ipns paths recursively until an /ipfs path is obtained."
+	self subclassResponsibility
+]
+
+{ #category : #converting }
+IpfsPath >> root [
 	self subclassResponsibility
 ]
 
