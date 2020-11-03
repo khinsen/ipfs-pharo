@@ -31,6 +31,11 @@ IpfsFileSystemEntry >> forIpfsPath: anIpfsPath [
 ]
 
 { #category : #accessing }
+IpfsFileSystemEntry >> ipfsPath [
+	^ ipfsPath
+]
+
+{ #category : #accessing }
 IpfsFileSystemEntry >> ipfsPath: anIpfsPath [ 
 	ipfsPath := anIpfsPath
 ]

@@ -60,8 +60,10 @@ IpfsStore >> basicIsWritable: aNode [
 
 { #category : #private }
 IpfsStore >> basicOpen: aPath writable: aBoolean [
-	"open the file at the given path and return an identifier"
-	self notYetImplemented
+	aBoolean ifTrue: [ ReadOnlyFileException signal ].
+	self nodeAt: aPath
+		ifPresent: [ :anEntry | ^ anEntry ipfsPath unixfsBinaryReadStream ]
+		ifAbsent: [ FileDoesNotExistException signal ]
 ]
 
 { #category : #private }
@@ -72,6 +74,11 @@ IpfsStore >> basicPosixPermissions: aNode [
 { #category : #private }
 IpfsStore >> basicSizeOf: anIpfsFileSystemEntry [
 	^ anIpfsFileSystemEntry fileSize
+]
+
+{ #category : #accessing }
+IpfsStore >> handleClass [
+	^ IpfsFileHandle
 ]
 
 { #category : #private }

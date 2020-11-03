@@ -7,29 +7,31 @@ Class {
 	#category : #'IPFS-3 - Files'
 }
 
+{ #category : #private }
+IpfsFileSystemDirectory >> ensureEntries [
+	entries ifNil: [
+		entries := Dictionary new.
+		ipfsPath unixfsDirectoryEntries do: [ :each |
+			| name |
+			name := each at: #Name.
+			entries at: name put: (IpfsFileSystemEntry forIpfsPath: ipfsPath / name) ] ].
+	^ entries
+]
+
 { #category : #enumeration }
 IpfsFileSystemDirectory >> fileEntriesDo: aBlock [
-	entries do: [ :each | aBlock value: each ]
+	self ensureEntries do: [ :each | aBlock value: each ]
 ]
 
 { #category : #accessing }
 IpfsFileSystemDirectory >> fileEntryAt: aString ifAbsent: aBlock [
-	^ entries at: aString ifAbsent: [ aBlock value ]
-]
-
-{ #category : #initialization }
-IpfsFileSystemDirectory >> initialize [
-	entries := Dictionary new
+	^ self ensureEntries at: aString ifAbsent: [ aBlock value ]
 ]
 
 { #category : #accessing }
 IpfsFileSystemDirectory >> ipfsPath: anIpfsPath [
 	super ipfsPath: anIpfsPath.
-	entries := Dictionary new.
-	anIpfsPath unixfsDirectoryEntries do: [ :each |
-		| name |
-		name := each at: #Name.
-		entries at: name put: (IpfsFileSystemEntry forIpfsPath: anIpfsPath / name) ]
+	entries := nil
 ]
 
 { #category : #testing }
