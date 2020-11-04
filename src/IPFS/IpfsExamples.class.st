@@ -1,10 +1,44 @@
 "
-!Examples for IPFS
+! IPFS Examples
+!!Storing and retrieving data
+!!!JSON-style linked data
+[[[
+'IpfsExamples' gtClassMatches & 'examples - cbor' gtMethodCategories
+]]]
+!!!Files and directories
+[[[
+'IpfsExamples' gtClassMatches & 'examples - unixfs' gtMethodCategories
+]]]
+!!! Other data
+[[[
+'IpfsExamples' gtClassMatches & 'examples - raw-block' gtMethodCategories
+]]]
+[[[
+'IpfsExamples' gtClassMatches & 'examples - unsupported CID' gtMethodCategories
+]]]
+!!Paths and IPNS
+[[[
+'IpfsExamples' gtClassMatches & 'examples - paths' gtMethodCategories
+]]]
+[[[
+'IpfsExamples' gtClassMatches & 'examples - ipns' gtMethodCategories
+]]]
+!!Interacting with an IPFS peer
+An IPFS peer is a node in the IPFS network. In addition to handling communication with other nodes in the network, it manages the storage of IPFS data on the computer it is running on (in particular pinning), and a set of keys used for IPNS.
 
+[[[
+'IpfsExamples' gtClassMatches & 'examples - peer' gtMethodCategories
+]]]
+
+[[[
+'IpfsExamples' gtClassMatches & 'examples - pinning' gtMethodCategories
+]]]
 "
 Class {
 	#name : #IpfsExamples,
 	#superclass : #Object,
+	#traits : 'TGtExampleAssertable',
+	#classTraits : 'TGtExampleAssertable classTrait',
 	#category : #'IPFS-Examples'
 }
 
@@ -62,7 +96,7 @@ IpfsExamples >> cborCidForString [
 	^ 'foo' storeInIpfs
 ]
 
-{ #category : #'examples - ipns' }
+{ #category : #'examples - peer' }
 IpfsExamples >> deleteIpnsKey [
 	self ipnsKey delete
 ]
@@ -117,7 +151,7 @@ IpfsExamples >> genericCid [
 	^ 'z43AaGEvwdfzjrCZ3Sq7DKxdDHrwoaPQDtqF4jfdkNEVTiqGVFW' asIpfsCid
 ]
 
-{ #category : #'examples - unsupported ID' }
+{ #category : #'examples - unsupported CID' }
 IpfsExamples >> gitObjectCid [
 	<gtExample>
 	"There is no support for creating git-raw objects from Pharo for now.
@@ -150,7 +184,7 @@ IpfsExamples >> ipfsPathToWebExplorer [
 	^ '/ipfs/QmfQkD8pBSBCBxWEwFSu4XaDVSWK6bjnNuaWZjMyQbyDub/#/explore/'
 ]
 
-{ #category : #'examples - ipns' }
+{ #category : #'examples - peer' }
 IpfsExamples >> ipnsKey [
 	<gtExample>
 	<after: #deleteIpnsKey>
@@ -191,7 +225,7 @@ IpfsExamples >> loadResolvedPath [
 	^ self resolvedPathIntoNestedDataStructure loadJson
 ]
 
-{ #category : #'examples - tools' }
+{ #category : #'examples - peer' }
 IpfsExamples >> localIpfsPeer [
 	<gtExample>
 	^ IpfsPeer local
