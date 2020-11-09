@@ -84,15 +84,31 @@ IpfsCid >> gtDisplayOn: stream [
 ]
 
 { #category : #'*IPFS-GToolkit' }
-IpfsCid >> gtFilesFor: aView [
+IpfsCid >> gtFileSystemFor: aView [
 	<gtView>
 	self isInLocalStorage ifFalse: [ ^ aView empty ].
 	self isUnixfsDirectory ifFalse: [ ^ aView empty ].
 	^ aView forward
-		title: 'Files';
-		priority: -9;
+		title: 'File system';
+		priority: -8;
 		object: [ self asIpfsPath asFileReference ];
 		view: #gtItemsFor:;
+		yourself
+]
+
+{ #category : #'*IPFS-GToolkit' }
+IpfsCid >> gtFilesFor: aView [
+	<gtView>
+	self isInLocalStorage ifFalse: [ ^ aView empty ].
+	self isUnixfsDirectory ifFalse: [ ^ aView empty ].
+	^ aView columnedList
+		title: 'Files';
+		priority: -9;
+		items: [ self unixfsDirectoryEntries ];
+		send: [ :each | each at: #Cid ];
+		column: 'Name' text: [ :each | each at: #Name ];
+		column: 'Size' text: [ :each | each at: #Size ];
+		column: 'Cid' text: [ :each | each at: #Cid ];
 		yourself
 ]
 
