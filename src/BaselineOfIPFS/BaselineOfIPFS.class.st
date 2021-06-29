@@ -16,18 +16,13 @@ BaselineOfIPFS >> baseline: spec [
 		spec
 			baseline: 'SingletonTrait'
 			with: [ spec repository: 'github://khinsen/SingletonTrait' ].
-		spec
-			baseline: 'GToolkit' 
-			with: [ spec repository: 'github://feenkcom/gtoolkit:release/src' ].
 
 		spec
 			package: 'Multiformats';
 			package: 'Multibase';
 			package: 'IPFS'
 				with: [ spec requires: #('SingletonTrait' 'NeoJSON' 'Multibase' 'Multiformats') ];
-			package: 'IPFS-GToolkit'
-				with: [ spec requires: #('IPFS' 'GToolkit') ];
-			package: 'BaselineOfIPFS'.
+			package: 'IPFS-GToolkit'.
 
 		spec
 			group: 'default' with: #('IPFS');
