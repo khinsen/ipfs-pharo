@@ -23,7 +23,17 @@ Metacello new
 
 The GToolkit add-on is strongly recommended, as it contains everything you need to explore IPFS: inspector views for everything, and a tutorial accessible from the World menu. There are two ways to install IPFS with GToolkit support, involving different trade-offs:
 
-1. In a plain Pharo 8 image, execute the following lines in a playground:
+1. (Recommended) In a pre-built GToolkit installation (from [this site](https://gtoolkit.com/download/)), execute the following lines in a playground:
+
+```
+Metacello new
+    baseline: 'IPFSForGToolkit';
+    repository: 'github://khinsen/ipfs-pharo/src';
+	 onConflictUseLoaded;
+    load.
+```
+
+2. In a plain Pharo 8 image, execute the following lines in a playground:
 
 ```
 EpMonitor current disable.
@@ -36,15 +46,4 @@ Metacello new
 ] ensure: [ EpMonitor current enable ].
 ```
 
-This will first install GToolkit, and then the IPFS package. Since GToolkit is rather big, be prepared for a lengthy installation. Note also that GToolkit installed on top of a standard Pharo 8 image cannot use its native windows, so you will see GToolkit inside Morphic. For native windows (nicer and faster), choose method 2 below.
-
-2. In a pre-built GToolkit installation (from [this site](https://gtoolkit.com/install/)), execute the following lines in a playground:
-
-```
-Metacello new
-    baseline: 'IPFSForGToolkit';
-    repository: 'github://khinsen/ipfs-pharo/src';
-	 onConflictUseLoaded;
-    load.
-```
-
+This will first install GToolkit, and then the IPFS package. Since GToolkit is rather big, be prepared for a lengthy installation.
