@@ -7,7 +7,7 @@ IpfsCid >> embeddedViewShowing: aBlock For: aView [
 			aContainer := BlElement new
 				margin: (BlInsets all: 20);
 				background: Color white;
-				look: BrShadowLook;
+				aptitude: BrShadowLook;
 				constraintsDo: [ :c | 
 					c horizontal matchParent.
 					c vertical matchParent ].
