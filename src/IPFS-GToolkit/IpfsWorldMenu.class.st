@@ -13,12 +13,6 @@ IpfsWorldMenu class >> ipfsWorldMenuOn: aBuilder [
 	(aBuilder item: #IPFS)
 		label: 'IPFS';
 		order: 10.
-	(aBuilder item: #IpfsTutorial)
-		parent: #IPFS;
-		order: 0;
-		withSeparatorAfter;
-		label: 'Tutorial';
-		action: [ GtInspector openOn: (IpfsGToolkitData at: #Documentation) ].
 	(aBuilder item: #IpfsLocalPeer)
 		parent: #IPFS;
 		order: 1;

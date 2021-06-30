@@ -11,10 +11,10 @@ IpfsGtHomeSection >> create [
 	sectionContainer addChild: (self newSectionTitle: 'IPFS').
 	cardContainer := self newCardsContainer.
 	cardContainer addChild: self localPeerCard.
-	cardContainer addChild:
+	"cardContainer addChild:
 		((self newWikiCardFor: (IpfsGToolkitData at: #Documentation))
 			size: 120 @ 120 ;
-			yourself).
+			yourself)."
 	sectionContainer addChild: cardContainer.
 	^ sectionContainer
 ]

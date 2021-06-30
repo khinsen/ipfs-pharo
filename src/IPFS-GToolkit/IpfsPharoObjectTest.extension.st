@@ -1,13 +1,6 @@
 Extension { #name : #IpfsPharoObjectTest }
 
 { #category : #'*IPFS-GToolkit' }
-IpfsPharoObjectTest >> testStoreAndLoadIpfsDocument [
-	| document |
-	document := IpfsDocument name: #Test text: 'This is a test document'.
-	self storeLoadCheck: document.
-]
-
-{ #category : #'*IPFS-GToolkit' }
 IpfsPharoObjectTest >> testStoreAndLoadIpfsWiki [
 	| wiki |
 	wiki := IpfsWiki new.
