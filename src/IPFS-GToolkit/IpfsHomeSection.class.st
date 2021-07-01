@@ -1,11 +1,11 @@
 Class {
-	#name : #IpfsGtHomeSection,
+	#name : #IpfsHomeSection,
 	#superclass : #GtHomeSection,
 	#category : #'IPFS-GToolkit'
 }
 
 { #category : #accessing }
-IpfsGtHomeSection >> create [
+IpfsHomeSection >> create [
 	| sectionContainer cardContainer |
 	sectionContainer := self newSectionContainer.
 	sectionContainer addChild: (self newSectionTitle: 'IPFS').
@@ -20,17 +20,14 @@ IpfsGtHomeSection >> create [
 ]
 
 { #category : #accessing }
-IpfsGtHomeSection >> localPeerCard [
-	| stencil |
-	stencil := GtToolButtonStencil new 
-		title: 'IPFS Peer';
-		icon: IpfsIcons ipfsLogo;
-		action: [ :card | 
+IpfsHomeSection >> localPeerCard [
+	^ self
+		newToolCardWithTitle: 'IPFS Peer'
+		icon: IpfsIcons ipfsLogo asElement
+		action: [ :card |
 			self
 				showSpaceWithTitle: 'IPFS Peer'
-				with:
-					(GtInspector createOn: IpfsPeer local)
-				from: card ];
-		description: 'Pinned data and IPNS keys on your device'.
-	^ stencil create
+				with: (GtInspector createOn: IpfsPeer local)
+				from: card ]
+		description: 'Pinned data and IPNS keys on your device'
 ]

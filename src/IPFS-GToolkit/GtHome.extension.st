@@ -3,6 +3,6 @@ Extension { #name : #GtHome }
 { #category : #'*IPFS-GToolkit' }
 GtHome >> ipfsSection [
 	<gtHomeSection>
-	^ IpfsGtHomeSection new
+	^ IpfsHomeSection new
 		priority: 11
 ]
