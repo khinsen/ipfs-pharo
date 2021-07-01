@@ -4,19 +4,29 @@ Class {
 	#category : #'IPFS-GToolkit'
 }
 
-{ #category : #accessing }
+{ #category : #initialization }
 IpfsHomeSection >> create [
 	| sectionContainer cardContainer |
 	sectionContainer := self newSectionContainer.
 	sectionContainer addChild: (self newSectionTitle: 'IPFS').
 	cardContainer := self newCardsContainer.
 	cardContainer addChild: self localPeerCard.
-	"cardContainer addChild:
-		((self newWikiCardFor: (IpfsGToolkitData at: #Documentation))
-			size: 120 @ 120 ;
-			yourself)."
+	cardContainer addChild: self documentationCard.
 	sectionContainer addChild: cardContainer.
 	^ sectionContainer
+]
+
+{ #category : #initialization }
+IpfsHomeSection >> documentationCard [
+	^ self
+		newToolCardWithTitle: 'IPFS Documentation'
+		icon: (LeIcons lepiterDatabase create asScalableElement size: 64 @ 64)
+		action: [ :card |
+			self
+				showSpaceWithTitle: 'IPFS Documentation'
+				with: (GtInspector createOn: IpfsDocumentation new database)
+				from: card ]
+		description: 'Learning about IPFS'
 ]
 
 { #category : #accessing }
