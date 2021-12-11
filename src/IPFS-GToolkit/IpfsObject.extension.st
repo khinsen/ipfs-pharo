@@ -14,13 +14,14 @@ IpfsObject >> gtDataFor: aView [
 
 { #category : #'*IPFS-GToolkit' }
 IpfsObject >> gtLinksFor: aView [
+
 	<gtView>
 	^ aView columnedList
-		title: 'Links';
-		priority: -9;
-		items: [ self links associations ];
-		column: 'Name' item: [ :link | link key ];
-		column: 'Size' item: [ :link | link value dataSize ];
-		column: 'CID' item: [ :link | link value cid asString ];
-		send: [ :link | link value cid ].
+		  title: 'Links';
+		  priority: -9;
+		  items: [ self links associations ];
+		  column: 'Name' text: [ :link | link key ];
+		  column: 'Size' text: [ :link | link value dataSize ];
+		  column: 'CID' text: [ :link | link value cid asString ];
+		  send: [ :link | link value cid ]
 ]

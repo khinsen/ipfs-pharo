@@ -76,6 +76,11 @@ IpfsFileSystemStore >> basicSizeOf: anIpfsFileSystemEntry [
 	^ anIpfsFileSystemEntry fileSize
 ]
 
+{ #category : #printing }
+IpfsFileSystemStore >> forReferencePrintOn: aStream [
+	aStream nextPutAll: rootPath asString
+]
+
 { #category : #accessing }
 IpfsFileSystemStore >> handleClass [
 	^ IpfsFileHandle

@@ -175,10 +175,12 @@ IpfsPath >> unixfsBinaryReadStream [
 { #category : #accessing }
 IpfsPath >> unixfsDirectoryEntries [
 	| data |
-	self isUnixfsDirectory ifFalse: [ ^ Array new ].
+	self isUnixfsDirectory
+		ifFalse: [ ^ Array new ].
 	data := self loadJson.
-	(data at: #data) = 'CAE=' ifFalse: [ ^ Array new ].
-	^ data at: #links
+	(Ipfs decodeBytes: (data at: #Data)) = #[8 1]
+		ifFalse: [ ^ Array new ].
+	^ data at: #Links
 ]
 
 { #category : #'data access' }

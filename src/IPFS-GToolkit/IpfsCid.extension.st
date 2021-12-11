@@ -51,21 +51,23 @@ IpfsCid >> gtActionLoadObjectFor: anAction [
 
 { #category : #'*IPFS-GToolkit' }
 IpfsCid >> gtCidDataFor: aView [
+
 	<gtView>
 	| cidData |
 	cidData := self parse.
 	^ aView columnedList
-		title: 'CID';
-		priority: -10;
-		items: [ {(#Base32 -> (self encodeInBase: #base32)).
-			(#Version -> (cidData at: #version)).
-			(#Codec -> (cidData at: #codec)).
-			(#'Hash function' -> (cidData at: #hashFunction)).
-			(#'Hash length' -> (cidData at: #hashLength)).
-			} ];
-		column: 'Key' item: [ :aField | aField key ];
-		column: 'Value' item: [ :aField | aField value ];
-		send: [ :aField | aField value ]
+		  title: 'CID';
+		  priority: -10;
+		  items: [ 
+			  { 
+				  (#Base32 -> (self encodeInBase: #base32)).
+				  (#Version -> (cidData at: #version)).
+				  (#Codec -> (cidData at: #codec)).
+				  (#'Hash function' -> (cidData at: #hashFunction)).
+				  (#'Hash length' -> (cidData at: #hashLength)) } ];
+		  column: 'Key' text: [ :aField | aField key ];
+		  column: 'Value' text: [ :aField | aField value ];
+		  send: [ :aField | aField value ]
 ]
 
 { #category : #'*IPFS-GToolkit' }

@@ -106,10 +106,11 @@ IpfsHttpApiTest >> testPinning [
 
 	result := self znClient
 		path: 'api/v0/dag/put';
-		queryAt: #f add: 'raw';
-		queryAt: #'input-enc' add: 'raw';
-		addPart: (ZnMimePart fieldName: 'file'
-									value: data);
+		queryAt: #'input-codec' add: 'raw';
+		queryAt: #'store-codec' add: 'raw';
+		addPart: (ZnMimePart
+					fieldName: 'file'
+					value: data);
 		post.
 	cid := ((NeoJSONReader fromString: result) at: 'Cid') at: '/'.
 
@@ -136,10 +137,11 @@ IpfsHttpApiTest >> testPutGetRawByteArray [
 
 	result := self znClient
 		path: 'api/v0/dag/put';
-		queryAt: #f add: 'raw';
-		queryAt: #'input-enc' add: 'raw';
-		addPart: (ZnMimePart fieldName: 'file'
-									value: data);
+		queryAt: #'input-codec' add: 'raw';
+		queryAt: #'store-codec' add: 'raw';
+		addPart: (ZnMimePart
+					fieldName: 'file'
+					value: data);
 		post.
 	cid := ((NeoJSONReader fromString: result) at: 'Cid') at: '/'.
 

@@ -49,6 +49,11 @@ Ipfs class >> dagResolve: aString [
 	^ self uniqueInstance dagResolve: aString
 ]
 
+{ #category : #IPLD }
+Ipfs class >> decodeBytes: jsonData [
+	^ self uniqueInstance decodeBytes: jsonData 
+]
+
 { #category : #IPFS }
 Ipfs class >> filesStat: aCidOrPath [
 	^ self uniqueInstance filesStat: aCidOrPath
@@ -221,12 +226,15 @@ Ipfs >> cat: aCid [
 
 { #category : #IPLD }
 Ipfs >> dagGet: anIpfsCidOrPath [
+
 	| node |
-	node := self getRequest: 'dag/get'
-					 parameters: (Dictionary with: #arg -> anIpfsCidOrPath asString)
-					 timeout: self dataRequestTimeout.
+	node := self
+		        getRequest: 'dag/get'
+		        parameters:
+		        (Dictionary with: #arg -> anIpfsCidOrPath asString)
+		        timeout: self dataRequestTimeout.
 	anIpfsCidOrPath asIpfsPath isRaw
-		ifTrue: [ ^ node asByteArray ]
+		ifTrue: [ ^ self decodeBytes: node ]
 		ifFalse: [ ^ node convertIpfsCids ]
 ]
 
@@ -249,8 +257,8 @@ Ipfs >> dagPutRaw: anObject [
 		parameters:
 			(Dictionary
 				with: #arg -> ''
-				with: #f -> 'raw'
-				with: #'input-enc' -> 'raw').
+				with: #'store-codec' -> 'raw'
+				with: #'input-codec' -> 'raw').
 	^ IpfsCid fromJSON: (result at: 'Cid')
 ]
 
@@ -269,6 +277,11 @@ Ipfs >> dagResolve: aString [
 	^ path ]
 		on: IpfsError
 		do: [ ^ nil ]
+]
+
+{ #category : #IPLD }
+Ipfs >> decodeBytes: jsonData [
+	^ MultibaseBase64 new decode: ((jsonData at: '/') at: 'bytes')
 ]
 
 { #category : #accessing }

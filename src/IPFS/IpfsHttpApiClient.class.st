@@ -118,7 +118,6 @@ IpfsHttpApiClient >> znClient [
 { #category : #'http requests' }
 IpfsHttpApiClient >> znClientForJsonResult [
 	^ self znClient
-		accept: 'application/json';
 		contentReader: [ :entity |
 								entity ifNil: [ nil ]
 										 ifNotNil: [ (NeoJSONReader on: entity contents readStream)
