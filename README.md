@@ -2,13 +2,13 @@
 
 ![screenshot](./screenshot.png)
 
-**Important note:** This is work in progress, written so far mainly to let me play with IPFS. Everything might change at any time. Don't rely on this package for mission-critical software! Moreover, many things are still missing, in particular support for IPNS and the file system layer. But for experimenting with [IPLD](http://ipld.io/) it's just fine!
+**Important note:** This is work in progress, written so far mainly to let me play with IPFS. Everything might change at any time. Don't rely on this package for mission-critical software!
 
 ## Installation
 
-To use this package, your computer must run a local IPFS node. On a personal machine, [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) is the most convenient way to do so. Alternatively, or for running on a server, use the [command-line version](https://docs.ipfs.io/guides/guides/install/).
+To use this package, your computer must run a local IPFS node. On a personal machine, [IPFS Desktop](https://github.com/ipfs-shipyard/ipfs-desktop) is the most convenient way to do so. Alternatively, or for running on a server, use the [command-line version](https://docs.ipfs.io/guides/guides/install/). You must have `go-ipfs` 0.10 or later, because of important changes in the HTTP API between versions 0.9 and 0.10.
 
-### Pharo 8 without GToolkit support
+### Pharo 8 or 9 without GToolkit support
 
 Execute the following lines in a playground:
 
@@ -19,11 +19,9 @@ Metacello new
     load.
 ```
 
-### Pharo 8 with GToolkit support
+### Glamorous Toolkit
 
-The GToolkit add-on is strongly recommended, as it contains everything you need to explore IPFS: inspector views for everything, and a tutorial accessible from the World menu. There are two ways to install IPFS with GToolkit support, involving different trade-offs:
-
-1. (Recommended) In a pre-built GToolkit installation (from [this site](https://gtoolkit.com/download/)), execute the following lines in a playground:
+In a pre-built GToolkit installation (from [this site](https://gtoolkit.com/download/)), execute the following lines in a playground:
 
 ```
 Metacello new
@@ -33,17 +31,5 @@ Metacello new
     load.
 ```
 
-2. In a plain Pharo 8 image, execute the following lines in a playground:
+This installs the basic Pharo interface for IPFS plus inspector views for everything and a tutorial in a Lepiter database.
 
-```
-EpMonitor current disable.
-[ 
-Metacello new
-    baseline: 'IPFS';
-    repository: 'github://khinsen/ipfs-pharo/src';
-    onConflictUseLoaded;
-    load: 'All'.
-] ensure: [ EpMonitor current enable ].
-```
-
-This will first install GToolkit, and then the IPFS package. Since GToolkit is rather big, be prepared for a lengthy installation.
